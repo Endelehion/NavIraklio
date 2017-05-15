@@ -3,21 +3,21 @@
 
     <item
         is-multidex="true"
-        jar="C:\Users\Varda\.AndroidStudio2.2\Android Projects\NavIraklio\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
+        jar="C:\Users\Endelehion\.AndroidStudio2.3\Android Projects\NavIraklio\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
         jumboMode="true"
         optimize="true"
         revision="25.0.3"
-        sha1="1eceebcaea69be0e0712afa2678ec7f2d6a9a626">
-        <dex dex="C:\Users\Varda\.AndroidStudio2.2\Android Projects\NavIraklio\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run-bootstrap_8ad1213b6aff14b39a7b302b3bb3a756a207bcb1\classes.dex" />
+        sha1="6b9b9956ae10de16101a4c669745800aaf86ead9">
+        <dex dex="C:\Users\Endelehion\.AndroidStudio2.3\Android Projects\NavIraklio\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run-bootstrap_5e9a3dabfd0a5b3b3a29e925392aac56b4f09e8c\classes.dex" />
     </item>
     <item
         is-multidex="true"
-        jar="C:\Users\Varda\.AndroidStudio2.2\Android Projects\NavIraklio\app\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
+        jar="C:\Users\Endelehion\.AndroidStudio2.3\Android Projects\NavIraklio\app\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
         jumboMode="true"
         optimize="true"
         revision="25.0.3"
         sha1="caff8e51a24901cfc9cd7e1cf83d84f4cb0c103b">
-        <dex dex="C:\Users\Varda\.AndroidStudio2.2\Android Projects\NavIraklio\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run_6c9143f1e1deafa54737590b509441f0be37339f\classes.dex" />
+        <dex dex="C:\Users\Endelehion\.AndroidStudio2.3\Android Projects\NavIraklio\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run_30420e0200c0610a30e4c57a39238b7eefeaaadb\classes.dex" />
     </item>
 
 </items>

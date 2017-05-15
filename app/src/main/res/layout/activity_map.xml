@@ -14,13 +14,6 @@
         android:layout_alignParentEnd="true"
         android:layout_toEndOf="@+id/btn_find" />
 
-    <Button
-        android:id="@+id/btn_find"
-        android:layout_width="wrap_content"
-        android:layout_height="60dp"
-        android:text="@string/str_btn_find"
-        android:layout_below="@+id/searchText"
-        android:layout_alignParentStart="true" />
     <EditText
         android:id="@+id/searchText"
         android:layout_width="wrap_content"
