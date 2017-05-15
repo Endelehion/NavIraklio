@@ -337,7 +337,7 @@ protected void checkPermissions(){
                     Toast toast=Toast.makeText(Map.this,"permission granted",Toast.LENGTH_SHORT);
                     toast.show();
                 } else {
-                    Toast toast=Toast.makeText(Map.this,"permission denied",Toast.LENGTH_SHORT);
+                    //Toast toast=Toast.makeText(Map.this,"permission denied",Toast.LENGTH_SHORT);
                    // toast.show();
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
@@ -364,7 +364,7 @@ protected void checkPermissions(){
                     toasty.show();
                 }
             } else {
-                Toast toasty = Toast.makeText(Map.this, "gps remains disabled", Toast.LENGTH_LONG);
+                Toast toasty = Toast.makeText(Map.this, "gps remains disabled", Toast.LENGTH_SHORT);
                 toasty.show();
             }
         }
