@@ -12,7 +12,7 @@ import java.util.List;
  * Created by Varda on 19/5/2017.
  */
 
-public class PlacesJSONParser {
+public class PlaceJSONParser {
     /** Receives a JSONObject and returns a list */
     public List<HashMap<String,String>> parse(JSONObject jObject){
 
