@@ -56,6 +56,7 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
@@ -152,6 +153,11 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, GoogleA
                 // Invokes the "doInBackground()" method of the class PlaceTask
                 placesTask.execute(sb.toString());
 
+                mLatitude = location.getLatitude();
+                mLongitude = location.getLongitude();
+                LatLng latLng = new LatLng(mLatitude, mLongitude);
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                mMap.animateCamera(CameraUpdateFactory.zoomTo(12));
             }
         });
 
@@ -532,7 +538,7 @@ protected void checkPermissions(){
         protected void onPostExecute(List<HashMap<String,String>> list){
 
             // Clears all the existing markers
-            mGoogleMap.clear();
+            mMap.clear();
 
             for(int i=0;i<list.size();i++){
 
@@ -564,7 +570,7 @@ protected void checkPermissions(){
                 markerOptions.title(name + " : " + vicinity);
 
                 // Placing a marker on the touched position
-                mGoogleMap.addMarker(markerOptions);
+                mMap.addMarker(markerOptions);
             }
         }
     }
@@ -575,7 +581,7 @@ protected void checkPermissions(){
         getMenuInflater().inflate(R.menu.activity_main, menu);
         return true;
     }
-*/
+
     @Override
     public void onLocationChanged(Location location) {
         mLatitude = location.getLatitude();
@@ -585,7 +591,7 @@ protected void checkPermissions(){
         mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(12));
     }
-
+*/
 }
 
 

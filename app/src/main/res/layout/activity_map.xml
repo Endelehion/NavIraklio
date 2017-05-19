@@ -28,19 +28,6 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/searchText" />
 
-    <TextView
-        android:id="@+id/searchLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/map"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_toStartOf="@+id/searchText"
-        android:gravity="center_vertical|fill_horizontal"
-        android:text="Search"
-        android:textAlignment="center"
-        android:textSize="23sp" />
-
     <Button
         android:id="@+id/whereAmI"
         android:layout_width="wrap_content"
@@ -53,16 +40,17 @@
         android:id="@+id/spr_place_type"
         android:layout_width="wrap_content"
         android:layout_height="60dp"
-        android:layout_below="@+id/searchText"
-        android:layout_toEndOf="@+id/searchLabel"
-        android:layout_marginStart="77dp" />
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@+id/searchText"
+        android:layout_above="@+id/map" />
 
     <Button
         android:id="@+id/btn_find"
         android:layout_width="wrap_content"
         android:layout_height="60dp"
         android:text="@string/str_btn_find"
-        android:layout_below="@+id/searchLabel"
-        android:layout_alignParentStart="true" />
+        android:layout_below="@+id/searchText"
+        android:layout_toEndOf="@+id/spr_place_type" />
 
 </RelativeLayout>
