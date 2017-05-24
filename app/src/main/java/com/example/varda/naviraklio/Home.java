@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 
 public class Home extends AppCompatActivity {
 
@@ -18,7 +17,7 @@ public class Home extends AppCompatActivity {
         startActivity(profileIntent);
     }
     protected void goCalendar(View view){
-        Intent profileIntent=new Intent(Home.this, Calendar.class);
+        Intent profileIntent=new Intent(Home.this, Organizer.class);
         startActivity(profileIntent);
     }
     protected void goMap(View view){

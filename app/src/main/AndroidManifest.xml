@@ -51,7 +51,7 @@
             android:name=".SignupActivity"
             android:label="@string/title_activity_signup" />
         <activity android:name=".Home" />
-        <activity android:name=".Calendar" />
+        <activity android:name=".Organizer" />
         <activity android:name=".Profile" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
