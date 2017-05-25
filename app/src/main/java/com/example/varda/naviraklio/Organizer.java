@@ -2,6 +2,7 @@ package com.example.varda.naviraklio;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.DatePicker;
 
 import java.util.Calendar;
@@ -18,6 +19,7 @@ public class Organizer extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar);
         datePicker = (DatePicker) findViewById(R.id.datePicker);
-        datePicker.updateDate(5, 5, 2016);
-    }
+        datePicker.updateDate(year,month,day);
+        Log.i("dategamw"," m"+month+" d"+day+" y"+year);
+            }
 }
