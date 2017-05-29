@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
@@ -43,6 +44,7 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -58,6 +60,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -80,6 +83,11 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, GoogleA
     private Button whereAmI;
     private LatLng whereNow;
     private Marker currMark;
+    Spinner spinner;
+    String[] placeTypes;
+    List<Coordinates> superMarkets;
+    List<Coordinates> gasStations;
+    List<Coordinates> cinemas;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,14 +99,22 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, GoogleA
             mGoogleApiClient = new GoogleApiClient.Builder(this)
                     .addConnectionCallbacks(this)
                     .addOnConnectionFailedListener(this)
-                    .addApi(API)
+                //    .addApi(API)
+                //    .addApi(Places.GEO_DATA_API)
+                //    .addApi(Places.PLACE_DETECTION_API)
+                    .enableAutoManage(this, this)
                     .build();
         }
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-            searchText = (EditText) findViewById(R.id.searchText);
+        searchText = (EditText) findViewById(R.id.searchText);
+        spinner = (Spinner) findViewById(R.id.spinner);
+        placeTypes=getResources().getStringArray(R.array.place_type);
+        ArrayAdapter dataAdapter= new ArrayAdapter<String>(Map.this,android.R.layout.simple_spinner_item,placeTypes);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(dataAdapter);
     }
 
 
@@ -108,7 +124,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, GoogleA
         clickedflag = false;
         mMap = googleMap;
         hera = new LatLng(35.339332, 25.133158);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(hera,17));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(hera, 17));
         searchText.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -143,8 +159,8 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, GoogleA
                     checkSettings();
                     Log.i("Location Info", "Location not Available");
                 }
-                LatLng origin = new LatLng(location.getLatitude(),location.getLongitude());
-                LatLng dest = new LatLng(location.getLatitude()+0.3,location.getLongitude()+0.3);
+                LatLng origin = new LatLng(location.getLatitude(), location.getLongitude());
+                LatLng dest = new LatLng(location.getLatitude() + 0.3, location.getLongitude() + 0.3);
 
                 // Getting URL to the Google Directions API
                 String url = getDirectionsUrl(origin, dest);
@@ -246,7 +262,40 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, GoogleA
         }
         whereNow = new LatLng(lat, lon);
         currMark = mMap.addMarker(new MarkerOptions().position(whereNow).title("EDO"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(whereNow,17));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(whereNow, 17));
+    }
+
+
+    void createCoordinates() {
+
+        superMarkets.add(new Coordinates(34.441, 32.82, "Xalkiadakis", "Supermarket"));
+        superMarkets.add(new Coordinates(34.442, 32.82, "LIDL", "Supermarket"));
+        superMarkets.add(new Coordinates(34.443, 32.82, "XARMA", "Supermarket"));
+        superMarkets.add(new Coordinates(34.444, 32.82, "BAZAAR", "Supermarket"));
+        superMarkets.add(new Coordinates(34.445, 32.82, "Ariadnh", "Supermarket"));
+
+        gasStations.add(new Coordinates(34.451, 32.8, "BP", "Gas Station"));
+        gasStations.add(new Coordinates(34.452, 32.8, "TEXACO", "Gas Station"));
+        gasStations.add(new Coordinates(34.453, 32.8, "SHELL", "Gas Station"));
+
+        cinemas.add(new Coordinates(34.461, 32.82, "Odeon", "Cinema"));
+        cinemas.add(new Coordinates(34.462, 32.82, "Texnopolis", "Cinema"));
+        cinemas.add(new Coordinates(34.463, 32.82, "Astoria", "Cinema"));
+    }
+
+
+    public static double distFrom(double lat1, double lng1, double lat2, double lng2) {
+        double earthRadius = 3958.75;
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLng = Math.toRadians(lng2 - lng1);
+        double sindLat = Math.sin(dLat / 2);
+        double sindLng = Math.sin(dLng / 2);
+        double a = Math.pow(sindLat, 2) + Math.pow(sindLng, 2)
+                * Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2));
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        double dist = earthRadius * c;
+        System.out.println(dist);
+        return dist;
     }
 
 
@@ -307,7 +356,7 @@ protected void checkPermissions(){
             if (ActivityCompat.shouldShowRequestPermissionRationale(Map.this,
                     Manifest.permission.ACCESS_FINE_LOCATION)) {
 
-                Toast toast= Toast.makeText(Map.this, "You previously revoked the Location permission", Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(Map.this, "You previously revoked the Location permission", Toast.LENGTH_SHORT);
                 toast.show();
                 ActivityCompat.requestPermissions(Map.this,
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
@@ -329,12 +378,10 @@ protected void checkPermissions(){
             }
 
 
-
-
         }
 
-    location =FusedLocationApi.getLastLocation(mGoogleApiClient);
-}
+        location = FusedLocationApi.getLastLocation(mGoogleApiClient);
+    }
 
 
     /**
@@ -352,11 +399,11 @@ protected void checkPermissions(){
                     // permission was granted, yay! Do the
                     // Location task you need to do.
 
-                    Toast toast=Toast.makeText(Map.this,"permission granted",Toast.LENGTH_SHORT);
+                    Toast toast = Toast.makeText(Map.this, "permission granted", Toast.LENGTH_SHORT);
                     toast.show();
                 } else {
                     //Toast toast=Toast.makeText(Map.this,"permission denied",Toast.LENGTH_SHORT);
-                   // toast.show();
+                    // toast.show();
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
                 }
@@ -367,6 +414,7 @@ protected void checkPermissions(){
             // permissions this app might request
         }
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Check which request we're responding to

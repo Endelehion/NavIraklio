@@ -19,6 +19,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d9f1127b-78f8-4fff-b05d-ec4e5afa92e5" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/varda/naviraklio/Coordinates.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/values/array.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/3.3/taskArtifacts/fileHashes.bin" afterPath="$PROJECT_DIR$/.gradle/3.3/taskArtifacts/fileHashes.bin" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/3.3/taskArtifacts/fileSnapshots.bin" afterPath="$PROJECT_DIR$/.gradle/3.3/taskArtifacts/fileSnapshots.bin" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/3.3/taskArtifacts/taskArtifacts.bin" afterPath="$PROJECT_DIR$/.gradle/3.3/taskArtifacts/taskArtifacts.bin" />
@@ -27,8 +29,9 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/3.3/tasks/_app_compileDebugJavaWithJavac/localClassSetAnalysis/localClassSetAnalysis.lock" afterPath="$PROJECT_DIR$/.gradle/3.3/tasks/_app_compileDebugJavaWithJavac/localClassSetAnalysis/localClassSetAnalysis.lock" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/3.3/tasks/_app_compileDebugJavaWithJavac/localJarClasspathSnapshot/localJarClasspathSnapshot.lock" afterPath="$PROJECT_DIR$/.gradle/3.3/tasks/_app_compileDebugJavaWithJavac/localJarClasspathSnapshot/localJarClasspathSnapshot.lock" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/varda/naviraklio/Organizer.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/varda/naviraklio/Organizer.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout-land/activity_calendar.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout-land/activity_calendar.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/varda/naviraklio/Map.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/varda/naviraklio/Map.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_map.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_map.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
     </list>
     <ignored path="NavIraklio.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -91,20 +94,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="activity_home.xml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/res/layout-land/activity_home.xml">
-          <provider selected="true" editor-type-id="android-designer2">
-            <state />
-          </provider>
-          <provider editor-type-id="text-editor">
-            <state relative-caret-position="224">
-              <caret line="80" column="5" selection-start-line="80" selection-start-column="5" selection-end-line="80" selection-end-column="5" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="activity_calendar.xml" pinned="false" current-in-tab="true">
+      <file leaf-file-name="activity_calendar.xml" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/res/layout-land/activity_calendar.xml">
           <provider selected="true" editor-type-id="android-designer2">
             <state />
@@ -117,14 +107,54 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="activity_home.xml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/res/layout-xlarge/activity_home.xml">
+      <file leaf-file-name="Map.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/varda/naviraklio/Map.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="391">
+              <caret line="102" column="50" selection-start-line="102" selection-start-column="50" selection-end-line="102" selection-end-column="50" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="activity_map.xml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_map.xml">
           <provider selected="true" editor-type-id="android-designer2">
             <state />
           </provider>
           <provider editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+            <state relative-caret-position="386">
+              <caret line="46" column="8" selection-start-line="46" selection-start-column="8" selection-end-line="46" selection-end-column="8" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="strings.xml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/res/values/strings.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="391">
+              <caret line="23" column="0" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="array.xml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/res/values/array.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="119">
+              <caret line="7" column="19" selection-start-line="7" selection-start-column="19" selection-end-line="7" selection-end-column="19" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Coordinates.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/varda/naviraklio/Coordinates.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="238">
+              <caret line="14" column="33" selection-start-line="14" selection-start-column="33" selection-end-line="14" selection-end-column="33" />
               <folding />
             </state>
           </provider>
@@ -143,183 +173,12 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="activity_map.xml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/res/layout-land/activity_map.xml">
-          <provider selected="true" editor-type-id="android-designer2">
-            <state />
-          </provider>
-          <provider editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="activity_map.xml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/res/layout-xlarge/activity_map.xml">
-          <provider selected="true" editor-type-id="android-designer2">
-            <state />
-          </provider>
-          <provider editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="Organizer.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/varda/naviraklio/Organizer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="374">
+            <state relative-caret-position="289">
               <caret line="22" column="56" selection-start-line="22" selection-start-column="56" selection-end-line="22" selection-end-column="56" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Activity.java" pinned="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/AppData/Local/Android/sdk/sources/android-25/android/app/Activity.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="31450">
-              <caret line="2006" column="18" selection-start-line="2006" selection-start-column="18" selection-end-line="2006" selection-end-column="18" />
-              <folding>
-                <element signature="e#0#303047#0" expanded="false" />
-                <element signature="imports" expanded="false" />
-                <element signature="e#39967#39968#0" expanded="false" />
-                <element signature="e#39997#39998#0" expanded="false" />
-                <element signature="e#40384#40385#0" expanded="false" />
-                <element signature="e#40419#40420#0" expanded="false" />
-                <element signature="e#40527#40528#0" expanded="false" />
-                <element signature="e#40562#40563#0" expanded="false" />
-                <element signature="e#40665#40666#0" expanded="false" />
-                <element signature="e#40703#40704#0" expanded="false" />
-                <element signature="e#40817#40818#0" expanded="false" />
-                <element signature="e#40847#40848#0" expanded="false" />
-                <element signature="e#40961#40962#0" expanded="false" />
-                <element signature="e#40998#40999#0" expanded="false" />
-                <element signature="e#41346#41347#0" expanded="false" />
-                <element signature="e#41376#41377#0" expanded="false" />
-                <element signature="e#41513#41514#0" expanded="false" />
-                <element signature="e#41565#41566#0" expanded="false" />
-                <element signature="e#41907#41908#0" expanded="false" />
-                <element signature="e#41980#41981#0" expanded="false" />
-                <element signature="e#50815#50816#0" expanded="false" />
-                <element signature="e#50867#50868#0" expanded="false" />
-                <element signature="e#54264#54265#0" expanded="false" />
-                <element signature="e#54294#54295#0" expanded="false" />
-                <element signature="e#57430#57431#0" expanded="false" />
-                <element signature="e#57477#57478#0" expanded="false" />
-                <element signature="e#58335#58336#0" expanded="false" />
-                <element signature="e#58374#58375#0" expanded="false" />
-                <element signature="e#72173#72174#0" expanded="false" />
-                <element signature="e#72201#72202#0" expanded="false" />
-                <element signature="e#72981#72982#0" expanded="false" />
-                <element signature="e#73008#73009#0" expanded="false" />
-                <element signature="e#86834#86835#0" expanded="false" />
-                <element signature="e#86875#86876#0" expanded="false" />
-                <element signature="e#91190#91191#0" expanded="false" />
-                <element signature="e#91217#91218#0" expanded="false" />
-                <element signature="e#92915#92916#0" expanded="false" />
-                <element signature="e#92942#92943#0" expanded="false" />
-                <element signature="e#94780#94781#0" expanded="false" />
-                <element signature="e#94834#94835#0" expanded="false" />
-                <element signature="e#101879#101880#0" expanded="false" />
-                <element signature="e#101930#101931#0" expanded="false" />
-                <element signature="e#108780#108781#0" expanded="false" />
-                <element signature="e#108832#108833#0" expanded="false" />
-                <element signature="e#109002#109003#0" expanded="false" />
-                <element signature="e#109056#109057#0" expanded="false" />
-                <element signature="e#116877#116878#0" expanded="false" />
-                <element signature="e#116905#116906#0" expanded="false" />
-                <element signature="e#118280#118281#0" expanded="false" />
-                <element signature="e#118308#118309#0" expanded="false" />
-                <element signature="e#121004#121005#0" expanded="false" />
-                <element signature="e#121032#121033#0" expanded="false" />
-                <element signature="e#122262#122263#0" expanded="false" />
-                <element signature="e#122290#122291#0" expanded="false" />
-                <element signature="e#133138#133139#0" expanded="false" />
-                <element signature="e#133165#133166#0" expanded="false" />
-                <element signature="e#145100#145101#0" expanded="false" />
-                <element signature="e#145137#145138#0" expanded="false" />
-                <element signature="e#149374#149375#0" expanded="false" />
-                <element signature="e#149431#149432#0" expanded="false" />
-                <element signature="e#149767#149768#0" expanded="false" />
-                <element signature="e#149824#149825#0" expanded="false" />
-                <element signature="e#150126#150127#0" expanded="false" />
-                <element signature="e#150164#150165#0" expanded="false" />
-                <element signature="e#152037#152038#0" expanded="false" />
-                <element signature="e#152064#152065#0" expanded="false" />
-                <element signature="e#153766#153767#0" expanded="false" />
-                <element signature="e#153807#153808#0" expanded="false" />
-                <element signature="e#154001#154002#0" expanded="false" />
-                <element signature="e#154046#154047#0" expanded="false" />
-                <element signature="e#155756#155757#0" expanded="false" />
-                <element signature="e#155792#155793#0" expanded="false" />
-                <element signature="e#162855#162856#0" expanded="false" />
-                <element signature="e#162890#162891#0" expanded="false" />
-                <element signature="e#166213#166214#0" expanded="false" />
-                <element signature="e#166259#166260#0" expanded="false" />
-                <element signature="e#168014#168015#0" expanded="false" />
-                <element signature="e#168068#168069#0" expanded="false" />
-                <element signature="e#191654#191655#0" expanded="false" />
-                <element signature="e#191702#191703#0" expanded="false" />
-                <element signature="e#193494#193495#0" expanded="false" />
-                <element signature="e#193540#193541#0" expanded="false" />
-                <element signature="e#209057#209058#0" expanded="false" />
-                <element signature="e#209084#209085#0" expanded="false" />
-                <element signature="e#216147#216148#0" expanded="false" />
-                <element signature="e#216174#216175#0" expanded="false" />
-                <element signature="e#219865#219866#0" expanded="false" />
-                <element signature="e#219897#219898#0" expanded="false" />
-                <element signature="e#220076#220077#0" expanded="false" />
-                <element signature="e#220109#220110#0" expanded="false" />
-                <element signature="e#220673#220674#0" expanded="false" />
-                <element signature="e#220719#220720#0" expanded="false" />
-                <element signature="e#222668#222669#0" expanded="false" />
-                <element signature="e#222722#222723#0" expanded="false" />
-                <element signature="e#224442#224443#0" expanded="false" />
-                <element signature="e#224466#224467#0" expanded="false" />
-                <element signature="e#226654#226655#0" expanded="false" />
-                <element signature="e#226708#226709#0" expanded="false" />
-                <element signature="e#236642#236643#0" expanded="false" />
-                <element signature="e#236675#236676#0" expanded="false" />
-                <element signature="e#238804#238805#0" expanded="false" />
-                <element signature="e#238846#238847#0" expanded="false" />
-                <element signature="e#239438#239439#0" expanded="false" />
-                <element signature="e#239467#239468#0" expanded="false" />
-                <element signature="e#239507#239508#0" expanded="false" />
-                <element signature="e#239541#239542#0" expanded="false" />
-                <element signature="e#246367#246368#0" expanded="false" />
-                <element signature="e#246426#246427#0" expanded="false" />
-                <element signature="e#247835#247836#0" expanded="false" />
-                <element signature="e#247890#247891#0" expanded="false" />
-                <element signature="e#249033#249034#0" expanded="false" />
-                <element signature="e#249060#249061#0" expanded="false" />
-                <element signature="e#261010#261011#0" expanded="false" />
-                <element signature="e#261040#261041#0" expanded="false" />
-                <element signature="e#278676#278677#0" expanded="false" />
-                <element signature="e#278742#278743#0" expanded="false" />
-                <element signature="e#279992#279993#0" expanded="false" />
-                <element signature="e#280024#280025#0" expanded="false" />
-                <element signature="e#291449#291450#0" expanded="false" />
-                <element signature="e#291480#291481#0" expanded="false" />
-                <element signature="e#299702#299703#0" expanded="false" />
-                <element signature="e#299759#299760#0" expanded="false" />
-                <element signature="e#300033#300034#0" expanded="false" />
-                <element signature="e#300078#300079#0" expanded="false" />
-                <element signature="e#300731#300732#0" expanded="false" />
-                <element signature="e#300775#300776#0" expanded="false" />
-                <element signature="e#300842#300843#0" expanded="false" />
-                <element signature="e#300903#300904#0" expanded="false" />
-                <element signature="e#302345#302346#0" expanded="false" />
-                <element signature="e#302395#302396#0" expanded="false" />
-                <element signature="e#302807#302808#0" expanded="false" />
-                <element signature="e#302868#302869#0" expanded="false" />
-              </folding>
+              <folding />
             </state>
           </provider>
         </entry>
@@ -329,8 +188,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="valueResourceFile" />
         <option value="Class" />
+        <option value="valueResourceFile" />
       </list>
     </option>
   </component>
@@ -2686,10 +2545,7 @@
         <option value="$PROJECT_DIR$/app/build.gradle" />
         <option value="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/varda/naviraklio/PlaceJSONParser.java" />
-        <option value="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
         <option value="$PROJECT_DIR$/app/src/debug/res/values/google_maps_api.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_map.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/example/varda/naviraklio/Map.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/varda/naviraklio/DirectionsJSONParser.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/varda/naviraklio/Calendar.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_calendar.xml" />
@@ -2699,6 +2555,12 @@
         <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_home.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/varda/naviraklio/Organizer.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout-land/activity_calendar.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/res/values/Markers.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/example/varda/naviraklio/Coordinates.java" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_map.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/res/values/array.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/example/varda/naviraklio/Map.java" />
       </list>
     </option>
   </component>
@@ -2733,9 +2595,9 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="ProjectPane" />
-      <pane id="Scope" />
       <pane id="Scratches" />
+      <pane id="PackagesPane" />
+      <pane id="ProjectPane" />
       <pane id="AndroidView">
         <subPane>
           <PATH>
@@ -2761,6 +2623,24 @@
               <option name="myItemId" value="res" />
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderNode" />
             </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="values" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderTypeNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="NavIraklio" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderNode" />
+            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -2798,29 +2678,7 @@
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderTypeNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="activity_home.xml" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResGroupNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="NavIraklio" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="res" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="layout" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderTypeNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="activity_calendar.xml" />
+              <option name="myItemId" value="activity_map.xml" />
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResGroupNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -2872,7 +2730,7 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -3319,7 +3177,14 @@
       <option name="project" value="LOCAL" />
       <updated>1495749161707</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="update calendar">
+      <created>1495750541743</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1495750541743</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TodoView">
@@ -3341,7 +3206,7 @@
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32777116" sideWeight="0.5194805" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32703003" sideWeight="0.46536797" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32703003" sideWeight="0.46536797" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3008658" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2080089" sideWeight="0.48051947" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32814237" sideWeight="0.4978355" order="7" side_tool="false" content_ui="tabs" />
@@ -3350,7 +3215,6 @@
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.20977354" sideWeight="0.504329" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20575693" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32925472" sideWeight="0.4978355" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32975295" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Android Model" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
@@ -3363,6 +3227,7 @@
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32925472" sideWeight="0.4978355" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -3381,7 +3246,8 @@
     <MESSAGE value="Draw Polyline on static marker" />
     <MESSAGE value="Calendar" />
     <MESSAGE value="home layouts" />
-    <option name="LAST_COMMIT_MESSAGE" value="home layouts" />
+    <MESSAGE value="update calendar" />
+    <option name="LAST_COMMIT_MESSAGE" value="update calendar" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -3390,39 +3256,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/src/debug/res/values/google_maps_api.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/varda/naviraklio/Home.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_login.xml">
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1650">
-          <caret line="75" column="21" selection-start-line="75" selection-start-column="21" selection-end-line="75" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/varda/naviraklio/MainActivity.java" />
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/varda/naviraklio/LoginActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4224">
-          <caret line="232" column="40" selection-start-line="232" selection-start-column="40" selection-end-line="232" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="242">
@@ -3598,25 +3431,17 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
-      <provider editor-type-id="android-manifest">
-        <state />
-      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1105">
           <caret line="65" column="35" selection-start-line="65" selection-start-column="35" selection-end-line="65" selection-end-column="35" />
           <folding />
         </state>
       </provider>
-    </entry>
-    <entry file="android-dummy://C:/Users/Varda/.AndroidStudio2.2/Android Projects/NavIraklio/app/Translations Editor" />
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/strings.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="867">
-          <caret line="51" column="36" selection-start-line="51" selection-start-column="36" selection-end-line="51" selection-end-column="36" />
-          <folding />
-        </state>
+      <provider editor-type-id="android-manifest">
+        <state />
       </provider>
     </entry>
+    <entry file="android-dummy://C:/Users/Varda/.AndroidStudio2.2/Android Projects/NavIraklio/app/Translations Editor" />
     <entry file="file://$PROJECT_DIR$/build.gradle">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -3652,17 +3477,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="68">
           <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/varda/naviraklio/Map.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5984">
-          <caret line="416" column="0" selection-start-line="416" selection-start-column="0" selection-end-line="416" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -3670,7 +3484,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="68">
           <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -3678,150 +3491,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="31450">
           <caret line="2006" column="18" selection-start-line="2006" selection-start-column="18" selection-end-line="2006" selection-end-column="18" />
-          <folding>
-            <element signature="e#0#303047#0" expanded="false" />
-            <element signature="imports" expanded="false" />
-            <element signature="e#39967#39968#0" expanded="false" />
-            <element signature="e#39997#39998#0" expanded="false" />
-            <element signature="e#40384#40385#0" expanded="false" />
-            <element signature="e#40419#40420#0" expanded="false" />
-            <element signature="e#40527#40528#0" expanded="false" />
-            <element signature="e#40562#40563#0" expanded="false" />
-            <element signature="e#40665#40666#0" expanded="false" />
-            <element signature="e#40703#40704#0" expanded="false" />
-            <element signature="e#40817#40818#0" expanded="false" />
-            <element signature="e#40847#40848#0" expanded="false" />
-            <element signature="e#40961#40962#0" expanded="false" />
-            <element signature="e#40998#40999#0" expanded="false" />
-            <element signature="e#41346#41347#0" expanded="false" />
-            <element signature="e#41376#41377#0" expanded="false" />
-            <element signature="e#41513#41514#0" expanded="false" />
-            <element signature="e#41565#41566#0" expanded="false" />
-            <element signature="e#41907#41908#0" expanded="false" />
-            <element signature="e#41980#41981#0" expanded="false" />
-            <element signature="e#50815#50816#0" expanded="false" />
-            <element signature="e#50867#50868#0" expanded="false" />
-            <element signature="e#54264#54265#0" expanded="false" />
-            <element signature="e#54294#54295#0" expanded="false" />
-            <element signature="e#57430#57431#0" expanded="false" />
-            <element signature="e#57477#57478#0" expanded="false" />
-            <element signature="e#58335#58336#0" expanded="false" />
-            <element signature="e#58374#58375#0" expanded="false" />
-            <element signature="e#72173#72174#0" expanded="false" />
-            <element signature="e#72201#72202#0" expanded="false" />
-            <element signature="e#72981#72982#0" expanded="false" />
-            <element signature="e#73008#73009#0" expanded="false" />
-            <element signature="e#86834#86835#0" expanded="false" />
-            <element signature="e#86875#86876#0" expanded="false" />
-            <element signature="e#91190#91191#0" expanded="false" />
-            <element signature="e#91217#91218#0" expanded="false" />
-            <element signature="e#92915#92916#0" expanded="false" />
-            <element signature="e#92942#92943#0" expanded="false" />
-            <element signature="e#94780#94781#0" expanded="false" />
-            <element signature="e#94834#94835#0" expanded="false" />
-            <element signature="e#101879#101880#0" expanded="false" />
-            <element signature="e#101930#101931#0" expanded="false" />
-            <element signature="e#108780#108781#0" expanded="false" />
-            <element signature="e#108832#108833#0" expanded="false" />
-            <element signature="e#109002#109003#0" expanded="false" />
-            <element signature="e#109056#109057#0" expanded="false" />
-            <element signature="e#116877#116878#0" expanded="false" />
-            <element signature="e#116905#116906#0" expanded="false" />
-            <element signature="e#118280#118281#0" expanded="false" />
-            <element signature="e#118308#118309#0" expanded="false" />
-            <element signature="e#121004#121005#0" expanded="false" />
-            <element signature="e#121032#121033#0" expanded="false" />
-            <element signature="e#122262#122263#0" expanded="false" />
-            <element signature="e#122290#122291#0" expanded="false" />
-            <element signature="e#133138#133139#0" expanded="false" />
-            <element signature="e#133165#133166#0" expanded="false" />
-            <element signature="e#145100#145101#0" expanded="false" />
-            <element signature="e#145137#145138#0" expanded="false" />
-            <element signature="e#149374#149375#0" expanded="false" />
-            <element signature="e#149431#149432#0" expanded="false" />
-            <element signature="e#149767#149768#0" expanded="false" />
-            <element signature="e#149824#149825#0" expanded="false" />
-            <element signature="e#150126#150127#0" expanded="false" />
-            <element signature="e#150164#150165#0" expanded="false" />
-            <element signature="e#152037#152038#0" expanded="false" />
-            <element signature="e#152064#152065#0" expanded="false" />
-            <element signature="e#153766#153767#0" expanded="false" />
-            <element signature="e#153807#153808#0" expanded="false" />
-            <element signature="e#154001#154002#0" expanded="false" />
-            <element signature="e#154046#154047#0" expanded="false" />
-            <element signature="e#155756#155757#0" expanded="false" />
-            <element signature="e#155792#155793#0" expanded="false" />
-            <element signature="e#162855#162856#0" expanded="false" />
-            <element signature="e#162890#162891#0" expanded="false" />
-            <element signature="e#166213#166214#0" expanded="false" />
-            <element signature="e#166259#166260#0" expanded="false" />
-            <element signature="e#168014#168015#0" expanded="false" />
-            <element signature="e#168068#168069#0" expanded="false" />
-            <element signature="e#191654#191655#0" expanded="false" />
-            <element signature="e#191702#191703#0" expanded="false" />
-            <element signature="e#193494#193495#0" expanded="false" />
-            <element signature="e#193540#193541#0" expanded="false" />
-            <element signature="e#209057#209058#0" expanded="false" />
-            <element signature="e#209084#209085#0" expanded="false" />
-            <element signature="e#216147#216148#0" expanded="false" />
-            <element signature="e#216174#216175#0" expanded="false" />
-            <element signature="e#219865#219866#0" expanded="false" />
-            <element signature="e#219897#219898#0" expanded="false" />
-            <element signature="e#220076#220077#0" expanded="false" />
-            <element signature="e#220109#220110#0" expanded="false" />
-            <element signature="e#220673#220674#0" expanded="false" />
-            <element signature="e#220719#220720#0" expanded="false" />
-            <element signature="e#222668#222669#0" expanded="false" />
-            <element signature="e#222722#222723#0" expanded="false" />
-            <element signature="e#224442#224443#0" expanded="false" />
-            <element signature="e#224466#224467#0" expanded="false" />
-            <element signature="e#226654#226655#0" expanded="false" />
-            <element signature="e#226708#226709#0" expanded="false" />
-            <element signature="e#236642#236643#0" expanded="false" />
-            <element signature="e#236675#236676#0" expanded="false" />
-            <element signature="e#238804#238805#0" expanded="false" />
-            <element signature="e#238846#238847#0" expanded="false" />
-            <element signature="e#239438#239439#0" expanded="false" />
-            <element signature="e#239467#239468#0" expanded="false" />
-            <element signature="e#239507#239508#0" expanded="false" />
-            <element signature="e#239541#239542#0" expanded="false" />
-            <element signature="e#246367#246368#0" expanded="false" />
-            <element signature="e#246426#246427#0" expanded="false" />
-            <element signature="e#247835#247836#0" expanded="false" />
-            <element signature="e#247890#247891#0" expanded="false" />
-            <element signature="e#249033#249034#0" expanded="false" />
-            <element signature="e#249060#249061#0" expanded="false" />
-            <element signature="e#261010#261011#0" expanded="false" />
-            <element signature="e#261040#261041#0" expanded="false" />
-            <element signature="e#278676#278677#0" expanded="false" />
-            <element signature="e#278742#278743#0" expanded="false" />
-            <element signature="e#279992#279993#0" expanded="false" />
-            <element signature="e#280024#280025#0" expanded="false" />
-            <element signature="e#291449#291450#0" expanded="false" />
-            <element signature="e#291480#291481#0" expanded="false" />
-            <element signature="e#299702#299703#0" expanded="false" />
-            <element signature="e#299759#299760#0" expanded="false" />
-            <element signature="e#300033#300034#0" expanded="false" />
-            <element signature="e#300078#300079#0" expanded="false" />
-            <element signature="e#300731#300732#0" expanded="false" />
-            <element signature="e#300775#300776#0" expanded="false" />
-            <element signature="e#300842#300843#0" expanded="false" />
-            <element signature="e#300903#300904#0" expanded="false" />
-            <element signature="e#302345#302346#0" expanded="false" />
-            <element signature="e#302395#302396#0" expanded="false" />
-            <element signature="e#302807#302808#0" expanded="false" />
-            <element signature="e#302868#302869#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_map.xml">
-      <provider selected="true" editor-type-id="android-designer2">
-        <state />
-      </provider>
-      <provider editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="22" column="29" selection-start-line="22" selection-start-column="29" selection-end-line="22" selection-end-column="29" />
         </state>
       </provider>
     </entry>
@@ -3863,7 +3532,7 @@
         <state />
       </provider>
       <provider editor-type-id="text-editor">
-        <state relative-caret-position="224">
+        <state relative-caret-position="1360">
           <caret line="80" column="5" selection-start-line="80" selection-start-column="5" selection-end-line="80" selection-end-column="5" />
           <folding />
         </state>
@@ -3904,11 +3573,9 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/varda/naviraklio/Organizer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
+        <state relative-caret-position="289">
           <caret line="22" column="56" selection-start-line="22" selection-start-column="56" selection-end-line="22" selection-end-column="56" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -3919,6 +3586,59 @@
       <provider editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/varda/naviraklio/Supermarkets.java" />
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/varda/naviraklio/GasStations.java" />
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/Markers.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="51">
+          <caret line="3" column="14" selection-start-line="3" selection-start-column="14" selection-end-line="3" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/varda/naviraklio/Coordinates.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="14" column="33" selection-start-line="14" selection-start-column="33" selection-end-line="14" selection-end-column="33" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/strings.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="391">
+          <caret line="23" column="0" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/array.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="7" column="19" selection-start-line="7" selection-start-column="19" selection-end-line="7" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_map.xml">
+      <provider selected="true" editor-type-id="android-designer2">
+        <state />
+      </provider>
+      <provider editor-type-id="text-editor">
+        <state relative-caret-position="386">
+          <caret line="46" column="8" selection-start-line="46" selection-start-column="8" selection-end-line="46" selection-end-column="8" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/varda/naviraklio/Map.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="391">
+          <caret line="102" column="50" selection-start-line="102" selection-start-column="50" selection-end-line="102" selection-end-column="50" />
           <folding />
         </state>
       </provider>
