@@ -21,6 +21,7 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -33,6 +34,8 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -44,7 +47,9 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.Places;
+import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -78,7 +83,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, GoogleA
     private GoogleApiClient mGoogleApiClient;
     private EditText searchText;
     private LocationRequest mLocationRequest;
-    private final int REQUEST_CHECK_SETTINGS = 1, PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 9; // unique identifiers
+    private final int REQUEST_CHECK_SETTINGS = 1, PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 9, PLACE_PICKER_REQUEST = 2;// unique identifiers
     private boolean clickedflag;
     private Button whereAmI;
     private LatLng whereNow;
@@ -99,9 +104,9 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, GoogleA
             mGoogleApiClient = new GoogleApiClient.Builder(this)
                     .addConnectionCallbacks(this)
                     .addOnConnectionFailedListener(this)
-                //    .addApi(API)
-                //    .addApi(Places.GEO_DATA_API)
-                //    .addApi(Places.PLACE_DETECTION_API)
+                    .addApi(API)
+                    .addApi(Places.GEO_DATA_API)
+                    .addApi(Places.PLACE_DETECTION_API)
                     .enableAutoManage(this, this)
                     .build();
         }
@@ -111,8 +116,8 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, GoogleA
         mapFragment.getMapAsync(this);
         searchText = (EditText) findViewById(R.id.searchText);
         spinner = (Spinner) findViewById(R.id.spinner);
-        placeTypes=getResources().getStringArray(R.array.place_type);
-        ArrayAdapter dataAdapter= new ArrayAdapter<String>(Map.this,android.R.layout.simple_spinner_item,placeTypes);
+        placeTypes = getResources().getStringArray(R.array.place_type);
+        ArrayAdapter dataAdapter = new ArrayAdapter<String>(Map.this, android.R.layout.simple_spinner_item, placeTypes);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
     }
@@ -172,6 +177,19 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, GoogleA
             }
         });
 
+        /**Place Picker */
+        Intent intent = null;
+        try {
+            PlacePicker.IntentBuilder intentBuilder =
+                    new PlacePicker.IntentBuilder();
+            //intentBuilder.setLatLngBounds(BOUNDS_MOUNTAIN_VIEW);
+            intent = intentBuilder.build(Map.this);
+        } catch (GooglePlayServicesRepairableException e) {
+            e.printStackTrace();
+        } catch (GooglePlayServicesNotAvailableException e) {
+            e.printStackTrace();
+        }
+        startActivityForResult(intent, PLACE_PICKER_REQUEST);
 
     }
 
@@ -434,6 +452,25 @@ protected void checkPermissions(){
                 toasty.show();
             }
         }
+        if (requestCode == PLACE_PICKER_REQUEST
+                && resultCode == Map.RESULT_OK) {
+
+            final Place place = PlacePicker.getPlace(this, data);
+            final CharSequence name = place.getName();
+            final CharSequence address = place.getAddress();
+            String attributions = (String) place.getAttributions();
+            if (attributions == null) {
+                attributions = "";
+            }
+
+            searchText.setText(name + " " + address);
+
+
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+
+
     }
 
     private class DownloadTask extends AsyncTask<String, Void, String> {
