@@ -13,7 +13,7 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/map"
         android:layout_alignParentTop="true"
-        android:layout_toStartOf="@+id/searchText"
+        android:layout_toStartOf="@+id/findButton"
         android:animateLayoutChanges="false"
         android:clipChildren="false"
         android:entries="@+strings/place_type"
@@ -47,5 +47,14 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:text="Where Am I" />
+
+    <Button
+        android:id="@+id/findButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/map"
+        android:layout_alignParentTop="true"
+        android:layout_toStartOf="@+id/searchText"
+        android:text="FIND" />
 
 </RelativeLayout>

@@ -88,6 +88,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, GoogleA
     private Button whereAmI;
     private LatLng whereNow;
     private Marker currMark;
+    private Button findButton;
     Spinner spinner;
     String[] placeTypes;
     List<Coordinates> superMarkets;
@@ -120,6 +121,9 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, GoogleA
         ArrayAdapter dataAdapter = new ArrayAdapter<String>(Map.this, android.R.layout.simple_spinner_item, placeTypes);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
+        findButton = (Button) findViewById(R.id.findButton);
+        whereAmI = (Button) findViewById(R.id.whereAmI);
+        createCoordinates();
     }
 
 
@@ -149,7 +153,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, GoogleA
             }
         });
 
-        whereAmI = (Button) findViewById(R.id.whereAmI);
+
         whereAmI.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -164,25 +168,42 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, GoogleA
                     checkSettings();
                     Log.i("Location Info", "Location not Available");
                 }
-                LatLng origin = new LatLng(location.getLatitude(), location.getLongitude());
-                LatLng dest = new LatLng(location.getLatitude() + 0.3, location.getLongitude() + 0.3);
 
-                // Getting URL to the Google Directions API
-                String url = getDirectionsUrl(origin, dest);
-
-                DownloadTask downloadTask = new DownloadTask();
-
-                // Start downloading json data from Google Directions API
-                downloadTask.execute(url);
             }
         });
 
-        /**Place Picker */
+        findButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mMap.clear();
+                clickedflag = true;
+                createLocation();
+                if (location != null) {
+                    Log.i("Location Info", "Location achieved!");
+                    addCurrentLocationMarker();
+                } else {
+                    Toast toast = Toast.makeText(Map.this, "Location not Available", Toast.LENGTH_LONG);
+                    toast.show();
+                    checkSettings();
+                    Log.i("Location Info", "Location not Available");
+                }
+                String spinnerSelection;
+                spinnerSelection = spinner.getSelectedItem().toString();
+                findPlace(spinnerSelection);
+
+
+            }
+        });
+
+
+        /*
+        // Place Picker
         Intent intent = null;
         try {
             PlacePicker.IntentBuilder intentBuilder =
                     new PlacePicker.IntentBuilder();
             //intentBuilder.setLatLngBounds(BOUNDS_MOUNTAIN_VIEW);
+
             intent = intentBuilder.build(Map.this);
         } catch (GooglePlayServicesRepairableException e) {
             e.printStackTrace();
@@ -190,7 +211,77 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, GoogleA
             e.printStackTrace();
         }
         startActivityForResult(intent, PLACE_PICKER_REQUEST);
+        */
 
+    }
+
+    protected void findPlace(String place) {
+        LatLng origin;
+        double dist;
+        LatLng dest;
+        double tempDist;
+        origin = new LatLng(location.getLatitude(), location.getLongitude());
+        switch (place) {
+            case "Supermarket":
+
+                dist = distFrom(origin, superMarkets.get(0).coord);
+                Coordinates nearestSupermarket = superMarkets.get(0);
+                for (Coordinates tempCoor : superMarkets) {
+                    tempDist = distFrom(origin, tempCoor.coord);
+                    if (tempDist < dist) {
+                        dist = tempDist;
+                        nearestSupermarket = tempCoor;
+                    }
+                }
+
+
+                dest = nearestSupermarket.coord;
+
+
+                break;
+            case "Cinema":
+                dist = distFrom(origin, cinemas.get(0).coord);
+
+                Coordinates nearestCinema = cinemas.get(0);
+                for (Coordinates tempCoor : cinemas) {
+                    tempDist = distFrom(origin, tempCoor.coord);
+                    if (tempDist < dist) {
+                        dist = tempDist;
+                        nearestCinema = tempCoor;
+                    }
+                }
+
+
+                dest = nearestCinema.coord;
+                break;
+            case "Gas Station":
+                dist = distFrom(origin, gasStations.get(0).coord);
+                Coordinates nearestGasStation = gasStations.get(0);
+                for (Coordinates tempCoor : gasStations) {
+                    tempDist = distFrom(origin, tempCoor.coord);
+                    if (tempDist < dist) {
+                        dist = tempDist;
+                        nearestGasStation = tempCoor;
+                    }
+                }
+
+
+                dest = nearestGasStation.coord;
+                break;
+            default:
+                Toast.makeText(Map.this, "No Place selected", Toast.LENGTH_SHORT).show();
+                dest = null;
+                break;
+        }
+        if (dest != null) {
+            // Getting URL to the Google Directions API
+            String url = getDirectionsUrl(origin, dest);
+
+            DownloadTask downloadTask = new DownloadTask();
+
+            // Start downloading json data from Google Directions API
+            downloadTask.execute(url);
+        }
     }
 
     protected void createLocationRequest() {
@@ -285,24 +376,43 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, GoogleA
 
 
     void createCoordinates() {
+        superMarkets = new ArrayList<>();
+        superMarkets.add(new Coordinates(35.340685, 25.133643, "Xalkiadakis", "Supermarket"));
+        superMarkets.add(new Coordinates(35.337384, 25.121930, "LIDL", "Supermarket"));
+        superMarkets.add(new Coordinates(35.338468, 25.139354, "AB", "Supermarket"));
+        superMarkets.add(new Coordinates(35.337481, 25.132863, "BAZAAR", "Supermarket"));
+        //zografou
+        superMarkets.add(new Coordinates(37.977817, 23.769849, "daily", "Supermarket"));
+        gasStations = new ArrayList<>();
+        gasStations.add(new Coordinates(35.338674, 25.141106, "SHELL", "Gas Station"));
+        gasStations.add(new Coordinates(35.334426, 25.133757, "BP", "Gas Station"));
+        gasStations.add(new Coordinates(35.335309, 25.141536, "EKO", "Gas Station"));
+        gasStations.add(new Coordinates(35.333256, 25.121656, "Tsiknakis Ioannis", "Gas Station"));
+        gasStations.add(new Coordinates(35.330283, 25.108827, "ELIN", "Gas Station"));
+        gasStations.add(new Coordinates(35.329145, 25.117691, "Christodoulakis", "Gas Station"));
+        gasStations.add(new Coordinates(35.338607, 25.143821, "Giannakakis", "Gas Station"));
+        gasStations.add(new Coordinates(35.338714, 25.143423, "BP", "Gas Station"));
+        //zografou
+        gasStations.add(new Coordinates(37.974122, 23.774079, "Revoil", "Gas Station"));
 
-        superMarkets.add(new Coordinates(34.441, 32.82, "Xalkiadakis", "Supermarket"));
-        superMarkets.add(new Coordinates(34.442, 32.82, "LIDL", "Supermarket"));
-        superMarkets.add(new Coordinates(34.443, 32.82, "XARMA", "Supermarket"));
-        superMarkets.add(new Coordinates(34.444, 32.82, "BAZAAR", "Supermarket"));
-        superMarkets.add(new Coordinates(34.445, 32.82, "Ariadnh", "Supermarket"));
-
-        gasStations.add(new Coordinates(34.451, 32.8, "BP", "Gas Station"));
-        gasStations.add(new Coordinates(34.452, 32.8, "TEXACO", "Gas Station"));
-        gasStations.add(new Coordinates(34.453, 32.8, "SHELL", "Gas Station"));
-
-        cinemas.add(new Coordinates(34.461, 32.82, "Odeon", "Cinema"));
-        cinemas.add(new Coordinates(34.462, 32.82, "Texnopolis", "Cinema"));
-        cinemas.add(new Coordinates(34.463, 32.82, "Astoria", "Cinema"));
+        cinemas = new ArrayList<>();
+        cinemas.add(new Coordinates(35.339880, 25.119728, "Odeon Talos", "Cinema"));
+        cinemas.add(new Coordinates(35.340889, 25.136980, "Vintsenzos Kornaros", "Cinema"));
+        cinemas.add(new Coordinates(35.338375, 25.136216, "Astoria", "Cinema"));
+        cinemas.add(new Coordinates(35.335669, 25.070682, "Texnopolis", "Cinema"));
+        cinemas.add(new Coordinates(35.337980, 25.158230, "Cine Studio", "Cinema"));
+        cinemas.add(new Coordinates(35.338573, 25.129685, "Dedalos Club", "Cinema"));
+        //zografou
+        cinemas.add(new Coordinates(37.977369, 23.770716, "Aleka", "Cinema"));
     }
 
 
-    public static double distFrom(double lat1, double lng1, double lat2, double lng2) {
+    public static double distFrom(LatLng latlang1, LatLng latlang2) {
+        double lat1 = latlang1.latitude;
+        double lng1 = latlang1.longitude;
+        double lat2 = latlang2.latitude;
+        double lng2 = latlang2.longitude;
+
         double earthRadius = 3958.75;
         double dLat = Math.toRadians(lat2 - lat1);
         double dLng = Math.toRadians(lng2 - lng1);
@@ -619,4 +729,6 @@ protected void checkPermissions(){
         }
         return data;
     }
+
+
 }

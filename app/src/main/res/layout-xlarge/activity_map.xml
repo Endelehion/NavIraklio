@@ -48,4 +48,13 @@
         android:layout_alignParentEnd="true"
         android:text="Where Am I" />
 
+    <Button
+        android:id="@+id/findButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/map"
+        android:layout_alignParentTop="true"
+        android:layout_toStartOf="@+id/searchText"
+        android:text="FIND" />
+
 </RelativeLayout>
