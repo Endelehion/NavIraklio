@@ -70,6 +70,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import static com.google.android.gms.location.LocationServices.*;
@@ -89,6 +90,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, GoogleA
     private LatLng whereNow;
     private Marker currMark;
     private Button findButton;
+    private double sumDist;
     Spinner spinner;
     String[] placeTypes;
     List<Coordinates> superMarkets;
@@ -281,6 +283,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, GoogleA
 
             // Start downloading json data from Google Directions API
             downloadTask.execute(url);
+
         }
     }
 
@@ -365,7 +368,6 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, GoogleA
     protected void addCurrentLocationMarker() {
         lat = location.getLatitude();
         lon = location.getLongitude();
-        searchText.setText("Showing Where I am");
         if (currMark != null) {
             currMark.remove();
         }
@@ -377,21 +379,60 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, GoogleA
 
     void createCoordinates() {
         superMarkets = new ArrayList<>();
-        superMarkets.add(new Coordinates(35.340685, 25.133643, "Xalkiadakis", "Supermarket"));
+        superMarkets.add(new Coordinates(35.340685, 25.133643, "Chalkiadakis", "Supermarket"));
         superMarkets.add(new Coordinates(35.337384, 25.121930, "LIDL", "Supermarket"));
         superMarkets.add(new Coordinates(35.338468, 25.139354, "AB", "Supermarket"));
         superMarkets.add(new Coordinates(35.337481, 25.132863, "BAZAAR", "Supermarket"));
+        superMarkets.add(new Coordinates(35.339136, 25.155434, "Sklavenitis", "Supermarket"));
+        superMarkets.add(new Coordinates(35.341716, 25.136238, "papadaki", "Supermarket"));
+        superMarkets.add(new Coordinates(35.326724, 25.131095, "Sklavenitis", "Supermarket"));
+        superMarkets.add(new Coordinates(35.326251, 25.138878, "Sklavenitis", "Supermarket"));
+        superMarkets.add(new Coordinates(35.337651, 25.126895, "Chalkiadakis", "Supermarket"));
+        superMarkets.add(new Coordinates(35.338751, 25.119835, "Chalkiadakis", "Supermarket"));
+        superMarkets.add(new Coordinates(35.324666, 25.133577, "Ariadni", "Supermarket"));
+        superMarkets.add(new Coordinates(35.334394, 25.115245, "INKA", "Supermarket"));
+        superMarkets.add(new Coordinates(35.324695, 25.124600, "AB", "Supermarket"));
+        superMarkets.add(new Coordinates(35.323925, 25.112541, "LIDL", "Supermarket"));
+        superMarkets.add(new Coordinates(35.319163, 25.144127, "INKA", "Supermarket"));
+        superMarkets.add(new Coordinates(35.324660, 25.124514, "AB", "Supermarket"));
+        superMarkets.add(new Coordinates(35.318393, 25.148246, "Chalkiadakis", "Supermarket"));
+        superMarkets.add(new Coordinates(35.331733, 25.137689, "Chalkiadakis", "Supermarket"));
+        superMarkets.add(new Coordinates(35.330157, 25.132282, "Chalkiadakis", "Supermarket"));
+        superMarkets.add(new Coordinates(35.334359, 25.158718, "Chalkiadakis Max", "Supermarket"));
+        superMarkets.add(new Coordinates(35.329072, 25.119279, "Chalkiadakis", "Supermarket"));
+        superMarkets.add(new Coordinates(35.343307, 25.155190, "My Cretan Goods", "Supermarket"));
+        superMarkets.add(new Coordinates(35.336788, 25.133692, "Alati tis Gis", "Supermarket"));
+        superMarkets.add(new Coordinates(35.330241, 25.124522, "Kouts", "Supermarket"));
+
         //zografou
         superMarkets.add(new Coordinates(37.977817, 23.769849, "daily", "Supermarket"));
+
         gasStations = new ArrayList<>();
         gasStations.add(new Coordinates(35.338674, 25.141106, "SHELL", "Gas Station"));
-        gasStations.add(new Coordinates(35.334426, 25.133757, "BP", "Gas Station"));
         gasStations.add(new Coordinates(35.335309, 25.141536, "EKO", "Gas Station"));
         gasStations.add(new Coordinates(35.333256, 25.121656, "Tsiknakis Ioannis", "Gas Station"));
         gasStations.add(new Coordinates(35.330283, 25.108827, "ELIN", "Gas Station"));
         gasStations.add(new Coordinates(35.329145, 25.117691, "Christodoulakis", "Gas Station"));
         gasStations.add(new Coordinates(35.338607, 25.143821, "Giannakakis", "Gas Station"));
+        gasStations.add(new Coordinates(35.336275, 25.121359, "Hanagia", "Gas Station"));
+        gasStations.add(new Coordinates(35.333818, 25.117024, "Stamatakis", "Gas Station"));
+        gasStations.add(new Coordinates(35.326903, 25.131728, "Koumoulas", "Gas Station"));
+        gasStations.add(new Coordinates(35.338667, 25.141116, "SHELL", "Gas Station"));
+        gasStations.add(new Coordinates(35.338795, 25.141556, "SHELL", "Gas Station"));
         gasStations.add(new Coordinates(35.338714, 25.143423, "BP", "Gas Station"));
+        gasStations.add(new Coordinates(35.337829, 25.141788, "BP", "Gas Station"));
+        gasStations.add(new Coordinates(35.336477, 25.146265, "BP", "Gas Station"));
+        gasStations.add(new Coordinates(35.334352, 25.133687, "BP", "Gas Station"));
+        gasStations.add(new Coordinates(35.324131, 25.139945, "Mavraki", "Gas Station"));
+        gasStations.add(new Coordinates(35.332375, 25.122159, "Samolis BP", "Gas Station"));
+        gasStations.add(new Coordinates(35.332414, 25.112785, "Aegean", "Gas Station"));
+        gasStations.add(new Coordinates(35.319242, 25.133003, "EKO", "Gas Station"));
+        gasStations.add(new Coordinates(35.320312, 25.125391, "Koumoulas", "Gas Station"));
+        gasStations.add(new Coordinates(35.321124, 25.143192, "Androulakis", "Gas Station"));
+        gasStations.add(new Coordinates(35.331358, 25.104039, "Xenakis", "Gas Station"));
+        gasStations.add(new Coordinates(35.341186, 25.141900, "Avis", "Gas Station"));
+        gasStations.add(new Coordinates(35.338016, 25.160950, "EKO", "Gas Station"));
+
         //zografou
         gasStations.add(new Coordinates(37.974122, 23.774079, "Revoil", "Gas Station"));
 
@@ -408,7 +449,11 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, GoogleA
 
 
     public static double distFrom(LatLng latlang1, LatLng latlang2) {
-        double lat1 = latlang1.latitude;
+        float[] results = new float[3];
+        Location.distanceBetween(latlang1.latitude, latlang1.longitude, latlang2.latitude, latlang2.longitude, results);
+        double dist;
+        dist = (double) results[0];
+        /* double lat1 = latlang1.latitude;
         double lng1 = latlang1.longitude;
         double lat2 = latlang2.latitude;
         double lng2 = latlang2.longitude;
@@ -422,7 +467,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, GoogleA
                 * Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2));
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         double dist = earthRadius * c;
-        System.out.println(dist);
+        System.out.println(dist);*/
         return dist;
     }
 
@@ -655,16 +700,46 @@ protected void checkPermissions(){
 
                     points.add(position);
                 }
-
                 lineOptions.addAll(points);
                 lineOptions.width(12);
                 lineOptions.color(Color.RED);
                 lineOptions.geodesic(true);
 
             }
+            /*
+            ArrayList<LatLng> latlngs=new ArrayList<>();
+            for (int k = 0; k < points.size(); k++){
+                latlngs.add((LatLng) points.get(k));
+            }
+            int size = latlngs.size() - 1;
+            float[] results = new float[1];
+            sumDist = 0;
+
+            for(int n = 0; n < size; n++){
+                Location.distanceBetween(
+                        latlngs.get(n).latitude,
+                        latlngs.get(n).longitude,
+                        latlngs.get(n+1).latitude,
+                        latlngs.get(n+1).longitude,
+                        results);
+                sumDist += results[0];
+            }*/
 
 // Drawing polyline in the Google Map for the i-th route
             mMap.addPolyline(lineOptions);
+
+            List<LatLng>LPoints=lineOptions.getPoints();
+            sumDist=0;
+            if (LPoints.get(1) != null) {
+                for (int k = 0; k < LPoints.size() - 1; k++) {
+                    sumDist = sumDist + distFrom(LPoints.get(k), LPoints.get(k + 1));
+                }
+            } else {
+                LatLng myOrigin = new LatLng(location.getLatitude(), location.getLongitude());
+                sumDist = distFrom(myOrigin,  LPoints.get(0));
+            }
+            searchText.setText("Distance: " + sumDist);
+
         }
     }
 
