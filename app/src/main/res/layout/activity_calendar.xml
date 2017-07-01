@@ -8,35 +8,75 @@
 
     <DatePicker
         android:id="@+id/datePicker"
-        android:layout_width="348dp"
-        android:layout_height="403dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_width="330dp"
+        android:layout_height="386dp"
+        android:scaleX="0.8"
+        android:scaleY="0.8"
+        app:layout_constraintRight_toLeftOf="@+id/guideline10"
+        android:layout_marginRight="-1dp"
+        android:layout_marginBottom="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline11" />
+
+    <Button
+        android:id="@+id/newAp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New"
+        app:layout_constraintRight_toLeftOf="@+id/guideline10"
+        app:layout_constraintLeft_toRightOf="@+id/listAp"
+        android:layout_marginLeft="8dp"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginStart="8dp"
+        app:layout_constraintTop_toTopOf="@+id/guideline11"
+        android:layout_marginTop="8dp" />
+
+    <Button
+        android:id="@+id/editAp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Edit"
+        app:layout_constraintRight_toLeftOf="@+id/guideline10"
+        app:layout_constraintLeft_toRightOf="@+id/listAp"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintHorizontal_bias="0.0"
+        android:layout_marginStart="8dp"
+        app:layout_constraintTop_toTopOf="@+id/newAp"
+        android:layout_marginTop="48dp" />
+
+    <Button
+        android:id="@+id/delAp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delete"
+        app:layout_constraintRight_toLeftOf="@+id/guideline10"
+        app:layout_constraintLeft_toRightOf="@+id/listAp"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintHorizontal_bias="0.0"
+        android:layout_marginStart="8dp"
+        app:layout_constraintTop_toTopOf="@+id/guideline11"
+        android:layout_marginTop="104dp" />
 
     <android.support.constraint.Guideline
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/guideline9"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_end="99dp"
-        tools:layout_editor_absoluteY="412dp"
-        tools:layout_editor_absoluteX="0dp" />
+        android:id="@+id/guideline10"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="61dp" />
 
     <ListView
-        android:id="@+id/listView1"
-        android:layout_width="489dp"
-        android:layout_height="304dp"
-        android:layout_marginLeft="0dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="0dp"
+        android:id="@+id/listAp"
+        android:layout_width="217dp"
+        android:layout_height="273dp"
         android:scrollbars="horizontal"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/datePicker" />
+        app:layout_constraintTop_toTopOf="@+id/guideline11"
+        android:layout_marginTop="8dp" />
+
+    <android.support.constraint.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/guideline11"
+        app:layout_constraintGuide_begin="349dp"
+        android:orientation="horizontal" />
 
 </android.support.constraint.ConstraintLayout>

@@ -1,18 +1,11 @@
 package com.example.varda.naviraklio;
 
-import android.*;
 import android.Manifest;
-import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.graphics.Color;
-import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationManager;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,12 +13,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.text.Editable;
-import android.text.Html;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -34,15 +23,11 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStates;
@@ -65,12 +50,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 import static com.google.android.gms.location.LocationServices.*;
@@ -93,9 +78,9 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, GoogleA
     private double sumDist;
     Spinner spinner;
     String[] placeTypes;
-    List<Coordinates> superMarkets;
-    List<Coordinates> gasStations;
-    List<Coordinates> cinemas;
+    List<Coordinate> superMarkets;
+    List<Coordinate> gasStations;
+    List<Coordinate> cinemas;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -171,6 +156,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, GoogleA
                     Log.i("Location Info", "Location not Available");
                 }
 
+
             }
         });
 
@@ -226,10 +212,10 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, GoogleA
         switch (place) {
             case "Supermarket":
 
-                dist = distFrom(origin, superMarkets.get(0).coord);
-                Coordinates nearestSupermarket = superMarkets.get(0);
-                for (Coordinates tempCoor : superMarkets) {
-                    tempDist = distFrom(origin, tempCoor.coord);
+                dist = distFrom(origin, superMarkets.get(0).getCoord());
+                Coordinate nearestSupermarket = superMarkets.get(0);
+                for (Coordinate tempCoor : superMarkets) {
+                    tempDist = distFrom(origin, tempCoor.getCoord());
                     if (tempDist < dist) {
                         dist = tempDist;
                         nearestSupermarket = tempCoor;
@@ -237,16 +223,16 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, GoogleA
                 }
 
 
-                dest = nearestSupermarket.coord;
+                dest = nearestSupermarket.getCoord();
 
 
                 break;
             case "Cinema":
-                dist = distFrom(origin, cinemas.get(0).coord);
+                dist = distFrom(origin, cinemas.get(0).getCoord());
 
-                Coordinates nearestCinema = cinemas.get(0);
-                for (Coordinates tempCoor : cinemas) {
-                    tempDist = distFrom(origin, tempCoor.coord);
+                Coordinate nearestCinema = cinemas.get(0);
+                for (Coordinate tempCoor : cinemas) {
+                    tempDist = distFrom(origin, tempCoor.getCoord());
                     if (tempDist < dist) {
                         dist = tempDist;
                         nearestCinema = tempCoor;
@@ -254,13 +240,13 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, GoogleA
                 }
 
 
-                dest = nearestCinema.coord;
+                dest = nearestCinema.getCoord();
                 break;
             case "Gas Station":
-                dist = distFrom(origin, gasStations.get(0).coord);
-                Coordinates nearestGasStation = gasStations.get(0);
-                for (Coordinates tempCoor : gasStations) {
-                    tempDist = distFrom(origin, tempCoor.coord);
+                dist = distFrom(origin, gasStations.get(0).getCoord());
+                Coordinate nearestGasStation = gasStations.get(0);
+                for (Coordinate tempCoor : gasStations) {
+                    tempDist = distFrom(origin, tempCoor.getCoord());
                     if (tempDist < dist) {
                         dist = tempDist;
                         nearestGasStation = tempCoor;
@@ -268,7 +254,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, GoogleA
                 }
 
 
-                dest = nearestGasStation.coord;
+                dest = nearestGasStation.getCoord();
                 break;
             default:
                 Toast.makeText(Map.this, "No Place selected", Toast.LENGTH_SHORT).show();
@@ -379,72 +365,81 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, GoogleA
 
     void createCoordinates() {
         superMarkets = new ArrayList<>();
-        superMarkets.add(new Coordinates(35.340685, 25.133643, "Chalkiadakis", "Supermarket"));
-        superMarkets.add(new Coordinates(35.337384, 25.121930, "LIDL", "Supermarket"));
-        superMarkets.add(new Coordinates(35.338468, 25.139354, "AB", "Supermarket"));
-        superMarkets.add(new Coordinates(35.337481, 25.132863, "BAZAAR", "Supermarket"));
-        superMarkets.add(new Coordinates(35.339136, 25.155434, "Sklavenitis", "Supermarket"));
-        superMarkets.add(new Coordinates(35.341716, 25.136238, "papadaki", "Supermarket"));
-        superMarkets.add(new Coordinates(35.326724, 25.131095, "Sklavenitis", "Supermarket"));
-        superMarkets.add(new Coordinates(35.326251, 25.138878, "Sklavenitis", "Supermarket"));
-        superMarkets.add(new Coordinates(35.337651, 25.126895, "Chalkiadakis", "Supermarket"));
-        superMarkets.add(new Coordinates(35.338751, 25.119835, "Chalkiadakis", "Supermarket"));
-        superMarkets.add(new Coordinates(35.324666, 25.133577, "Ariadni", "Supermarket"));
-        superMarkets.add(new Coordinates(35.334394, 25.115245, "INKA", "Supermarket"));
-        superMarkets.add(new Coordinates(35.324695, 25.124600, "AB", "Supermarket"));
-        superMarkets.add(new Coordinates(35.323925, 25.112541, "LIDL", "Supermarket"));
-        superMarkets.add(new Coordinates(35.319163, 25.144127, "INKA", "Supermarket"));
-        superMarkets.add(new Coordinates(35.324660, 25.124514, "AB", "Supermarket"));
-        superMarkets.add(new Coordinates(35.318393, 25.148246, "Chalkiadakis", "Supermarket"));
-        superMarkets.add(new Coordinates(35.331733, 25.137689, "Chalkiadakis", "Supermarket"));
-        superMarkets.add(new Coordinates(35.330157, 25.132282, "Chalkiadakis", "Supermarket"));
-        superMarkets.add(new Coordinates(35.334359, 25.158718, "Chalkiadakis Max", "Supermarket"));
-        superMarkets.add(new Coordinates(35.329072, 25.119279, "Chalkiadakis", "Supermarket"));
-        superMarkets.add(new Coordinates(35.343307, 25.155190, "My Cretan Goods", "Supermarket"));
-        superMarkets.add(new Coordinates(35.336788, 25.133692, "Alati tis Gis", "Supermarket"));
-        superMarkets.add(new Coordinates(35.330241, 25.124522, "Kouts", "Supermarket"));
+        superMarkets.add(new Coordinate(35.340685, 25.133643, "Chalkiadakis", "Supermarket"));
+        superMarkets.add(new Coordinate(35.337384, 25.121930, "LIDL", "Supermarket"));
+        superMarkets.add(new Coordinate(35.338468, 25.139354, "AB", "Supermarket"));
+        superMarkets.add(new Coordinate(35.337481, 25.132863, "BAZAAR", "Supermarket"));
+        superMarkets.add(new Coordinate(35.339136, 25.155434, "Sklavenitis", "Supermarket"));
+        superMarkets.add(new Coordinate(35.341716, 25.136238, "papadaki", "Supermarket"));
+        superMarkets.add(new Coordinate(35.326724, 25.131095, "Sklavenitis", "Supermarket"));
+        superMarkets.add(new Coordinate(35.326251, 25.138878, "Sklavenitis", "Supermarket"));
+        superMarkets.add(new Coordinate(35.337651, 25.126895, "Chalkiadakis", "Supermarket"));
+        superMarkets.add(new Coordinate(35.338751, 25.119835, "Chalkiadakis", "Supermarket"));
+        superMarkets.add(new Coordinate(35.324666, 25.133577, "Ariadni", "Supermarket"));
+        superMarkets.add(new Coordinate(35.334394, 25.115245, "INKA", "Supermarket"));
+        superMarkets.add(new Coordinate(35.324695, 25.124600, "AB", "Supermarket"));
+        superMarkets.add(new Coordinate(35.323925, 25.112541, "LIDL", "Supermarket"));
+        superMarkets.add(new Coordinate(35.319163, 25.144127, "INKA", "Supermarket"));
+        superMarkets.add(new Coordinate(35.324660, 25.124514, "AB", "Supermarket"));
+        superMarkets.add(new Coordinate(35.318393, 25.148246, "Chalkiadakis", "Supermarket"));
+        superMarkets.add(new Coordinate(35.331733, 25.137689, "Chalkiadakis", "Supermarket"));
+        superMarkets.add(new Coordinate(35.330157, 25.132282, "Chalkiadakis", "Supermarket"));
+        superMarkets.add(new Coordinate(35.334359, 25.158718, "Chalkiadakis Max", "Supermarket"));
+        superMarkets.add(new Coordinate(35.329072, 25.119279, "Chalkiadakis", "Supermarket"));
+        superMarkets.add(new Coordinate(35.343307, 25.155190, "My Cretan Goods", "Supermarket"));
+        superMarkets.add(new Coordinate(35.336788, 25.133692, "Alati tis Gis", "Supermarket"));
+        superMarkets.add(new Coordinate(35.330241, 25.124522, "Kouts", "Supermarket"));
+
 
         //zografou
-        superMarkets.add(new Coordinates(37.977817, 23.769849, "daily", "Supermarket"));
+        superMarkets.add(new Coordinate(37.977817, 23.769849, "daily", "Supermarket"));
+        Collections.sort(superMarkets, new ComparatorCoord());
+
 
         gasStations = new ArrayList<>();
-        gasStations.add(new Coordinates(35.338674, 25.141106, "SHELL", "Gas Station"));
-        gasStations.add(new Coordinates(35.335309, 25.141536, "EKO", "Gas Station"));
-        gasStations.add(new Coordinates(35.333256, 25.121656, "Tsiknakis Ioannis", "Gas Station"));
-        gasStations.add(new Coordinates(35.330283, 25.108827, "ELIN", "Gas Station"));
-        gasStations.add(new Coordinates(35.329145, 25.117691, "Christodoulakis", "Gas Station"));
-        gasStations.add(new Coordinates(35.338607, 25.143821, "Giannakakis", "Gas Station"));
-        gasStations.add(new Coordinates(35.336275, 25.121359, "Hanagia", "Gas Station"));
-        gasStations.add(new Coordinates(35.333818, 25.117024, "Stamatakis", "Gas Station"));
-        gasStations.add(new Coordinates(35.326903, 25.131728, "Koumoulas", "Gas Station"));
-        gasStations.add(new Coordinates(35.338667, 25.141116, "SHELL", "Gas Station"));
-        gasStations.add(new Coordinates(35.338795, 25.141556, "SHELL", "Gas Station"));
-        gasStations.add(new Coordinates(35.338714, 25.143423, "BP", "Gas Station"));
-        gasStations.add(new Coordinates(35.337829, 25.141788, "BP", "Gas Station"));
-        gasStations.add(new Coordinates(35.336477, 25.146265, "BP", "Gas Station"));
-        gasStations.add(new Coordinates(35.334352, 25.133687, "BP", "Gas Station"));
-        gasStations.add(new Coordinates(35.324131, 25.139945, "Mavraki", "Gas Station"));
-        gasStations.add(new Coordinates(35.332375, 25.122159, "Samolis BP", "Gas Station"));
-        gasStations.add(new Coordinates(35.332414, 25.112785, "Aegean", "Gas Station"));
-        gasStations.add(new Coordinates(35.319242, 25.133003, "EKO", "Gas Station"));
-        gasStations.add(new Coordinates(35.320312, 25.125391, "Koumoulas", "Gas Station"));
-        gasStations.add(new Coordinates(35.321124, 25.143192, "Androulakis", "Gas Station"));
-        gasStations.add(new Coordinates(35.331358, 25.104039, "Xenakis", "Gas Station"));
-        gasStations.add(new Coordinates(35.341186, 25.141900, "Avis", "Gas Station"));
-        gasStations.add(new Coordinates(35.338016, 25.160950, "EKO", "Gas Station"));
+        gasStations.add(new Coordinate(35.338674, 25.141106, "SHELL", "Gas Station"));
+        gasStations.add(new Coordinate(35.335309, 25.141536, "EKO", "Gas Station"));
+        gasStations.add(new Coordinate(35.333256, 25.121656, "Tsiknakis Ioannis", "Gas Station"));
+        gasStations.add(new Coordinate(35.330283, 25.108827, "ELIN", "Gas Station"));
+        gasStations.add(new Coordinate(35.329145, 25.117691, "Christodoulakis", "Gas Station"));
+        gasStations.add(new Coordinate(35.338607, 25.143821, "Giannakakis", "Gas Station"));
+        gasStations.add(new Coordinate(35.336275, 25.121359, "Hanagia", "Gas Station"));
+        gasStations.add(new Coordinate(35.333818, 25.117024, "Stamatakis", "Gas Station"));
+        gasStations.add(new Coordinate(35.326903, 25.131728, "Koumoulas", "Gas Station"));
+        gasStations.add(new Coordinate(35.338667, 25.141116, "SHELL", "Gas Station"));
+        gasStations.add(new Coordinate(35.338795, 25.141556, "SHELL", "Gas Station"));
+        gasStations.add(new Coordinate(35.338714, 25.143423, "BP", "Gas Station"));
+        gasStations.add(new Coordinate(35.337829, 25.141788, "BP", "Gas Station"));
+        gasStations.add(new Coordinate(35.336477, 25.146265, "BP", "Gas Station"));
+        gasStations.add(new Coordinate(35.334352, 25.133687, "BP", "Gas Station"));
+        gasStations.add(new Coordinate(35.324131, 25.139945, "Mavraki", "Gas Station"));
+        gasStations.add(new Coordinate(35.332375, 25.122159, "Samolis BP", "Gas Station"));
+        gasStations.add(new Coordinate(35.332414, 25.112785, "Aegean", "Gas Station"));
+        gasStations.add(new Coordinate(35.319242, 25.133003, "EKO", "Gas Station"));
+        gasStations.add(new Coordinate(35.320312, 25.125391, "Koumoulas", "Gas Station"));
+        gasStations.add(new Coordinate(35.321124, 25.143192, "Androulakis", "Gas Station"));
+        gasStations.add(new Coordinate(35.331358, 25.104039, "Xenakis", "Gas Station"));
+        gasStations.add(new Coordinate(35.341186, 25.141900, "Avis", "Gas Station"));
+        gasStations.add(new Coordinate(35.338016, 25.160950, "EKO", "Gas Station"));
 
         //zografou
-        gasStations.add(new Coordinates(37.974122, 23.774079, "Revoil", "Gas Station"));
+        gasStations.add(new Coordinate(37.974122, 23.774079, "Revoil", "Gas Station"));
+
+        Collections.sort(gasStations, new ComparatorCoord());
+
 
         cinemas = new ArrayList<>();
-        cinemas.add(new Coordinates(35.339880, 25.119728, "Odeon Talos", "Cinema"));
-        cinemas.add(new Coordinates(35.340889, 25.136980, "Vintsenzos Kornaros", "Cinema"));
-        cinemas.add(new Coordinates(35.338375, 25.136216, "Astoria", "Cinema"));
-        cinemas.add(new Coordinates(35.335669, 25.070682, "Texnopolis", "Cinema"));
-        cinemas.add(new Coordinates(35.337980, 25.158230, "Cine Studio", "Cinema"));
-        cinemas.add(new Coordinates(35.338573, 25.129685, "Dedalos Club", "Cinema"));
+        cinemas.add(new Coordinate(35.339880, 25.119728, "Odeon Talos", "Cinema"));
+        cinemas.add(new Coordinate(35.340889, 25.136980, "Vintsenzos Kornaros", "Cinema"));
+        cinemas.add(new Coordinate(35.338375, 25.136216, "Astoria", "Cinema"));
+        cinemas.add(new Coordinate(35.335669, 25.070682, "Texnopolis", "Cinema"));
+        cinemas.add(new Coordinate(35.337980, 25.158230, "Cine Studio", "Cinema"));
+        cinemas.add(new Coordinate(35.338573, 25.129685, "Dedalos Club", "Cinema"));
         //zografou
-        cinemas.add(new Coordinates(37.977369, 23.770716, "Aleka", "Cinema"));
+        cinemas.add(new Coordinate(37.977369, 23.770716, "Aleka", "Cinema"));
+        Collections.sort(cinemas, new ComparatorCoord());
+
+
     }
 
 
@@ -738,7 +733,10 @@ protected void checkPermissions(){
                 LatLng myOrigin = new LatLng(location.getLatitude(), location.getLongitude());
                 sumDist = distFrom(myOrigin,  LPoints.get(0));
             }
-            searchText.setText("Distance: " + sumDist);
+            int timeEst;
+
+            timeEst=(int) sumDist/333; // Average Driving speed in Heraklion 20km/h or 333m/min
+            searchText.setText("Distance: " + sumDist+ "Time: "+timeEst);
 
         }
     }
