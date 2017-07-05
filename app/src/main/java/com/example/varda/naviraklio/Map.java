@@ -79,7 +79,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, GoogleA
     Spinner spinner;
     String[] placeTypes;
     List<Coordinate> superMarkets;
-    List<Coordinate> gasStations;
+    List<GasStation> gasStations;
     List<Coordinate> cinemas;
 
     @Override
@@ -397,33 +397,33 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, GoogleA
 
 
         gasStations = new ArrayList<>();
-        gasStations.add(new Coordinate(35.338674, 25.141106, "SHELL", "Gas Station"));
-        gasStations.add(new Coordinate(35.335309, 25.141536, "EKO", "Gas Station"));
-        gasStations.add(new Coordinate(35.333256, 25.121656, "Tsiknakis Ioannis", "Gas Station"));
-        gasStations.add(new Coordinate(35.330283, 25.108827, "ELIN", "Gas Station"));
-        gasStations.add(new Coordinate(35.329145, 25.117691, "Christodoulakis", "Gas Station"));
-        gasStations.add(new Coordinate(35.338607, 25.143821, "Giannakakis", "Gas Station"));
-        gasStations.add(new Coordinate(35.336275, 25.121359, "Hanagia", "Gas Station"));
-        gasStations.add(new Coordinate(35.333818, 25.117024, "Stamatakis", "Gas Station"));
-        gasStations.add(new Coordinate(35.326903, 25.131728, "Koumoulas", "Gas Station"));
-        gasStations.add(new Coordinate(35.338667, 25.141116, "SHELL", "Gas Station"));
-        gasStations.add(new Coordinate(35.338795, 25.141556, "SHELL", "Gas Station"));
-        gasStations.add(new Coordinate(35.338714, 25.143423, "BP", "Gas Station"));
-        gasStations.add(new Coordinate(35.337829, 25.141788, "BP", "Gas Station"));
-        gasStations.add(new Coordinate(35.336477, 25.146265, "BP", "Gas Station"));
-        gasStations.add(new Coordinate(35.334352, 25.133687, "BP", "Gas Station"));
-        gasStations.add(new Coordinate(35.324131, 25.139945, "Mavraki", "Gas Station"));
-        gasStations.add(new Coordinate(35.332375, 25.122159, "Samolis BP", "Gas Station"));
-        gasStations.add(new Coordinate(35.332414, 25.112785, "Aegean", "Gas Station"));
-        gasStations.add(new Coordinate(35.319242, 25.133003, "EKO", "Gas Station"));
-        gasStations.add(new Coordinate(35.320312, 25.125391, "Koumoulas", "Gas Station"));
-        gasStations.add(new Coordinate(35.321124, 25.143192, "Androulakis", "Gas Station"));
-        gasStations.add(new Coordinate(35.331358, 25.104039, "Xenakis", "Gas Station"));
-        gasStations.add(new Coordinate(35.341186, 25.141900, "Avis", "Gas Station"));
-        gasStations.add(new Coordinate(35.338016, 25.160950, "EKO", "Gas Station"));
+        gasStations.add(new GasStation(35.338674, 25.141106, "SHELL", "Gas Station",24,24));
+        gasStations.add(new GasStation(35.335309, 25.141536, "EKO", "Gas Station",24,24));
+        gasStations.add(new GasStation(35.333256, 25.121656, "Tsiknakis Ioannis", "Gas Station",7,22));
+        gasStations.add(new GasStation(35.330283, 25.108827, "ELIN", "Gas Station",7,22));
+        gasStations.add(new GasStation(35.329145, 25.117691, "Christodoulakis", "Gas Station",7,22));
+        gasStations.add(new GasStation(35.338607, 25.143821, "Giannakakis", "Gas Station",7,22));
+        gasStations.add(new GasStation(35.336275, 25.121359, "Hanagia", "Gas Station",7,22));
+        gasStations.add(new GasStation(35.333818, 25.117024, "Stamatakis", "Gas Station",7,22));
+        gasStations.add(new GasStation(35.326903, 25.131728, "Koumoulas", "Gas Station",7,22));
+        gasStations.add(new GasStation(35.338667, 25.141116, "SHELL", "Gas Station",24,24));
+        gasStations.add(new GasStation(35.338795, 25.141556, "SHELL", "Gas Station",24,24));
+        gasStations.add(new GasStation(35.338714, 25.143423, "BP", "Gas Station",24,24));
+        gasStations.add(new GasStation(35.337829, 25.141788, "BP", "Gas Station",24,24));
+        gasStations.add(new GasStation(35.336477, 25.146265, "BP", "Gas Station",24,24));
+        gasStations.add(new GasStation(35.334352, 25.133687, "BP", "Gas Station",24,24));
+        gasStations.add(new GasStation(35.324131, 25.139945, "Mavraki", "Gas Station",24,24));
+        gasStations.add(new GasStation(35.332375, 25.122159, "Samolis BP", "Gas Station",24,24));
+        gasStations.add(new GasStation(35.332414, 25.112785, "Aegean", "Gas Station",7,22));
+        gasStations.add(new GasStation(35.319242, 25.133003, "EKO", "Gas Station",7,22));
+        gasStations.add(new GasStation(35.320312, 25.125391, "Koumoulas", "Gas Station",7,22));
+        gasStations.add(new GasStation(35.321124, 25.143192, "Androulakis", "Gas Station",7,22));
+        gasStations.add(new GasStation(35.331358, 25.104039, "Xenakis", "Gas Station",24,24));
+        gasStations.add(new GasStation(35.341186, 25.141900, "Avis", "Gas Station",7,22));
+        gasStations.add(new GasStation(35.338016, 25.160950, "EKO", "Gas Station",7,22));
 
         //zografou
-        gasStations.add(new Coordinate(37.974122, 23.774079, "Revoil", "Gas Station"));
+        gasStations.add(new GasStation(37.974122, 23.774079, "Revoil", "Gas Station",7,22));
 
         Collections.sort(gasStations, new ComparatorCoord());
 

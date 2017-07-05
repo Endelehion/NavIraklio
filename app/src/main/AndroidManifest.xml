@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.varda.naviraklio">
 
-
     <permission
         android:name="in.wptrafficanalyzer.locationroutedirectionmapv2.permission.MAPS_RECEIVE"
         android:protectionLevel="signature" />
@@ -17,12 +16,13 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
-    <uses-permission-sdk-23   android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission-sdk-23 android:name="android.permission.ACCESS_FINE_LOCATION"/>
+
+    <uses-permission-sdk-23 android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission-sdk-23 android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <uses-feature
         android:glEsVersion="0x00020000"
         android:required="true" />
-
 
     <application
         android:allowBackup="true"
@@ -67,8 +67,10 @@
 
         <activity
             android:name=".Map"
-            android:label="@string/title_activity_map">
-        </activity>
+            android:label="@string/title_activity_map" />
+        <activity android:name=".NewAppointment" />
+        <activity android:name=".DatePick" />
+        <activity android:name=".TimePick"></activity>
     </application>
 
 </manifest>

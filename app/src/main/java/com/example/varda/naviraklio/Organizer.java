@@ -1,5 +1,6 @@
 package com.example.varda.naviraklio;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -81,6 +82,14 @@ public class Organizer extends AppCompatActivity {
             }
         });
 
+
+        newAp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(Organizer.this,NewAppointment.class);
+                startActivity(intent);
+            }
+        });
     }
 
     Date createDate(int date, int month, int year, int hour, int minute) {

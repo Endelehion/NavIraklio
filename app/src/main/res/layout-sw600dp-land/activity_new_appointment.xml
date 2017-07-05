@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.varda.naviraklio.NewAppointment">
+
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="369dp"
+        android:layout_height="66dp"
+        android:layout_above="@+id/map"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="134dp"
+        android:layout_marginTop="41dp"
+        android:layout_toStartOf="@+id/findButton"
+        android:animateLayoutChanges="false"
+        android:clipChildren="false"
+        android:entries="@+strings/place_type"
+        android:prompt="@+strings/prompt_spinner"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline12"
+        app:layout_constraintTop_toTopOf="@+id/guideline13"
+        android:layout_marginStart="134dp" />
+
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="483dp"
+        android:layout_height="98dp"
+        android:layout_marginBottom="6dp"
+        android:layout_marginLeft="417dp"
+        android:text="New Appointment"
+        android:textSize="50dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline13"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline12"
+        android:layout_marginStart="383dp" />
+
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="134dp"
+        android:layout_height="68dp"
+        android:layout_marginTop="161dp"
+        android:text="Type"
+        android:textSize="45dp"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline12"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="132dp"
+        android:layout_height="74dp"
+        android:layout_marginTop="258dp"
+        android:text="Starts"
+        android:textSize="45dp"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline12"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/dateText"
+        android:layout_width="223dp"
+        android:layout_height="76dp"
+        android:layout_marginLeft="134dp"
+        android:layout_marginTop="258dp"
+        android:ems="10"
+        android:inputType="date"
+        android:textSize="45dp"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline12"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="__/__/____"
+        android:layout_marginStart="134dp" />
+
+    <TextView
+        android:id="@+id/timeStartText"
+        android:layout_width="223dp"
+        android:layout_height="86dp"
+        android:layout_marginLeft="134dp"
+        android:layout_marginTop="214dp"
+        android:ems="10"
+        android:inputType="date"
+        android:textSize="45dp"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline12"
+        app:layout_constraintTop_toTopOf="@+id/guideline13"
+        tools:text="0:00"
+        android:layout_marginStart="134dp" />
+
+    <TextView
+        android:id="@+id/timeEndText"
+        android:layout_width="190dp"
+        android:layout_height="74dp"
+        android:layout_marginLeft="141dp"
+        android:layout_marginTop="325dp"
+        android:ems="10"
+        android:inputType="time"
+        android:textSize="45dp"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline12"
+        app:layout_constraintTop_toTopOf="@+id/guideline13"
+        tools:text="0:00"
+        android:layout_marginStart="134dp" />
+
+    <TextView
+        android:id="@+id/textView10"
+        android:layout_width="118dp"
+        android:layout_height="72dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="445dp"
+        android:text="Ends"
+        android:textSize="45dp"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline12"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="16dp" />
+
+    <android.support.constraint.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/guideline12"
+        app:layout_constraintGuide_begin="16dp"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteY="0dp"
+        tools:layout_editor_absoluteX="16dp" />
+
+    <android.support.constraint.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/guideline13"
+        app:layout_constraintGuide_begin="120dp"
+        android:orientation="horizontal"
+        tools:layout_editor_absoluteY="120dp"
+        tools:layout_editor_absoluteX="0dp" />
+
+    <Button
+        android:id="@+id/setDateTimeBtn"
+        android:layout_width="199dp"
+        android:layout_height="162dp"
+        android:text="set Date &amp; Time"
+        android:textSize="30dp"
+        app:layout_constraintTop_toTopOf="@+id/guideline13"
+        android:layout_marginTop="145dp"
+        android:layout_marginLeft="383dp"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline12" />
+
+    <Button
+        android:id="@+id/button9"
+        android:layout_width="256dp"
+        android:layout_height="73dp"
+        android:text="Set Location"
+        android:textSize="30dp"
+        android:layout_marginStart="53dp"
+        app:layout_constraintTop_toTopOf="@+id/guideline13"
+        android:layout_marginTop="52dp"
+        app:layout_constraintRight_toLeftOf="@+id/guideline18"
+        android:layout_marginRight="177dp" />
+
+    <Button
+        android:id="@+id/button10"
+        android:layout_width="175dp"
+        android:layout_height="94dp"
+        android:text="Confirm"
+        android:textSize="30dp"
+        app:layout_constraintRight_toLeftOf="@+id/guideline18"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginRight="0dp"
+        android:layout_marginBottom="50dp" />
+
+    <Button
+        android:id="@+id/button11"
+        android:layout_width="179dp"
+        android:layout_height="94dp"
+        android:layout_marginLeft="51dp"
+        android:text="Cancel"
+        android:textSize="30dp"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline12"
+        android:layout_marginStart="53dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="34dp" />
+
+    <android.support.constraint.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/guideline18"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="83dp" />
+
+</android.support.constraint.ConstraintLayout>
