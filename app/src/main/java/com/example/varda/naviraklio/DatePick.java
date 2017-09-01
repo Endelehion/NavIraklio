@@ -2,6 +2,7 @@ package com.example.varda.naviraklio;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -42,7 +43,7 @@ public class DatePick extends AppCompatActivity {
         selectedDateTime = new SimpleDateFormat("EEE d MMM yyyy HH:mm");
         datePicker.setVisibility(View.VISIBLE);
         timePicker.setVisibility(View.GONE);
-        titleDate.setText(selectedDateTime.format(createDate(datePicker.getDayOfMonth(), datePicker.getMonth(), datePicker.getYear(), timePicker.getHour(), timePicker.getMinute())));
+        printDateTime();
 
 
         okButtonDate.setOnClickListener(new View.OnClickListener() {
@@ -81,41 +82,19 @@ public class DatePick extends AppCompatActivity {
 
             @Override
             public void onDateChanged(DatePicker datePicker, int year, int month, int dayOfMonth) {
-                titleDate.setText(selectedDateTime.format(createDate(DatePick.this.datePicker.getDayOfMonth(), DatePick.this.datePicker.getMonth(), DatePick.this.datePicker.getYear(), timePicker.getHour(), timePicker.getMinute())));
+                printDateTime();
 
             }
         });
 
-        datePicker.setOnContextClickListener(new View.OnContextClickListener() {
+        timePicker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
             @Override
-            public boolean onContextClick(View v) {
-
-                return false;
-            }
-        });
-
-        datePicker.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
+            public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
+                printDateTime();
             }
         });
 
 
-        timePicker.setOnContextClickListener(new View.OnContextClickListener() {
-            @Override
-            public boolean onContextClick(View v) {
-                titleDate.setText(selectedDateTime.format(createDate(datePicker.getDayOfMonth(), datePicker.getMonth(), datePicker.getYear(), timePicker.getHour(), timePicker.getMinute())));
-                return false;
-            }
-        });
-        timePicker.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                titleDate.setText(selectedDateTime.format(createDate(datePicker.getDayOfMonth(), datePicker.getMonth(), datePicker.getYear(), timePicker.getHour(), timePicker.getMinute())));
-            }
-        });
         cancelButtonDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -126,9 +105,20 @@ public class DatePick extends AppCompatActivity {
 
     Date createDate(int day, int month, int year, int hour, int minute) {
         Date myDate;
-      GregorianCalendar gre = new GregorianCalendar(year,month,day,hour,minute);
+        GregorianCalendar gre = new GregorianCalendar(year, month, day, hour, minute);
         myDate = gre.getTime();
         return myDate;
     }
 
+    protected void printDateTime() {
+
+        if (Build.VERSION.SDK_INT < 23) {
+            titleDate.setText(selectedDateTime.format(createDate(DatePick.this.datePicker.getDayOfMonth(),
+                    DatePick.this.datePicker.getMonth(), DatePick.this.datePicker.getYear(),timePicker.getCurrentHour(),timePicker.getCurrentMinute())));
+        } else {
+            titleDate.setText(selectedDateTime.format(createDate(DatePick.this.datePicker.getDayOfMonth(),
+                    DatePick.this.datePicker.getMonth(), DatePick.this.datePicker.getYear(),timePicker.getHour(),timePicker.getMinute())));
+        }
+
+    }
 }
