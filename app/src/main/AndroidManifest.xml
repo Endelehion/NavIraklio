@@ -70,7 +70,6 @@
             android:label="@string/title_activity_map" />
         <activity android:name=".NewAppointment" />
         <activity android:name=".DatePick" />
-        <activity android:name=".TimePick"></activity>
     </application>
 
 </manifest>

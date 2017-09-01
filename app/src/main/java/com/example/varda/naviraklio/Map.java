@@ -169,15 +169,16 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, GoogleA
                 if (location != null) {
                     Log.i("Location Info", "Location achieved!");
                     addCurrentLocationMarker();
+                    String spinnerSelection;
+                    spinnerSelection = spinner.getSelectedItem().toString();
+                    findPlace(spinnerSelection);
                 } else {
                     Toast toast = Toast.makeText(Map.this, "Location not Available", Toast.LENGTH_LONG);
                     toast.show();
                     checkSettings();
                     Log.i("Location Info", "Location not Available");
                 }
-                String spinnerSelection;
-                spinnerSelection = spinner.getSelectedItem().toString();
-                findPlace(spinnerSelection);
+
 
 
             }

@@ -21,25 +21,25 @@
         android:entries="@+strings/place_type"
         android:prompt="@+strings/prompt_spinner"
         app:layout_constraintLeft_toLeftOf="@+id/guideline12"
-        app:layout_constraintTop_toTopOf="@+id/guideline13" />
+        app:layout_constraintTop_toTopOf="@+id/guideline13"
+        android:layout_marginStart="134dp" />
 
     <TextView
         android:id="@+id/textView7"
-        android:layout_width="483dp"
-        android:layout_height="98dp"
-        android:layout_marginBottom="0dp"
-        android:layout_marginLeft="176dp"
+        android:layout_width="403dp"
+        android:layout_height="85dp"
         android:text="New Appointment"
         android:textSize="50dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline13"
-        app:layout_constraintLeft_toLeftOf="@+id/guideline12"
-        tools:layout_editor_absoluteY="22dp" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintHorizontal_bias="0.558"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline13" />
 
     <TextView
         android:id="@+id/textView8"
         android:layout_width="134dp"
         android:layout_height="68dp"
-        android:layout_marginLeft="0dp"
         android:layout_marginTop="161dp"
         android:text="Type"
         android:textSize="45dp"
@@ -48,19 +48,19 @@
 
     <TextView
         android:id="@+id/textView9"
-        android:layout_width="132dp"
-        android:layout_height="74dp"
-        android:layout_marginLeft="0dp"
+        android:layout_width="134dp"
+        android:layout_height="77dp"
         android:layout_marginTop="258dp"
         android:text="Starts"
         android:textSize="45dp"
         app:layout_constraintLeft_toLeftOf="@+id/guideline12"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginLeft="0dp" />
 
     <TextView
         android:id="@+id/dateText"
-        android:layout_width="223dp"
-        android:layout_height="76dp"
+        android:layout_width="220dp"
+        android:layout_height="77dp"
         android:layout_marginLeft="134dp"
         android:layout_marginTop="258dp"
         android:ems="10"
@@ -68,16 +68,18 @@
         android:textSize="45dp"
         app:layout_constraintLeft_toLeftOf="@+id/guideline12"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="__/__/____" />
+        tools:text="__/__/____"
+        android:layout_marginStart="134dp" />
 
     <TextView
         android:id="@+id/timeStartText"
-        android:layout_width="223dp"
-        android:layout_height="86dp"
-        android:layout_marginLeft="134dp"
+        android:layout_width="149dp"
+        android:layout_height="80dp"
+        android:layout_marginLeft="204dp"
         android:layout_marginTop="214dp"
         android:ems="10"
         android:inputType="date"
+        android:textAlignment="center"
         android:textSize="45dp"
         app:layout_constraintLeft_toLeftOf="@+id/guideline12"
         app:layout_constraintTop_toTopOf="@+id/guideline13"
@@ -85,24 +87,26 @@
 
     <TextView
         android:id="@+id/timeEndText"
-        android:layout_width="190dp"
-        android:layout_height="74dp"
-        android:layout_marginLeft="134dp"
-        android:layout_marginTop="325dp"
+        android:layout_width="149dp"
+        android:layout_height="65dp"
+        android:layout_marginLeft="205dp"
         android:ems="10"
         android:inputType="time"
+        android:textAlignment="center"
         android:textSize="45dp"
         app:layout_constraintLeft_toLeftOf="@+id/guideline12"
-        app:layout_constraintTop_toTopOf="@+id/guideline13"
-        tools:text="0:00" />
+        tools:text="0:00"
+        tools:layout_editor_absoluteY="414dp" />
 
     <TextView
         android:id="@+id/textView10"
-        android:layout_width="118dp"
-        android:layout_height="72dp"
+        android:layout_width="189dp"
+        android:layout_height="64dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="445dp"
-        android:text="Ends"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="414dp"
+        android:text="Duration"
+        android:textAlignment="center"
         android:textSize="45dp"
         app:layout_constraintLeft_toLeftOf="@+id/guideline12"
         app:layout_constraintTop_toTopOf="parent" />
@@ -121,26 +125,30 @@
         android:layout_height="wrap_content"
         android:id="@+id/guideline13"
         app:layout_constraintGuide_begin="120dp"
-        android:orientation="horizontal" />
+        android:orientation="horizontal"
+        tools:layout_editor_absoluteY="120dp"
+        tools:layout_editor_absoluteX="0dp" />
 
     <Button
         android:id="@+id/setDateTimeBtn"
-        android:layout_width="190dp"
-        android:layout_height="122dp"
-        android:layout_marginRight="183dp"
-        android:layout_marginTop="289dp"
+        android:layout_width="177dp"
+        android:layout_height="155dp"
         android:text="set Date &amp; Time"
         android:textSize="30dp"
+        android:layout_marginRight="29dp"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/guideline13"
+        android:layout_marginTop="138dp"
+        android:layout_marginEnd="16dp" />
 
     <Button
         android:id="@+id/button9"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="514dp"
-        android:layout_marginLeft="53dp"
-        android:text="Set Location"
+        android:layout_width="228dp"
+        android:layout_height="88dp"
+        android:layout_marginBottom="214dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:text="Edit Location"
         android:textSize="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="@+id/guideline12" />
@@ -149,22 +157,33 @@
         android:id="@+id/button10"
         android:layout_width="175dp"
         android:layout_height="94dp"
-        android:layout_marginBottom="164dp"
-        android:layout_marginRight="95dp"
         android:text="Confirm"
         android:textSize="30dp"
+        android:layout_marginRight="16dp"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        android:layout_marginBottom="32dp"
+        android:layout_marginEnd="16dp" />
 
     <Button
         android:id="@+id/button11"
-        android:layout_width="179dp"
+        android:layout_width="175dp"
         android:layout_height="94dp"
-        android:layout_marginLeft="53dp"
-        android:layout_marginTop="885dp"
         android:text="Cancel"
         android:textSize="30dp"
         app:layout_constraintLeft_toLeftOf="@+id/guideline12"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="32dp"
+        android:layout_marginLeft="0dp" />
+
+    <TextView
+        android:id="@+id/textView13"
+        android:layout_width="328dp"
+        android:layout_height="129dp"
+        android:text="TextView"
+        android:layout_marginRight="16dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="173dp" />
 
 </android.support.constraint.ConstraintLayout>

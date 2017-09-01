@@ -18,6 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 public class Organizer extends AppCompatActivity {
     private DatePicker datePicker;
@@ -41,11 +42,11 @@ public class Organizer extends AppCompatActivity {
         month = calendar.get(Calendar.MONTH);
         day = calendar.get(Calendar.DAY_OF_MONTH);
         datePicker.updateDate(year, month, day);
-        sdateFormat = new SimpleDateFormat("EEE d MMM yyyy HH:mm");
+        sdateFormat = new SimpleDateFormat("EEE dd MMM yyyy HH:mm");
 
         arListAp = new ArrayList<>();
 
-        dateString = sdateFormat.format(createDate(4, 5, 2017, 15, 24));
+        dateString = sdateFormat.format(createDate(day, month, 2017, 15, 35));
         arListAp.add(new Appointment(1, "Cinema", dateString, 37.977817, 23.769849));
 
         dateString = sdateFormat.format(createDate(7, 7, 2017, 12, 55));
@@ -92,15 +93,10 @@ public class Organizer extends AppCompatActivity {
         });
     }
 
-    Date createDate(int date, int month, int year, int hour, int minute) {
+    Date createDate(int day, int month, int year, int hour, int minute) {
         Date myDate;
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.MONTH, month);
-        cal.set(Calendar.DATE, date);
-        cal.set(Calendar.YEAR, year);
-        cal.set(Calendar.HOUR, hour);
-        cal.set(Calendar.MINUTE, minute);
-        myDate = cal.getTime();
+        GregorianCalendar gre = new GregorianCalendar(year,month,day,hour,minute);
+        myDate = gre.getTime();
         return myDate;
     }
 
