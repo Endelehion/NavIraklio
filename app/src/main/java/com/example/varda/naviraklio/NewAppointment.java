@@ -16,6 +16,7 @@ import android.widget.TextView;
 public class NewAppointment extends AppCompatActivity {
     private Spinner spinner;
     private String[] placeTypes;
+    String dateString = "";
     private TextView dateText, timeStartText, timeEndText;
     private Button setDateTimeBtn;
     private int REQUEST_DATETIME_STRING = 43;
@@ -33,7 +34,6 @@ public class NewAppointment extends AppCompatActivity {
         spinner.setAdapter(dataAdapter);
 
         dateText = (TextView) findViewById(R.id.dateText);
-        timeStartText = (TextView) findViewById(R.id.timeStartText);
         timeEndText = (TextView) findViewById(R.id.timeEndText);
         setDateTimeBtn = (Button) findViewById(R.id.setDateTimeBtn);
         updateStartText();
@@ -59,19 +59,26 @@ public class NewAppointment extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_DATETIME_STRING) {
             if (resultCode == Activity.RESULT_OK) {
-                String newText = data.getStringExtra("94");
-                dateText.setText(newText);
+                dateString = data.getStringExtra("94");
+                dateText.setText(dateString);
             }
         }
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putString("dateStringKey", dateString);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        dateString = savedInstanceState.getString("dateStringKey");
+    }
 
 
     protected void updateStartText() {
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            String dateString = extras.getString("stringDatekey");
-            dateText.setText(dateString);
-        }
+        dateText.setText(dateString);
     }
 }

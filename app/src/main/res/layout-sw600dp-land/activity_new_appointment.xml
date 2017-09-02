@@ -48,19 +48,20 @@
 
     <TextView
         android:id="@+id/textView9"
-        android:layout_width="137dp"
-        android:layout_height="117dp"
+        android:layout_width="141dp"
+        android:layout_height="63dp"
         android:layout_marginTop="258dp"
         android:text="Starts"
         android:textAlignment="center"
         android:textSize="35dp"
         app:layout_constraintLeft_toLeftOf="@+id/guideline12"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginLeft="0dp" />
 
     <TextView
         android:id="@+id/dateText"
-        android:layout_width="173dp"
-        android:layout_height="59dp"
+        android:layout_width="388dp"
+        android:layout_height="93dp"
         android:layout_marginLeft="137dp"
         android:layout_marginTop="258dp"
         android:ems="10"
@@ -70,21 +71,6 @@
         app:layout_constraintLeft_toLeftOf="@+id/guideline12"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="__/__/____"
-        android:layout_marginStart="137dp" />
-
-    <TextView
-        android:id="@+id/timeStartText"
-        android:layout_width="133dp"
-        android:layout_height="56dp"
-        android:layout_marginLeft="137dp"
-        android:layout_marginTop="198dp"
-        android:ems="10"
-        android:inputType="date"
-        android:textAlignment="center"
-        android:textSize="35dp"
-        app:layout_constraintLeft_toLeftOf="@+id/guideline12"
-        app:layout_constraintTop_toTopOf="@+id/guideline13"
-        tools:text="0:00"
         android:layout_marginStart="137dp" />
 
     <TextView

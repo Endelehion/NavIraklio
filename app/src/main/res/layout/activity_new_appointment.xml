@@ -57,29 +57,17 @@
 
     <TextView
         android:id="@+id/dateText"
-        android:layout_width="140dp"
-        android:layout_height="40dp"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="85dp"
         android:layout_marginTop="121dp"
+        android:layout_weight="1"
         android:ems="10"
         android:inputType="date"
         android:textSize="30dp"
         app:layout_constraintLeft_toLeftOf="@+id/guideline12"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="__/__/____" />
-
-    <TextView
-        android:id="@+id/timeStartText"
-        android:layout_width="140dp"
-        android:layout_height="40dp"
-        android:layout_marginLeft="85dp"
-        android:layout_marginTop="111dp"
-        android:ems="10"
-        android:inputType="date"
-        android:textSize="30dp"
-        app:layout_constraintLeft_toLeftOf="@+id/guideline12"
-        app:layout_constraintTop_toTopOf="@+id/guideline13"
-        tools:text="0:00" />
 
     <TextView
         android:id="@+id/timeEndText"

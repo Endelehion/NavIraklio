@@ -71,34 +71,6 @@
         android:layout_marginLeft="0dp" />
 
     <TextView
-        android:id="@+id/dateText"
-        android:layout_width="220dp"
-        android:layout_height="77dp"
-        android:layout_marginLeft="134dp"
-        android:layout_marginTop="258dp"
-        android:ems="10"
-        android:inputType="date"
-        android:textSize="45dp"
-        app:layout_constraintLeft_toLeftOf="@+id/guideline12"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="__/__/____"
-        android:layout_marginStart="134dp" />
-
-    <TextView
-        android:id="@+id/timeStartText"
-        android:layout_width="149dp"
-        android:layout_height="80dp"
-        android:layout_marginLeft="204dp"
-        android:layout_marginTop="214dp"
-        android:ems="10"
-        android:inputType="date"
-        android:textAlignment="center"
-        android:textSize="45dp"
-        app:layout_constraintLeft_toLeftOf="@+id/guideline12"
-        app:layout_constraintTop_toTopOf="@+id/guideline13"
-        tools:text="0:00" />
-
-    <TextView
         android:id="@+id/timeEndText"
         android:layout_width="149dp"
         android:layout_height="65dp"
@@ -187,5 +159,17 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginBottom="204dp" />
+
+    <TextView
+        android:id="@+id/dateText"
+        android:layout_width="256dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="134dp"
+        android:layout_marginTop="138dp"
+        android:layout_weight="1"
+        android:text="TextView"
+        android:textSize="45dp"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline12"
+        app:layout_constraintTop_toTopOf="@+id/guideline13" />
 
 </android.support.constraint.ConstraintLayout>
