@@ -1,5 +1,6 @@
 package com.example.varda.naviraklio;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ public class NewAppointment extends AppCompatActivity {
     private String[] placeTypes;
     private TextView dateText, timeStartText, timeEndText;
     private Button setDateTimeBtn;
+    private int REQUEST_DATETIME_STRING = 43;
 
 
     @Override
@@ -33,16 +35,43 @@ public class NewAppointment extends AppCompatActivity {
         dateText = (TextView) findViewById(R.id.dateText);
         timeStartText = (TextView) findViewById(R.id.timeStartText);
         timeEndText = (TextView) findViewById(R.id.timeEndText);
-        setDateTimeBtn=(Button) findViewById(R.id.setDateTimeBtn);
+        setDateTimeBtn = (Button) findViewById(R.id.setDateTimeBtn);
+        updateStartText();
 
         setDateTimeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String passedExtra = "Appointment Date";
-                Intent intent =new Intent(NewAppointment.this,DatePick.class);
-                intent.putExtra("passedString",passedExtra);
-                startActivity(intent);
+                Intent intent = new Intent(NewAppointment.this, DatePick.class);
+                startActivityForResult(intent, REQUEST_DATETIME_STRING);
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateStartText();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_DATETIME_STRING) {
+            if (resultCode == Activity.RESULT_OK) {
+                String newText = data.getStringExtra("94");
+                dateText.setText(newText);
+            }
+        }
+    }
+
+
+
+    protected void updateStartText() {
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            String dateString = extras.getString("stringDatekey");
+            dateText.setText(dateString);
+        }
     }
 }

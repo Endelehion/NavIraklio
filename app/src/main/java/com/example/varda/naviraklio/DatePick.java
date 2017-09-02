@@ -1,6 +1,7 @@
 package com.example.varda.naviraklio;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +15,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -28,6 +30,7 @@ public class DatePick extends AppCompatActivity {
     private SimpleDateFormat selectedDateTime;
     private TextView titleDate;
     private final Calendar calendar = Calendar.getInstance();
+    private String STRING_IDENTIFIER="94";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +52,28 @@ public class DatePick extends AppCompatActivity {
         okButtonDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                GregorianCalendar greg = (GregorianCalendar) GregorianCalendar.getInstance();
+                Date currDate = greg.getTime(),selDate;
+                String dateSet;
+                dateSet = titleDate.getText().toString();
+                try {
+                    selDate=selectedDateTime.parse(dateSet);
+                    if(selDate.compareTo(currDate)<0){
+                        Toast.makeText(DatePick.this,"Time machines not invented yet please enter a current of future date and time",Toast.LENGTH_SHORT).show();
+                    }
+                    else{
+                        Toast.makeText(DatePick.this,"Date & Time set",Toast.LENGTH_SHORT).show();
+                        Intent dateIntent = new Intent(DatePick.this,NewAppointment.class);
+                        Intent resultIntent = new Intent();
+                        resultIntent.putExtra(STRING_IDENTIFIER, dateSet);
+                        setResult(Activity.RESULT_OK, resultIntent);
+                        finish();
+
+
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
 
 
             }
@@ -114,10 +139,10 @@ public class DatePick extends AppCompatActivity {
 
         if (Build.VERSION.SDK_INT < 23) {
             titleDate.setText(selectedDateTime.format(createDate(DatePick.this.datePicker.getDayOfMonth(),
-                    DatePick.this.datePicker.getMonth(), DatePick.this.datePicker.getYear(),timePicker.getCurrentHour(),timePicker.getCurrentMinute())));
+                    DatePick.this.datePicker.getMonth(), DatePick.this.datePicker.getYear(), timePicker.getCurrentHour(), timePicker.getCurrentMinute())));
         } else {
             titleDate.setText(selectedDateTime.format(createDate(DatePick.this.datePicker.getDayOfMonth(),
-                    DatePick.this.datePicker.getMonth(), DatePick.this.datePicker.getYear(),timePicker.getHour(),timePicker.getMinute())));
+                    DatePick.this.datePicker.getMonth(), DatePick.this.datePicker.getYear(), timePicker.getHour(), timePicker.getMinute())));
         }
 
     }

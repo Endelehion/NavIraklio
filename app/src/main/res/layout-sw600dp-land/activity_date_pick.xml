@@ -8,24 +8,26 @@
 
     <Button
         android:id="@+id/okButtonDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="110dp"
+        android:layout_height="55dp"
         android:layout_marginBottom="10dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:text="OK"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginEnd="16dp" />
+        tools:layout_editor_absoluteX="836dp"
+        tools:layout_editor_absoluteY="400dp" />
 
     <Button
         android:id="@+id/cancelButtonDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:layout_width="110dp"
+        android:layout_height="55dp"
         android:text="Cancel"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="@+id/guideline15"
-        android:layout_marginLeft="35dp" />
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="8dp" />
 
     <android.support.constraint.Guideline
         android:layout_width="wrap_content"
@@ -42,41 +44,42 @@
         android:id="@+id/guideline16"
         android:orientation="horizontal"
         app:layout_constraintGuide_end="513dp"
-        tools:layout_editor_absoluteY="-1dp"
+        tools:layout_editor_absoluteY="-49dp"
         tools:layout_editor_absoluteX="0dp" />
 
     <Button
         android:id="@+id/dateToggle"
-        android:layout_width="89dp"
-        android:layout_height="48dp"
+        android:layout_width="110dp"
+        android:layout_height="55dp"
         android:text="Date"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline15"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="11dp"
-        android:layout_marginLeft="35dp"
-        app:layout_constraintLeft_toLeftOf="@+id/guideline15" />
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="9dp" />
 
     <Button
         android:id="@+id/timeToggle"
-        android:layout_width="89dp"
-        android:layout_height="48dp"
+        android:layout_width="110dp"
+        android:layout_height="55dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="9dp"
         android:checked="false"
         android:text="Time"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="16dp"
-        android:layout_marginRight="16dp"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/titleDate"
-        android:layout_width="699dp"
-        android:layout_height="49dp"
-        android:layout_marginLeft="140dp"
-        android:layout_marginTop="11dp"
+        android:layout_width="687dp"
+        android:layout_height="50dp"
+        android:gravity="center"
         android:text="N/A"
-        android:textAlignment="center"
         android:textSize="25dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginLeft="145dp"
+        android:layout_marginTop="9dp" />
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="697dp"
@@ -86,27 +89,34 @@
         android:layout_marginStart="16dp"
         android:layout_marginRight="8dp"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginLeft="8dp"
+        android:layout_marginLeft="16dp"
         app:layout_constraintLeft_toLeftOf="@+id/guideline15"
-        app:layout_constraintHorizontal_bias="0.467">
+        app:layout_constraintHorizontal_bias="0.467"
+        android:layout_marginEnd="8dp">
 
         <TimePicker
             android:id="@+id/timePicker"
-            android:layout_width="677dp"
-            android:layout_height="386dp"
-            android:layout_marginLeft="0dp"
-            android:layout_marginTop="0dp"
-            app:layout_constraintLeft_toLeftOf="@+id/datePicker"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_width="682dp"
+            android:layout_height="392dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="2dp"
+            android:scaleY="0.97"
+            android:visibility="visible"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteX="18dp" />
 
         <DatePicker
             android:id="@+id/datePicker"
-            android:layout_width="679dp"
-            android:layout_height="390dp"
-            android:layout_marginLeft="0dp"
-            android:layout_marginStart="7dp"
-            android:layout_marginTop="0dp"
-            app:layout_constraintLeft_toLeftOf="@+id/guideline15"
+            android:layout_width="520dp"
+            android:layout_height="238dp"
+            android:scaleX="1.4"
+            android:scaleY="1.4"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.587"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
     </android.support.constraint.ConstraintLayout>

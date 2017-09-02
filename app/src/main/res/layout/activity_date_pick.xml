@@ -13,7 +13,7 @@
         android:layout_marginRight="116dp"
         android:layout_marginTop="6dp"
         android:text="N/A"
-        android:textAlignment="center"
+        android:gravity="center"
         android:textSize="25dp"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline16" />

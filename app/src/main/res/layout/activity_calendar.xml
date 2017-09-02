@@ -13,8 +13,8 @@
         android:scaleX="0.8"
         android:scaleY="0.8"
         app:layout_constraintRight_toLeftOf="@+id/guideline10"
-        android:layout_marginRight="-1dp"
-        android:layout_marginBottom="0dp"
+        android:layout_marginRight="-807dp"
+        android:layout_marginBottom="54dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline11" />
 
     <Button
