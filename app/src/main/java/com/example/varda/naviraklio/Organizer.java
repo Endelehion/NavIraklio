@@ -19,8 +19,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.IllegalFormatCodePointException;
 
 public class Organizer extends AppCompatActivity {
+    private static final int REQUEST_APPOINTMENT = 22;
     private DatePicker datePicker;
     private SimpleDateFormat sdateFormat;
     private final Calendar calendar = Calendar.getInstance();
@@ -29,7 +31,8 @@ public class Organizer extends AppCompatActivity {
     private ArrayList<Appointment> arListAp;
     private ArrayAdapter adapterAp;
     private ListView listViewAp;
-    private String dateString;
+    private String dateString, receivedDate, receivedType;
+    private Coordinate receivedDestination;
     ArrayList<String> stringList;
 
     @Override
@@ -47,14 +50,18 @@ public class Organizer extends AppCompatActivity {
         arListAp = new ArrayList<>();
 
         dateString = sdateFormat.format(createDate(day, month, 2017, 15, 35));
-        arListAp.add(new Appointment(1, "Cinema", dateString, 37.977817, 23.769849));
+        arListAp.add(new Appointment(arListAp.size(), "ekei 4","Cinema", dateString, 37.977817, 23.769849));
 
         dateString = sdateFormat.format(createDate(7, 7, 2017, 12, 55));
-        arListAp.add(new Appointment(2, "Gas", dateString, 37.977817, 23.769849));
+        arListAp.add(new Appointment(arListAp.size(), "kapou 11", "Gas", dateString, 37.977817, 23.769849));
 
         stringList = new ArrayList<>();
         for (int i = 0; i < arListAp.size(); i++) {
-            stringList.add(arListAp.get(i).type + " " + arListAp.get(i).dateString);
+            int id=arListAp.get(i).getId();
+            String address=arListAp.get(i).getAddress();
+            String type=arListAp.get(i).getType();
+            String date=arListAp.get(i).getDateString();
+            stringList.add(id + " " + address+" "+type+" "+ date);
         }
 
         adapterAp = new ArrayAdapter<>(Organizer.this, android.R.layout.simple_list_item_single_choice, stringList);
@@ -87,17 +94,39 @@ public class Organizer extends AppCompatActivity {
         newAp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(Organizer.this,NewAppointment.class);
-                startActivity(intent);
+                Intent intent = new Intent(Organizer.this, NewAppointment.class);
+                startActivityForResult(intent, REQUEST_APPOINTMENT);
             }
         });
     }
 
     Date createDate(int day, int month, int year, int hour, int minute) {
         Date myDate;
-        GregorianCalendar gre = new GregorianCalendar(year,month,day,hour,minute);
+        GregorianCalendar gre = new GregorianCalendar(year, month, day, hour, minute);
         myDate = gre.getTime();
         return myDate;
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check which request we're responding to
+        if (requestCode == REQUEST_APPOINTMENT
+                && resultCode == Organizer.RESULT_OK) {
+            super.onActivityResult(requestCode, resultCode, data);
+            receivedDestination = data.getParcelableExtra("coordKey");
+            receivedDate = data.getStringExtra("dateKey");
+            receivedType = data.getStringExtra("typeKey");
+            arListAp.add(new Appointment(arListAp.size(), receivedType, receivedDate, receivedDestination.getAddress(),
+                    receivedDestination.getCoord().latitude, receivedDestination.getCoord().longitude));
+            int id=arListAp.get(arListAp.size()-1).getId();
+            String address=arListAp.get(arListAp.size()-1).getAddress();
+            String type=arListAp.get(arListAp.size()-1).getType();
+            String date=arListAp.get(arListAp.size()-1).getDateString();
+            stringList.add(id + " " + address+" "+type+" "+ date);
+            adapterAp.notifyDataSetChanged();
+            Log.i("Elegxos", "koudsfdfgfgdfg");
+        }
+
+
+    }
 }

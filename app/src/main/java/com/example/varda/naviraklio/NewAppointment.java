@@ -4,22 +4,21 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 public class NewAppointment extends AppCompatActivity {
+    private static final int REQUEST_LOCATION_STRING = 34, REQUEST_DATETIME_STRING = 43;
     private Spinner spinner;
     private String[] placeTypes;
     String dateString = "";
     private TextView dateText, timeStartText, timeEndText;
-    private Button setDateTimeBtn;
-    private int REQUEST_DATETIME_STRING = 43;
+    private Button setDateTimeBtn, setLocationBtn,confirmAppointmentBtn;
+    private Coordinate receivedDestination;
+    private TextView addressText;
 
 
     @Override
@@ -32,18 +31,48 @@ public class NewAppointment extends AppCompatActivity {
         ArrayAdapter dataAdapter = new ArrayAdapter<String>(NewAppointment.this, android.R.layout.simple_spinner_item, placeTypes);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
-
+        setLocationBtn = (Button) findViewById(R.id.setLocationBtn);
         dateText = (TextView) findViewById(R.id.dateText);
         timeEndText = (TextView) findViewById(R.id.timeEndText);
+        addressText = (TextView) findViewById(R.id.addressText);
         setDateTimeBtn = (Button) findViewById(R.id.setDateTimeBtn);
+        confirmAppointmentBtn = (Button) findViewById(R.id.confirmAppointmentBtn);
         updateStartText();
+
+
+
+        confirmAppointmentBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(receivedDestination!=null && !dateString.equals(null)){
+                    Intent resultIntent = new Intent();
+                    resultIntent.putExtra("coordKey", receivedDestination);
+                    resultIntent.putExtra("dateKey",dateString);
+                    resultIntent.putExtra("typeKey",spinner.getSelectedItem().toString());
+                    setResult(Activity.RESULT_OK, resultIntent);
+                    finish();
+                }
+            }
+        });
+
+
 
         setDateTimeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String passedExtra = "Appointment Date";
-                Intent intent = new Intent(NewAppointment.this, DatePick.class);
+                Intent intent = new Intent(NewAppointment.this, DateTimePick.class);
                 startActivityForResult(intent, REQUEST_DATETIME_STRING);
+            }
+        });
+
+        setLocationBtn.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent locationIntent = new Intent(NewAppointment.this, PlanMap.class);
+                String passedString = spinner.getSelectedItem().toString();
+                locationIntent.putExtra("typeKey", passedString);
+                startActivityForResult(locationIntent, REQUEST_LOCATION_STRING);
             }
         });
     }
@@ -61,6 +90,12 @@ public class NewAppointment extends AppCompatActivity {
             if (resultCode == Activity.RESULT_OK) {
                 dateString = data.getStringExtra("94");
                 dateText.setText(dateString);
+            }
+        }
+        if (requestCode == REQUEST_LOCATION_STRING) {
+            if (resultCode == Activity.RESULT_OK) {
+                receivedDestination = data.getParcelableExtra("coordKey");
+                addressText.setText(receivedDestination.getAddress());
             }
         }
     }
@@ -82,3 +117,29 @@ public class NewAppointment extends AppCompatActivity {
         dateText.setText(dateString);
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

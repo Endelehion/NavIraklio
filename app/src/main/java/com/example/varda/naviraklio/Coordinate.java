@@ -1,25 +1,46 @@
 package com.example.varda.naviraklio;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.io.Serializable;
 import java.util.Comparator;
 
 /**
  * Created by Endelehion on 28/5/2017.
  */
 
-public class Coordinate  {
+public class Coordinate implements Parcelable {
     private LatLng coord;
-    private String name;
+    private String address;
     private String coordType;
 
-    public Coordinate(double latitude, double longtitude, String name, String coordType) {
+    public Coordinate(double latitude, double longtitude, String address, String coordType) {
         setCoord(new LatLng(latitude, longtitude));
-        this.setName(name);
+        this.setAddress(address);
         this.setCoordType(coordType);
     }
+
+    protected Coordinate(Parcel in) {
+        coord = in.readParcelable(LatLng.class.getClassLoader());
+        address = in.readString();
+        coordType = in.readString();
+    }
+
+    public static final Creator<Coordinate> CREATOR = new Creator<Coordinate>() {
+        @Override
+        public Coordinate createFromParcel(Parcel in) {
+            return new Coordinate(in);
+        }
+
+        @Override
+        public Coordinate[] newArray(int size) {
+            return new Coordinate[size];
+        }
+    };
 
     public LatLng getCoord() {
         return coord;
@@ -29,12 +50,12 @@ public class Coordinate  {
         this.coord = coord;
     }
 
-    public String getName() {
-        return name;
+    public String getAddress() {
+        return address;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public String getCoordType() {
@@ -46,4 +67,15 @@ public class Coordinate  {
     }
 
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeParcelable(coord, flags);
+        dest.writeString(address);
+        dest.writeString(coordType);
+    }
 }

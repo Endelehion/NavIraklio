@@ -66,10 +66,12 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".Map"
+            android:name=".InstantMap"
             android:label="@string/title_activity_map" />
         <activity android:name=".NewAppointment" />
-        <activity android:name=".DatePick" />
+        <activity android:name=".DateTimePick" />
+        <activity android:name=".PlanMap" />
+        <activity android:name=".Petros"></activity>
     </application>
 
 </manifest>

@@ -21,7 +21,7 @@ public class Home extends AppCompatActivity {
         startActivity(profileIntent);
     }
     protected void goMap(View view){
-        Intent profileIntent=new Intent(Home.this, Map.class);
+        Intent profileIntent=new Intent(Home.this, InstantMap.class);
         startActivity(profileIntent);
     }
     protected void goLogout(View view){

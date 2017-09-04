@@ -122,14 +122,14 @@
         app:layout_constraintLeft_toLeftOf="@+id/guideline12" />
 
     <Button
-        android:id="@+id/button10"
+        android:id="@+id/confirmAppointmentBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Confirm"
-        app:layout_constraintTop_toTopOf="@+id/guideline13"
-        android:layout_marginTop="382dp"
         android:layout_marginLeft="249dp"
-        app:layout_constraintLeft_toLeftOf="@+id/guideline12" />
+        android:layout_marginTop="382dp"
+        android:text="Confirm"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline12"
+        app:layout_constraintTop_toTopOf="@+id/guideline13" />
 
     <Button
         android:id="@+id/button11"
@@ -142,17 +142,17 @@
         android:layout_marginTop="382dp" />
 
     <TextView
-        android:id="@+id/textView11"
+        android:id="@+id/addressText"
         android:layout_width="198dp"
         android:layout_height="65dp"
-        android:text="TextView"
+        android:layout_marginBottom="122dp"
         android:layout_marginRight="25dp"
-        app:layout_constraintRight_toRightOf="parent"
+        android:text="TextView"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="122dp" />
+        app:layout_constraintRight_toRightOf="parent" />
 
     <TextView
-        android:id="@+id/textView18"
+        android:id="@+id/addressLabel"
         android:layout_width="109dp"
         android:layout_height="51dp"
         android:layout_marginBottom="136dp"
@@ -162,5 +162,15 @@
         android:textSize="25dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="@+id/guideline12" />
+
+    <Button
+        android:id="@+id/setLocationBtn"
+        android:layout_width="92dp"
+        android:layout_height="79dp"
+        android:text="Set Location"
+        android:layout_marginRight="16dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline13"
+        android:layout_marginTop="186dp" />
 
 </android.support.constraint.ConstraintLayout>
