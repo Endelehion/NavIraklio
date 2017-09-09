@@ -2,43 +2,43 @@ package com.example.varda.naviraklio;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
 
 import com.google.android.gms.maps.model.LatLng;
-
-import java.io.Serializable;
-import java.util.Comparator;
 
 /**
  * Created by Endelehion on 28/5/2017.
  */
 
-public class Coordinate implements Parcelable {
+public class Place implements Parcelable {
     private LatLng coord;
     private String address;
     private String coordType;
 
-    public Coordinate(double latitude, double longtitude, String address, String coordType) {
-        setCoord(new LatLng(latitude, longtitude));
+    public Place(LatLng coord, String address, String coordType, int openHour,  int closeHour) {
+        this.coord=coord;
         this.setAddress(address);
         this.setCoordType(coordType);
     }
 
-    protected Coordinate(Parcel in) {
+    public Place(String coordType){
+        this.coordType=coordType;
+    }
+
+    protected Place(Parcel in) {
         coord = in.readParcelable(LatLng.class.getClassLoader());
         address = in.readString();
         coordType = in.readString();
     }
 
-    public static final Creator<Coordinate> CREATOR = new Creator<Coordinate>() {
+    public static final Creator<Place> CREATOR = new Creator<Place>() {
         @Override
-        public Coordinate createFromParcel(Parcel in) {
-            return new Coordinate(in);
+        public Place createFromParcel(Parcel in) {
+            return new Place(in);
         }
 
         @Override
-        public Coordinate[] newArray(int size) {
-            return new Coordinate[size];
+        public Place[] newArray(int size) {
+            return new Place[size];
         }
     };
 

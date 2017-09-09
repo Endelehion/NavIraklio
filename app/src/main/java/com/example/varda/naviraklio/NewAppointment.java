@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -15,9 +16,9 @@ public class NewAppointment extends AppCompatActivity {
     private Spinner spinner;
     private String[] placeTypes;
     String dateString = "";
-    private TextView dateText, timeStartText, timeEndText;
-    private Button setDateTimeBtn, setLocationBtn,confirmAppointmentBtn;
-    private Coordinate receivedDestination;
+    private TextView dateText;
+    private Button setDateTimeBtn, movieBtn, confirmAppointmentBtn;
+    private Place receivedDestination;
     private TextView addressText;
 
 
@@ -31,24 +32,54 @@ public class NewAppointment extends AppCompatActivity {
         ArrayAdapter dataAdapter = new ArrayAdapter<String>(NewAppointment.this, android.R.layout.simple_spinner_item, placeTypes);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
-        setLocationBtn = (Button) findViewById(R.id.setLocationBtn);
         dateText = (TextView) findViewById(R.id.dateText);
-        timeEndText = (TextView) findViewById(R.id.timeEndText);
-        addressText = (TextView) findViewById(R.id.addressText);
+        movieBtn = (Button) findViewById(R.id.movieBtn);
         setDateTimeBtn = (Button) findViewById(R.id.setDateTimeBtn);
         confirmAppointmentBtn = (Button) findViewById(R.id.confirmAppointmentBtn);
         updateStartText();
 
 
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (spinner.getSelectedItem().toString().equals("Cinema")) {
+                    setDateTimeBtn.setVisibility(View.GONE);
+                    movieBtn.setVisibility(View.VISIBLE);
+                } else {
+                    setDateTimeBtn.setVisibility(View.VISIBLE);
+                    movieBtn.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                if (spinner.getSelectedItem().toString().equals("Cinema")) {
+                    setDateTimeBtn.setVisibility(View.GONE);
+                    movieBtn.setVisibility(View.VISIBLE);
+                } else {
+                    setDateTimeBtn.setVisibility(View.VISIBLE);
+                    movieBtn.setVisibility(View.GONE);
+                }
+
+            }
+        });
+
+        movieBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent= new Intent(NewAppointment.this,MoviePicker.class);
+                startActivity(intent);
+            }
+        });
+
 
         confirmAppointmentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(receivedDestination!=null && !dateString.equals(null)){
+                if (!dateString.equals(null)) {
                     Intent resultIntent = new Intent();
-                    resultIntent.putExtra("coordKey", receivedDestination);
-                    resultIntent.putExtra("dateKey",dateString);
-                    resultIntent.putExtra("typeKey",spinner.getSelectedItem().toString());
+                    resultIntent.putExtra("dateKey", dateString);
+                    resultIntent.putExtra("typeKey", spinner.getSelectedItem().toString());
                     setResult(Activity.RESULT_OK, resultIntent);
                     finish();
                 }
@@ -56,23 +87,11 @@ public class NewAppointment extends AppCompatActivity {
         });
 
 
-
         setDateTimeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(NewAppointment.this, DateTimePick.class);
                 startActivityForResult(intent, REQUEST_DATETIME_STRING);
-            }
-        });
-
-        setLocationBtn.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Intent locationIntent = new Intent(NewAppointment.this, PlanMap.class);
-                String passedString = spinner.getSelectedItem().toString();
-                locationIntent.putExtra("typeKey", passedString);
-                startActivityForResult(locationIntent, REQUEST_LOCATION_STRING);
             }
         });
     }

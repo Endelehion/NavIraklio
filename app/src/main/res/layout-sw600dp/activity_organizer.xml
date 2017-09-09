@@ -6,6 +6,16 @@
     android:layout_height="match_parent"
     tools:context="com.example.varda.naviraklio.Organizer">
 
+    <Button
+        android:id="@+id/navigateBtn"
+        android:layout_width="130dp"
+        android:layout_height="66dp"
+        android:layout_marginBottom="108dp"
+        android:layout_marginRight="118dp"
+        android:text="Navigate"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
     <DatePicker
         android:id="@+id/datePicker"
         android:layout_width="348dp"
@@ -50,19 +60,6 @@
         app:layout_constraintBottom_toTopOf="@+id/guideline9" />
 
     <Button
-        android:id="@+id/editAp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Edit"
-        app:layout_constraintRight_toLeftOf="@+id/guideline10"
-        android:layout_marginRight="-1dp"
-        app:layout_constraintLeft_toRightOf="@+id/listAp"
-        android:layout_marginLeft="8dp"
-        app:layout_constraintHorizontal_bias="1.0"
-        android:layout_marginBottom="164dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline9" />
-
-    <Button
         android:id="@+id/delAp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -71,8 +68,8 @@
         android:layout_marginRight="-10dp"
         app:layout_constraintLeft_toRightOf="@+id/listAp"
         android:layout_marginLeft="8dp"
-        app:layout_constraintHorizontal_bias="0.111"
-        android:layout_marginBottom="64dp"
+        app:layout_constraintHorizontal_bias="0.0"
+        android:layout_marginBottom="153dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline9" />
 
     <android.support.constraint.Guideline

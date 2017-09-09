@@ -8,9 +8,9 @@ import java.util.Comparator;
  * Created by Endelehion on 27/6/2017.
  */
 
-public class ComparatorCoord implements Comparator<Coordinate> {
+public class ComparatorCoord implements Comparator<Place> {
     @Override
-    public int compare(Coordinate compareCoord1,Coordinate compareCoord2) {
+    public int compare(Place compareCoord1, Place compareCoord2) {
         LatLng compLatl1 = (compareCoord1).getCoord();
         double compX1 = compLatl1.latitude;
         LatLng compLat2 = (compareCoord2).getCoord();

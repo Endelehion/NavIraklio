@@ -7,6 +7,16 @@
     tools:context="com.example.varda.naviraklio.Organizer">
 
     <Button
+        android:id="@+id/navigateBtn"
+        android:layout_width="130dp"
+        android:layout_height="52dp"
+        android:layout_marginBottom="169dp"
+        android:layout_marginRight="249dp"
+        android:text="Navigate"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <Button
         android:id="@+id/newAp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -20,19 +30,6 @@
         android:layout_marginTop="39dp" />
 
     <Button
-        android:id="@+id/editAp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Edit"
-        app:layout_constraintLeft_toRightOf="@+id/listAp"
-        android:layout_marginLeft="15dp"
-        app:layout_constraintRight_toLeftOf="@+id/guideline8"
-        android:layout_marginRight="8dp"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="140dp" />
-
-    <Button
         android:id="@+id/delAp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -43,7 +40,7 @@
         android:layout_marginRight="8dp"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="246dp" />
+        android:layout_marginTop="131dp" />
 
     <DatePicker
         android:id="@+id/datePicker"

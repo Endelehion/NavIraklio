@@ -1,26 +1,50 @@
 package com.example.varda.naviraklio;
 
-import com.google.android.gms.maps.model.LatLng;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 /**
  * Created by Endelehion on 18/6/2017.
  */
 
-public class Appointment {
+public class Appointment implements Parcelable{
 
-    String type;
     String dateString;
-    private String address;
-    LatLng coord;
+    Place place;
     int id;
 
 
-    public Appointment(int id, String type, String address, String dateString, double lat, double lon) {
-        this.type = type;
+    public Appointment(int id, String dateString, Place place) {
+
         this.dateString = dateString;
-        this.coord = new LatLng(lat, lon);
         this.id = id;
-        this.setAddress(address);
+        this.place = place;
+    }
+
+    protected Appointment(Parcel in) {
+        dateString = in.readString();
+        place = in.readParcelable(Place.class.getClassLoader());
+        id = in.readInt();
+    }
+
+    public static final Creator<Appointment> CREATOR = new Creator<Appointment>() {
+        @Override
+        public Appointment createFromParcel(Parcel in) {
+            return new Appointment(in);
+        }
+
+        @Override
+        public Appointment[] newArray(int size) {
+            return new Appointment[size];
+        }
+    };
+
+    public Place getPlace() {
+        return place;
+    }
+
+    public void setPlace(Place place) {
+        this.place = place;
     }
 
     public String getDateString() {
@@ -31,13 +55,6 @@ public class Appointment {
         this.dateString = dateString;
     }
 
-    public LatLng getCoord() {
-        return coord;
-    }
-
-    public void setCoord(LatLng coord) {
-        this.coord = coord;
-    }
 
     public int getId() {
         return id;
@@ -47,19 +64,15 @@ public class Appointment {
         this.id = id;
     }
 
-    public String getType() {
-        return type;
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(dateString);
+        dest.writeParcelable(place, flags);
+        dest.writeInt(id);
     }
 }

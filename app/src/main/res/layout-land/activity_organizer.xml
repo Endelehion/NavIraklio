@@ -6,6 +6,17 @@
     android:layout_height="match_parent"
     tools:context="com.example.varda.naviraklio.Organizer">
 
+    <Button
+        android:id="@+id/navigateBtn"
+        android:layout_width="87dp"
+        android:layout_height="71dp"
+        android:layout_marginBottom="88dp"
+        android:layout_marginRight="0dp"
+        android:text="Navigate"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
     <ListView
         android:id="@+id/listAp"
         android:layout_width="207dp"
@@ -27,22 +38,12 @@
         app:layout_constraintLeft_toLeftOf="@+id/guideline8" />
 
     <Button
-        android:id="@+id/editAp"
-        android:layout_width="85dp"
-        android:layout_height="47dp"
-        android:text="Edit"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="77dp"
-        android:layout_marginLeft="207dp"
-        app:layout_constraintLeft_toLeftOf="@+id/guideline8" />
-
-    <Button
         android:id="@+id/delAp"
         android:layout_width="85dp"
         android:layout_height="47dp"
         android:text="Delete"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="154dp"
+        android:layout_marginTop="59dp"
         android:layout_marginLeft="207dp"
         app:layout_constraintLeft_toLeftOf="@+id/guideline8" />
 

@@ -53,7 +53,7 @@ public class DateTimePick extends AppCompatActivity {
             public void onClick(View v) {
                 GregorianCalendar greg = (GregorianCalendar) GregorianCalendar.getInstance();
                 Date currDate = greg.getTime(), selDate;
-                String dateSet,oneMinWindow;
+                String dateSet;
                 dateSet = titleDate.getText().toString();
                 try {
                     selDate = selectedDateTime.parse(dateSet);

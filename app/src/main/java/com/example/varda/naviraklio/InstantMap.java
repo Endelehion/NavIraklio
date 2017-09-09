@@ -32,7 +32,6 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
-import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -77,9 +76,9 @@ public class InstantMap extends FragmentActivity implements OnMapReadyCallback, 
     private double sumDist;
     Spinner spinner;
     String[] placeTypes;
-    List<Coordinate> superMarkets;
-    List<GasStation> gasStations;
-    List<Coordinate> cinemas;
+    List<Place> superMarkets;
+    List<Place> gasStations;
+    List<Place> cinemas;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -213,8 +212,8 @@ public class InstantMap extends FragmentActivity implements OnMapReadyCallback, 
             case "Supermarket":
 
                 dist = distFrom(origin, superMarkets.get(0).getCoord());
-                Coordinate nearestSupermarket = superMarkets.get(0);
-                for (Coordinate tempCoor : superMarkets) {
+                Place nearestSupermarket = superMarkets.get(0);
+                for (Place tempCoor : superMarkets) {
                     tempDist = distFrom(origin, tempCoor.getCoord());
                     if (tempDist < dist) {
                         dist = tempDist;
@@ -230,8 +229,8 @@ public class InstantMap extends FragmentActivity implements OnMapReadyCallback, 
             case "Cinema":
                 dist = distFrom(origin, cinemas.get(0).getCoord());
 
-                Coordinate nearestCinema = cinemas.get(0);
-                for (Coordinate tempCoor : cinemas) {
+                Place nearestCinema = cinemas.get(0);
+                for (Place tempCoor : cinemas) {
                     tempDist = distFrom(origin, tempCoor.getCoord());
                     if (tempDist < dist) {
                         dist = tempDist;
@@ -244,8 +243,8 @@ public class InstantMap extends FragmentActivity implements OnMapReadyCallback, 
                 break;
             case "Gas Station":
                 dist = distFrom(origin, gasStations.get(0).getCoord());
-                Coordinate nearestGasStation = gasStations.get(0);
-                for (Coordinate tempCoor : gasStations) {
+                Place nearestGasStation = gasStations.get(0);
+                for (Place tempCoor : gasStations) {
                     tempDist = distFrom(origin, tempCoor.getCoord());
                     if (tempDist < dist) {
                         dist = tempDist;
@@ -365,78 +364,80 @@ public class InstantMap extends FragmentActivity implements OnMapReadyCallback, 
 
     void createCoordinates() {
         superMarkets = new ArrayList<>();
-        superMarkets.add(new Coordinate(35.340685, 25.133643, "Chalkiadakis", "Supermarket"));
-        superMarkets.add(new Coordinate(35.337384, 25.121930, "LIDL", "Supermarket"));
-        superMarkets.add(new Coordinate(35.338468, 25.139354, "AB", "Supermarket"));
-        superMarkets.add(new Coordinate(35.337481, 25.132863, "BAZAAR", "Supermarket"));
-        superMarkets.add(new Coordinate(35.339136, 25.155434, "Sklavenitis", "Supermarket"));
-        superMarkets.add(new Coordinate(35.341716, 25.136238, "papadaki", "Supermarket"));
-        superMarkets.add(new Coordinate(35.326724, 25.131095, "Sklavenitis", "Supermarket"));
-        superMarkets.add(new Coordinate(35.326251, 25.138878, "Sklavenitis", "Supermarket"));
-        superMarkets.add(new Coordinate(35.337651, 25.126895, "Chalkiadakis", "Supermarket"));
-        superMarkets.add(new Coordinate(35.338751, 25.119835, "Chalkiadakis", "Supermarket"));
-        superMarkets.add(new Coordinate(35.324666, 25.133577, "Ariadni", "Supermarket"));
-        superMarkets.add(new Coordinate(35.334394, 25.115245, "INKA", "Supermarket"));
-        superMarkets.add(new Coordinate(35.324695, 25.124600, "AB", "Supermarket"));
-        superMarkets.add(new Coordinate(35.323925, 25.112541, "LIDL", "Supermarket"));
-        superMarkets.add(new Coordinate(35.319163, 25.144127, "INKA", "Supermarket"));
-        superMarkets.add(new Coordinate(35.324660, 25.124514, "AB", "Supermarket"));
-        superMarkets.add(new Coordinate(35.318393, 25.148246, "Chalkiadakis", "Supermarket"));
-        superMarkets.add(new Coordinate(35.331733, 25.137689, "Chalkiadakis", "Supermarket"));
-        superMarkets.add(new Coordinate(35.330157, 25.132282, "Chalkiadakis", "Supermarket"));
-        superMarkets.add(new Coordinate(35.334359, 25.158718, "Chalkiadakis Max", "Supermarket"));
-        superMarkets.add(new Coordinate(35.329072, 25.119279, "Chalkiadakis", "Supermarket"));
-        superMarkets.add(new Coordinate(35.343307, 25.155190, "My Cretan Goods", "Supermarket"));
-        superMarkets.add(new Coordinate(35.336788, 25.133692, "Alati tis Gis", "Supermarket"));
-        superMarkets.add(new Coordinate(35.330241, 25.124522, "Kouts", "Supermarket"));
+        superMarkets.add(new Place(new LatLng(35.340685, 25.133643), "Chalkiadakis", "Supermarket",9,21));
+        superMarkets.add(new Place(new LatLng(35.337384, 25.121930), "LIDL", "Supermarket",9,21));
+        superMarkets.add(new Place(new LatLng(35.338468, 25.139354), "AB", "Supermarket",9,21));
+        superMarkets.add(new Place(new LatLng(35.337481, 25.132863), "BAZAAR", "Supermarket",9,21));
+        superMarkets.add(new Place(new LatLng(35.339136, 25.155434), "Sklavenitis", "Supermarket",9,21));
+        superMarkets.add(new Place(new LatLng(35.341716, 25.136238), "papadaki", "Supermarket",9,21));
+        superMarkets.add(new Place(new LatLng(35.326724, 25.131095), "Sklavenitis", "Supermarket",9,21));
+        superMarkets.add(new Place(new LatLng(35.326251, 25.138878), "Sklavenitis", "Supermarket",9,21));
+        superMarkets.add(new Place(new LatLng(35.337651, 25.126895), "Chalkiadakis", "Supermarket",9,21));
+        superMarkets.add(new Place(new LatLng(35.338751, 25.119835), "Chalkiadakis", "Supermarket",9,21));
+        superMarkets.add(new Place(new LatLng(35.324666, 25.133577), "Ariadni", "Supermarket",9,21));
+        superMarkets.add(new Place(new LatLng(35.334394, 25.115245), "INKA", "Supermarket",9,21));
+        superMarkets.add(new Place(new LatLng(35.324695, 25.124600), "AB", "Supermarket",9,21));
+        superMarkets.add(new Place(new LatLng(35.323925, 25.112541), "LIDL", "Supermarket",9,21));
+        superMarkets.add(new Place(new LatLng(35.319163, 25.144127), "INKA", "Supermarket",9,21));
+        superMarkets.add(new Place(new LatLng(35.324660, 25.124514), "AB", "Supermarket",9,21));
+        superMarkets.add(new Place(new LatLng(35.318393, 25.148246), "Chalkiadakis", "Supermarket",9,21));
+        superMarkets.add(new Place(new LatLng(35.331733, 25.137689), "Chalkiadakis", "Supermarket",9,21));
+        superMarkets.add(new Place(new LatLng(35.330157, 25.132282), "Chalkiadakis", "Supermarket",9,21));
+        superMarkets.add(new Place(new LatLng(35.334359, 25.158718), "Chalkiadakis Max", "Supermarket",9,21));
+        superMarkets.add(new Place(new LatLng(35.329072, 25.119279), "Chalkiadakis", "Supermarket",9,21));
+        superMarkets.add(new Place(new LatLng(35.343307, 25.155190), "My Cretan Goods", "Supermarket",9,21));
+        superMarkets.add(new Place(new LatLng(35.336788, 25.133692), "Alati tis Gis", "Supermarket",9,21));
+        superMarkets.add(new Place(new LatLng(35.330241, 25.124522), "Kouts", "Supermarket",9,21));
 
 
         //zografou
-        superMarkets.add(new Coordinate(37.977817, 23.769849, "daily", "Supermarket"));
+        superMarkets.add(new Place(new LatLng(37.977817, 23.769849), "Daily Lewf. Papagou 114", "Supermarket",9,21));
         Collections.sort(superMarkets, new ComparatorCoord());
 
 
+
         gasStations = new ArrayList<>();
-        gasStations.add(new GasStation(35.338674, 25.141106, "SHELL", "Gas Station",24,24));
-        gasStations.add(new GasStation(35.335309, 25.141536, "EKO", "Gas Station",24,24));
-        gasStations.add(new GasStation(35.333256, 25.121656, "Tsiknakis Ioannis", "Gas Station",7,22));
-        gasStations.add(new GasStation(35.330283, 25.108827, "ELIN", "Gas Station",7,22));
-        gasStations.add(new GasStation(35.329145, 25.117691, "Christodoulakis", "Gas Station",7,22));
-        gasStations.add(new GasStation(35.338607, 25.143821, "Giannakakis", "Gas Station",7,22));
-        gasStations.add(new GasStation(35.336275, 25.121359, "Hanagia", "Gas Station",7,22));
-        gasStations.add(new GasStation(35.333818, 25.117024, "Stamatakis", "Gas Station",7,22));
-        gasStations.add(new GasStation(35.326903, 25.131728, "Koumoulas", "Gas Station",7,22));
-        gasStations.add(new GasStation(35.338667, 25.141116, "SHELL", "Gas Station",24,24));
-        gasStations.add(new GasStation(35.338795, 25.141556, "SHELL", "Gas Station",24,24));
-        gasStations.add(new GasStation(35.338714, 25.143423, "BP", "Gas Station",24,24));
-        gasStations.add(new GasStation(35.337829, 25.141788, "BP", "Gas Station",24,24));
-        gasStations.add(new GasStation(35.336477, 25.146265, "BP", "Gas Station",24,24));
-        gasStations.add(new GasStation(35.334352, 25.133687, "BP", "Gas Station",24,24));
-        gasStations.add(new GasStation(35.324131, 25.139945, "Mavraki", "Gas Station",24,24));
-        gasStations.add(new GasStation(35.332375, 25.122159, "Samolis BP", "Gas Station",24,24));
-        gasStations.add(new GasStation(35.332414, 25.112785, "Aegean", "Gas Station",7,22));
-        gasStations.add(new GasStation(35.319242, 25.133003, "EKO", "Gas Station",7,22));
-        gasStations.add(new GasStation(35.320312, 25.125391, "Koumoulas", "Gas Station",7,22));
-        gasStations.add(new GasStation(35.321124, 25.143192, "Androulakis", "Gas Station",7,22));
-        gasStations.add(new GasStation(35.331358, 25.104039, "Xenakis", "Gas Station",24,24));
-        gasStations.add(new GasStation(35.341186, 25.141900, "Avis", "Gas Station",7,22));
-        gasStations.add(new GasStation(35.338016, 25.160950, "EKO", "Gas Station",7,22));
+        gasStations.add(new Place(new LatLng(35.338674, 25.141106), "SHELL", "Gas Station", 24, 24));
+        gasStations.add(new Place(new LatLng(35.335309, 25.141536), "EKO", "Gas Station", 24, 24));
+        gasStations.add(new Place(new LatLng(35.333256, 25.121656), "Tsiknakis Ioannis", "Gas Station", 7, 22));
+        gasStations.add(new Place(new LatLng(35.330283, 25.108827), "ELIN", "Gas Station", 7, 22));
+        gasStations.add(new Place(new LatLng(35.329145, 25.117691), "Christodoulakis", "Gas Station", 7, 22));
+        gasStations.add(new Place(new LatLng(35.338607, 25.143821), "Giannakakis", "Gas Station", 7, 22));
+        gasStations.add(new Place(new LatLng(35.336275, 25.121359), "Hanagia", "Gas Station", 7, 22));
+        gasStations.add(new Place(new LatLng(35.333818, 25.117024), "Stamatakis", "Gas Station", 7, 22));
+        gasStations.add(new Place(new LatLng(35.326903, 25.131728), "Koumoulas", "Gas Station", 7, 22));
+        gasStations.add(new Place(new LatLng(35.338667, 25.141116), "SHELL", "Gas Station", 24, 24));
+        gasStations.add(new Place(new LatLng(35.338795, 25.141556), "SHELL", "Gas Station", 24, 24));
+        gasStations.add(new Place(new LatLng(35.338714, 25.143423), "BP", "Gas Station", 24, 24));
+        gasStations.add(new Place(new LatLng(35.337829, 25.141788), "BP", "Gas Station", 24, 24));
+        gasStations.add(new Place(new LatLng(35.336477, 25.146265), "BP", "Gas Station", 24, 24));
+        gasStations.add(new Place(new LatLng(35.334352, 25.133687), "BP", "Gas Station", 24, 24));
+        gasStations.add(new Place(new LatLng(35.324131, 25.139945), "Mavraki", "Gas Station", 24, 24));
+        gasStations.add(new Place(new LatLng(35.332375, 25.122159), "Samolis BP", "Gas Station", 24, 24));
+        gasStations.add(new Place(new LatLng(35.332414, 25.112785), "Aegean", "Gas Station", 7, 22));
+        gasStations.add(new Place(new LatLng(35.319242, 25.133003), "EKO", "Gas Station", 7, 22));
+        gasStations.add(new Place(new LatLng(35.320312, 25.125391), "Koumoulas", "Gas Station", 7, 22));
+        gasStations.add(new Place(new LatLng(35.321124, 25.143192), "Androulakis", "Gas Station", 7, 22));
+        gasStations.add(new Place(new LatLng(35.331358, 25.104039), "Xenakis", "Gas Station", 24, 24));
+        gasStations.add(new Place(new LatLng(35.341186, 25.141900), "Avis", "Gas Station", 7, 22));
+        gasStations.add(new Place(new LatLng(35.338016, 25.160950), "EKO", "Gas Station", 7, 22));
 
         //zografou
-        gasStations.add(new GasStation(37.974122, 23.774079, "Revoil", "Gas Station",7,22));
+        gasStations.add(new Place(new LatLng(37.974122, 23.774079), "Revoil", "Gas Station", 7, 22));
+
 
         Collections.sort(gasStations, new ComparatorCoord());
 
 
         cinemas = new ArrayList<>();
-        cinemas.add(new Coordinate(35.339880, 25.119728, "Odeon Talos", "Cinema"));
-        cinemas.add(new Coordinate(35.340889, 25.136980, "Vintsenzos Kornaros", "Cinema"));
-        cinemas.add(new Coordinate(35.338375, 25.136216, "Astoria", "Cinema"));
-        cinemas.add(new Coordinate(35.335669, 25.070682, "Texnopolis", "Cinema"));
-        cinemas.add(new Coordinate(35.337980, 25.158230, "Cine Studio", "Cinema"));
-        cinemas.add(new Coordinate(35.338573, 25.129685, "Dedalos Club", "Cinema"));
+        cinemas.add(new Place(new LatLng(35.339880, 25.119728), "Odeon Talos", "Cinema",16,2));
+        cinemas.add(new Place(new LatLng(35.340889, 25.136980), "Vintsenzos Kornaros", "Cinema",16,2));
+        cinemas.add(new Place(new LatLng(35.338375, 25.136216), "Astoria", "Cinema",16,2));
+        cinemas.add(new Place(new LatLng(35.335669, 25.070682), "Texnopolis", "Cinema",16,2));
+        cinemas.add(new Place(new LatLng(35.337980, 25.158230), "Cine Studio", "Cinema",16,2));
+        cinemas.add(new Place(new LatLng(35.338573, 25.129685), "Dedalos Club", "Cinema",16,2));
         //zografou
-        cinemas.add(new Coordinate(37.977369, 23.770716, "Aleka", "Cinema"));
+        cinemas.add(new Place(new LatLng(37.977369, 23.770716), "Aleka", "Cinema",16,2));
         Collections.sort(cinemas, new ComparatorCoord());
 
 
@@ -605,7 +606,7 @@ protected void checkPermissions(){
         if (requestCode == PLACE_PICKER_REQUEST
                 && resultCode == InstantMap.RESULT_OK) {
 
-            final Place place = PlacePicker.getPlace(this, data);
+            final com.google.android.gms.location.places.Place place = PlacePicker.getPlace(this, data);
             final CharSequence name = place.getName();
             final CharSequence address = place.getAddress();
             String attributions = (String) place.getAttributions();

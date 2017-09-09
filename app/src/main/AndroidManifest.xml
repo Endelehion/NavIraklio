@@ -71,7 +71,7 @@
         <activity android:name=".NewAppointment" />
         <activity android:name=".DateTimePick" />
         <activity android:name=".PlanMap" />
-        <activity android:name=".Petros"></activity>
+        <activity android:name=".MoviePicker"></activity>
     </application>
 
 </manifest>

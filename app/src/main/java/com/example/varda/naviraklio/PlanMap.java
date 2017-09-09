@@ -8,7 +8,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.AsyncTask;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -16,13 +15,9 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -37,14 +32,12 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
-import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.CustomCap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -56,11 +49,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -74,10 +69,10 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
     private Location location;
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
-    private final int REQUEST_CHECK_SETTINGS = 1, PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 9, PLACE_PICKER_REQUEST = 2 ;// unique identifiers
-    private boolean clickedflag;  //,togglemyLocationFlag=true;  //TODO Custom Markers
-    private String spinnerSelectedString;
-    private final String COORDINATE_CLASS_STRINGID="coordKey";
+    private final int REQUEST_CHECK_SETTINGS = 1, PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 9, PLACE_PICKER_REQUEST = 2;// unique identifiers
+    private boolean clickedflag;
+    private String selectedTypeString;
+    private final String APPOINTMENT_STRINGID = "appointKey";
     private LatLng whereNow;
     private Marker currMark;
     private Button findButton, mapConfirmBtn;
@@ -85,10 +80,12 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
     private TextView destinationText;
     private ToggleButton myLocationToggle, customMarkerToggle;
     String[] placeTypes;
-    private Coordinate destination;
-    List<Coordinate> superMarkets;
-    List<GasStation> gasStations;
-    List<Coordinate> cinemas;
+    private Place destination;
+    List<Place> superMarkets,cinemas,gasStations;
+    private ArrayList<Appointment> receivedAppointmentList;
+    private Intent receivedIntent;
+    private int receivedListIndex;
+    private SimpleDateFormat dateFormat;
 
 
     @Override
@@ -116,36 +113,13 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         findButton = (Button) findViewById(R.id.findButton);
         mapConfirmBtn = (Button) findViewById(R.id.mapConfirmBtn);
-        myLocationToggle = (ToggleButton) findViewById(R.id.myLocationToggle);
-        customMarkerToggle = (ToggleButton) findViewById(R.id.customMarkerToggle);
         destinationText = (TextView) findViewById(R.id.destinationText);
-        myLocationToggle.setChecked(true);
+        dateFormat = new SimpleDateFormat("EEE dd MMM yyyy HH:mm");
+        receivedIntent = getIntent();
+        receivedIntent.getIntExtra("listIndexKey", receivedListIndex);
+        receivedAppointmentList = receivedIntent.getParcelableArrayListExtra("listKey");
+        selectedTypeString=receivedAppointmentList.get(receivedListIndex).getPlace().getCoordType();
 
-/*//TODO markers picker with touchlistener on Map
-        myLocationToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(myLocationToggle.isChecked()){
-                    togglemyLocationFlag=true;
-                    customMarkerToggle.setChecked(false);
-                }
-
-            }
-        });
-        customMarkerToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(customMarkerToggle.isChecked()){
-                    togglemyLocationFlag=false;
-                    myLocationToggle.setChecked(false);
-                }
-            }
-        });
-*/
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            spinnerSelectedString = extras.getString("typeKey");
-        }
         createCoordinates();
     }
 
@@ -162,9 +136,10 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
         mapConfirmBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(destination!=null){
+                if (destination != null) {
                     Intent resultIntent = new Intent();
-                    resultIntent.putExtra(COORDINATE_CLASS_STRINGID, destination);
+                    receivedAppointmentList.get(receivedListIndex).setPlace(destination);
+                    resultIntent.putExtra(APPOINTMENT_STRINGID, receivedAppointmentList.get(receivedListIndex));
                     setResult(Activity.RESULT_OK, resultIntent);
                     finish();
                 }
@@ -176,32 +151,7 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
         findButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mMap.clear();
-                clickedflag = true;
-                createLocation();
-                if (location != null) {
-                    Log.i("Location Info", "Location achieved!");
-                    addCurrentLocationMarker();
-                    origin = new LatLng(location.getLatitude(), location.getLongitude());
-                    /*  if(togglemyLocationFlag){
-                        origin=new LatLng(location.getLatitude(), location.getLongitude());
-                    }
-                    else{
-                        origin=new LatLng(35.339332, 25.133158); //TODO input custom marker coordinates here
-                    }*/
-                    if (spinnerSelectedString != null) {
-                        findPlace(spinnerSelectedString);
-                        destinationText.setText("Destination: " + destination.getAddress());
-                    }
-
-                } else {
-                    Toast toast = Toast.makeText(PlanMap.this, "Location not Available", Toast.LENGTH_LONG);
-                    toast.show();
-                    checkSettings();
-                    Log.i("Location Info", "Location not Available");
-                }
-
-
+                startNavigation();
             }
         });
 
@@ -225,6 +175,43 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
 
     }
 
+    public void startNavigation() {
+        mMap.clear();
+        clickedflag = true;
+        createLocation();
+        if (location != null) {
+            Log.i("Location Info", "Location achieved!");
+            addCurrentLocationMarker();
+            origin = new LatLng(location.getLatitude(), location.getLongitude());
+            if (selectedTypeString != null) {
+                findPlace(selectedTypeString);
+                destinationText.setText("Destination: " + destination.getAddress());
+            }
+
+        } else {
+            Toast toast = Toast.makeText(PlanMap.this, "Location not Available", Toast.LENGTH_LONG);
+            toast.show();
+            checkSettings();
+            Log.i("Location Info", "Location not Available");
+        }
+
+
+    }
+
+    public void checkCloseAppointments() {
+        Date past20min,after20min;
+        try {
+            past20min=dateFormat.parse(receivedAppointmentList.get(receivedListIndex).getDateString());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        for (int i = 0; i < receivedAppointmentList.size(); i++) {
+
+        }
+
+    }
+
     protected void findPlace(String place) {
         double dist;
         double tempDist;
@@ -232,8 +219,8 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
             case "Supermarket":
 
                 dist = distFrom(origin, superMarkets.get(0).getCoord());
-                Coordinate nearestSupermarket = superMarkets.get(0);
-                for (Coordinate tempCoor : superMarkets) {
+                Place nearestSupermarket = superMarkets.get(0);
+                for (Place tempCoor : superMarkets) {
                     tempDist = distFrom(origin, tempCoor.getCoord());
                     if (tempDist < dist) {
                         dist = tempDist;
@@ -248,8 +235,8 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
             case "Cinema":
                 dist = distFrom(origin, cinemas.get(0).getCoord());
 
-                Coordinate nearestCinema = cinemas.get(0);
-                for (Coordinate tempCoor : cinemas) {
+                Place nearestCinema = cinemas.get(0);
+                for (Place tempCoor : cinemas) {
                     tempDist = distFrom(origin, tempCoor.getCoord());
                     if (tempDist < dist) {
                         dist = tempDist;
@@ -261,8 +248,8 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
                 break;
             case "Gas Station":
                 dist = distFrom(origin, gasStations.get(0).getCoord());
-                Coordinate nearestGasStation = gasStations.get(0);
-                for (Coordinate tempCoor : gasStations) {
+                Place nearestGasStation = gasStations.get(0);
+                for (Place tempCoor : gasStations) {
                     tempDist = distFrom(origin, tempCoor.getCoord());
                     if (tempDist < dist) {
                         dist = tempDist;
@@ -382,78 +369,78 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
 
     void createCoordinates() {
         superMarkets = new ArrayList<>();
-        superMarkets.add(new Coordinate(35.340685, 25.133643, "Chalkiadakis", "Supermarket"));
-        superMarkets.add(new Coordinate(35.337384, 25.121930, "LIDL", "Supermarket"));
-        superMarkets.add(new Coordinate(35.338468, 25.139354, "AB", "Supermarket"));
-        superMarkets.add(new Coordinate(35.337481, 25.132863, "BAZAAR", "Supermarket"));
-        superMarkets.add(new Coordinate(35.339136, 25.155434, "Sklavenitis", "Supermarket"));
-        superMarkets.add(new Coordinate(35.341716, 25.136238, "papadaki", "Supermarket"));
-        superMarkets.add(new Coordinate(35.326724, 25.131095, "Sklavenitis", "Supermarket"));
-        superMarkets.add(new Coordinate(35.326251, 25.138878, "Sklavenitis", "Supermarket"));
-        superMarkets.add(new Coordinate(35.337651, 25.126895, "Chalkiadakis", "Supermarket"));
-        superMarkets.add(new Coordinate(35.338751, 25.119835, "Chalkiadakis", "Supermarket"));
-        superMarkets.add(new Coordinate(35.324666, 25.133577, "Ariadni", "Supermarket"));
-        superMarkets.add(new Coordinate(35.334394, 25.115245, "INKA", "Supermarket"));
-        superMarkets.add(new Coordinate(35.324695, 25.124600, "AB", "Supermarket"));
-        superMarkets.add(new Coordinate(35.323925, 25.112541, "LIDL", "Supermarket"));
-        superMarkets.add(new Coordinate(35.319163, 25.144127, "INKA", "Supermarket"));
-        superMarkets.add(new Coordinate(35.324660, 25.124514, "AB", "Supermarket"));
-        superMarkets.add(new Coordinate(35.318393, 25.148246, "Chalkiadakis", "Supermarket"));
-        superMarkets.add(new Coordinate(35.331733, 25.137689, "Chalkiadakis", "Supermarket"));
-        superMarkets.add(new Coordinate(35.330157, 25.132282, "Chalkiadakis", "Supermarket"));
-        superMarkets.add(new Coordinate(35.334359, 25.158718, "Chalkiadakis Max", "Supermarket"));
-        superMarkets.add(new Coordinate(35.329072, 25.119279, "Chalkiadakis", "Supermarket"));
-        superMarkets.add(new Coordinate(35.343307, 25.155190, "My Cretan Goods", "Supermarket"));
-        superMarkets.add(new Coordinate(35.336788, 25.133692, "Alati tis Gis", "Supermarket"));
-        superMarkets.add(new Coordinate(35.330241, 25.124522, "Kouts", "Supermarket"));
+        superMarkets.add(new Place(new LatLng(35.340685, 25.133643), "Chalkiadakis", "Supermarket",9,21));
+        superMarkets.add(new Place(new LatLng(35.337384, 25.121930), "LIDL", "Supermarket",9,21));
+        superMarkets.add(new Place(new LatLng(35.338468, 25.139354), "AB", "Supermarket",9,21));
+        superMarkets.add(new Place(new LatLng(35.337481, 25.132863), "BAZAAR", "Supermarket",9,21));
+        superMarkets.add(new Place(new LatLng(35.339136, 25.155434), "Sklavenitis", "Supermarket",9,21));
+        superMarkets.add(new Place(new LatLng(35.341716, 25.136238), "papadaki", "Supermarket",9,21));
+        superMarkets.add(new Place(new LatLng(35.326724, 25.131095), "Sklavenitis", "Supermarket",9,21));
+        superMarkets.add(new Place(new LatLng(35.326251, 25.138878), "Sklavenitis", "Supermarket",9,21));
+        superMarkets.add(new Place(new LatLng(35.337651, 25.126895), "Chalkiadakis", "Supermarket",9,21));
+        superMarkets.add(new Place(new LatLng(35.338751, 25.119835), "Chalkiadakis", "Supermarket",9,21));
+        superMarkets.add(new Place(new LatLng(35.324666, 25.133577), "Ariadni", "Supermarket",9,21));
+        superMarkets.add(new Place(new LatLng(35.334394, 25.115245), "INKA", "Supermarket",9,21));
+        superMarkets.add(new Place(new LatLng(35.324695, 25.124600), "AB", "Supermarket",9,21));
+        superMarkets.add(new Place(new LatLng(35.323925, 25.112541), "LIDL", "Supermarket",9,21));
+        superMarkets.add(new Place(new LatLng(35.319163, 25.144127), "INKA", "Supermarket",9,21));
+        superMarkets.add(new Place(new LatLng(35.324660, 25.124514), "AB", "Supermarket",9,21));
+        superMarkets.add(new Place(new LatLng(35.318393, 25.148246), "Chalkiadakis", "Supermarket",9,21));
+        superMarkets.add(new Place(new LatLng(35.331733, 25.137689), "Chalkiadakis", "Supermarket",9,21));
+        superMarkets.add(new Place(new LatLng(35.330157, 25.132282), "Chalkiadakis", "Supermarket",9,21));
+        superMarkets.add(new Place(new LatLng(35.334359, 25.158718), "Chalkiadakis Max", "Supermarket",9,21));
+        superMarkets.add(new Place(new LatLng(35.329072, 25.119279), "Chalkiadakis", "Supermarket",9,21));
+        superMarkets.add(new Place(new LatLng(35.343307, 25.155190), "My Cretan Goods", "Supermarket",9,21));
+        superMarkets.add(new Place(new LatLng(35.336788, 25.133692), "Alati tis Gis", "Supermarket",9,21));
+        superMarkets.add(new Place(new LatLng(35.330241, 25.124522), "Kouts", "Supermarket",9,21));
 
 
         //zografou
-        superMarkets.add(new Coordinate(37.977817, 23.769849, "Daily Lewf. Papagou 114", "Supermarket"));
+        superMarkets.add(new Place(new LatLng(37.977817, 23.769849), "Daily Lewf. Papagou 114", "Supermarket",9,21));
         Collections.sort(superMarkets, new ComparatorCoord());
 
 
         gasStations = new ArrayList<>();
-        gasStations.add(new GasStation(35.338674, 25.141106, "SHELL", "Gas Station", 24, 24));
-        gasStations.add(new GasStation(35.335309, 25.141536, "EKO", "Gas Station", 24, 24));
-        gasStations.add(new GasStation(35.333256, 25.121656, "Tsiknakis Ioannis", "Gas Station", 7, 22));
-        gasStations.add(new GasStation(35.330283, 25.108827, "ELIN", "Gas Station", 7, 22));
-        gasStations.add(new GasStation(35.329145, 25.117691, "Christodoulakis", "Gas Station", 7, 22));
-        gasStations.add(new GasStation(35.338607, 25.143821, "Giannakakis", "Gas Station", 7, 22));
-        gasStations.add(new GasStation(35.336275, 25.121359, "Hanagia", "Gas Station", 7, 22));
-        gasStations.add(new GasStation(35.333818, 25.117024, "Stamatakis", "Gas Station", 7, 22));
-        gasStations.add(new GasStation(35.326903, 25.131728, "Koumoulas", "Gas Station", 7, 22));
-        gasStations.add(new GasStation(35.338667, 25.141116, "SHELL", "Gas Station", 24, 24));
-        gasStations.add(new GasStation(35.338795, 25.141556, "SHELL", "Gas Station", 24, 24));
-        gasStations.add(new GasStation(35.338714, 25.143423, "BP", "Gas Station", 24, 24));
-        gasStations.add(new GasStation(35.337829, 25.141788, "BP", "Gas Station", 24, 24));
-        gasStations.add(new GasStation(35.336477, 25.146265, "BP", "Gas Station", 24, 24));
-        gasStations.add(new GasStation(35.334352, 25.133687, "BP", "Gas Station", 24, 24));
-        gasStations.add(new GasStation(35.324131, 25.139945, "Mavraki", "Gas Station", 24, 24));
-        gasStations.add(new GasStation(35.332375, 25.122159, "Samolis BP", "Gas Station", 24, 24));
-        gasStations.add(new GasStation(35.332414, 25.112785, "Aegean", "Gas Station", 7, 22));
-        gasStations.add(new GasStation(35.319242, 25.133003, "EKO", "Gas Station", 7, 22));
-        gasStations.add(new GasStation(35.320312, 25.125391, "Koumoulas", "Gas Station", 7, 22));
-        gasStations.add(new GasStation(35.321124, 25.143192, "Androulakis", "Gas Station", 7, 22));
-        gasStations.add(new GasStation(35.331358, 25.104039, "Xenakis", "Gas Station", 24, 24));
-        gasStations.add(new GasStation(35.341186, 25.141900, "Avis", "Gas Station", 7, 22));
-        gasStations.add(new GasStation(35.338016, 25.160950, "EKO", "Gas Station", 7, 22));
+        gasStations.add(new Place(new LatLng(35.338674, 25.141106), "SHELL", "Gas Station", 24, 24));
+        gasStations.add(new Place(new LatLng(35.335309, 25.141536), "EKO", "Gas Station", 24, 24));
+        gasStations.add(new Place(new LatLng(35.333256, 25.121656), "Tsiknakis Ioannis", "Gas Station", 7, 22));
+        gasStations.add(new Place(new LatLng(35.330283, 25.108827), "ELIN", "Gas Station", 7, 22));
+        gasStations.add(new Place(new LatLng(35.329145, 25.117691), "Christodoulakis", "Gas Station", 7, 22));
+        gasStations.add(new Place(new LatLng(35.338607, 25.143821), "Giannakakis", "Gas Station", 7, 22));
+        gasStations.add(new Place(new LatLng(35.336275, 25.121359), "Hanagia", "Gas Station", 7, 22));
+        gasStations.add(new Place(new LatLng(35.333818, 25.117024), "Stamatakis", "Gas Station", 7, 22));
+        gasStations.add(new Place(new LatLng(35.326903, 25.131728), "Koumoulas", "Gas Station", 7, 22));
+        gasStations.add(new Place(new LatLng(35.338667, 25.141116), "SHELL", "Gas Station", 24, 24));
+        gasStations.add(new Place(new LatLng(35.338795, 25.141556), "SHELL", "Gas Station", 24, 24));
+        gasStations.add(new Place(new LatLng(35.338714, 25.143423), "BP", "Gas Station", 24, 24));
+        gasStations.add(new Place(new LatLng(35.337829, 25.141788), "BP", "Gas Station", 24, 24));
+        gasStations.add(new Place(new LatLng(35.336477, 25.146265), "BP", "Gas Station", 24, 24));
+        gasStations.add(new Place(new LatLng(35.334352, 25.133687), "BP", "Gas Station", 24, 24));
+        gasStations.add(new Place(new LatLng(35.324131, 25.139945), "Mavraki", "Gas Station", 24, 24));
+        gasStations.add(new Place(new LatLng(35.332375, 25.122159), "Samolis BP", "Gas Station", 24, 24));
+        gasStations.add(new Place(new LatLng(35.332414, 25.112785), "Aegean", "Gas Station", 7, 22));
+        gasStations.add(new Place(new LatLng(35.319242, 25.133003), "EKO", "Gas Station", 7, 22));
+        gasStations.add(new Place(new LatLng(35.320312, 25.125391), "Koumoulas", "Gas Station", 7, 22));
+        gasStations.add(new Place(new LatLng(35.321124, 25.143192), "Androulakis", "Gas Station", 7, 22));
+        gasStations.add(new Place(new LatLng(35.331358, 25.104039), "Xenakis", "Gas Station", 24, 24));
+        gasStations.add(new Place(new LatLng(35.341186, 25.141900), "Avis", "Gas Station", 7, 22));
+        gasStations.add(new Place(new LatLng(35.338016, 25.160950), "EKO", "Gas Station", 7, 22));
 
         //zografou
-        gasStations.add(new GasStation(37.974122, 23.774079, "Revoil", "Gas Station", 7, 22));
+        gasStations.add(new Place(new LatLng(37.974122, 23.774079), "Revoil", "Gas Station", 7, 22));
 
         Collections.sort(gasStations, new ComparatorCoord());
 
 
         cinemas = new ArrayList<>();
-        cinemas.add(new Coordinate(35.339880, 25.119728, "Odeon Talos", "Cinema"));
-        cinemas.add(new Coordinate(35.340889, 25.136980, "Vintsenzos Kornaros", "Cinema"));
-        cinemas.add(new Coordinate(35.338375, 25.136216, "Astoria", "Cinema"));
-        cinemas.add(new Coordinate(35.335669, 25.070682, "Texnopolis", "Cinema"));
-        cinemas.add(new Coordinate(35.337980, 25.158230, "Cine Studio", "Cinema"));
-        cinemas.add(new Coordinate(35.338573, 25.129685, "Dedalos Club", "Cinema"));
+        cinemas.add(new Place(new LatLng(35.339880, 25.119728), "Odeon Talos", "Cinema",16,2));
+        cinemas.add(new Place(new LatLng(35.340889, 25.136980), "Vintsenzos Kornaros", "Cinema",16,2));
+        cinemas.add(new Place(new LatLng(35.338375, 25.136216), "Astoria", "Cinema",16,2));
+        cinemas.add(new Place(new LatLng(35.335669, 25.070682), "Texnopolis", "Cinema",16,2));
+        cinemas.add(new Place(new LatLng(35.337980, 25.158230), "Cine Studio", "Cinema",16,2));
+        cinemas.add(new Place(new LatLng(35.338573, 25.129685), "Dedalos Club", "Cinema",16,2));
         //zografou
-        cinemas.add(new Coordinate(37.977369, 23.770716, "Aleka", "Cinema"));
+        cinemas.add(new Place(new LatLng(37.977369, 23.770716), "Aleka", "Cinema",16,2));
         Collections.sort(cinemas, new ComparatorCoord());
 
 
@@ -527,17 +514,6 @@ protected void checkPermissions(){
         if (ContextCompat.checkSelfPermission(PlanMap.this, android.Manifest.
                 permission.ACCESS_FINE_LOCATION) != PackageManager.
                 PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-
-            // Here, thisActivity is the current activity
-
-// Should we show an explanation?
             if (ActivityCompat.shouldShowRequestPermissionRationale(PlanMap.this,
                     Manifest.permission.ACCESS_FINE_LOCATION)) {
 
@@ -622,7 +598,7 @@ protected void checkPermissions(){
         if (requestCode == PLACE_PICKER_REQUEST
                 && resultCode == PlanMap.RESULT_OK) {
 
-            final Place place = PlacePicker.getPlace(this, data);
+            final com.google.android.gms.location.places.Place place = PlacePicker.getPlace(this, data);
             final CharSequence name = place.getName();
             final CharSequence address = place.getAddress();
             String attributions = (String) place.getAttributions();
@@ -738,24 +714,38 @@ protected void checkPermissions(){
             }*/
 
 // Drawing polyline in the Google PlanMap for the i-th route
-            mMap.addPolyline(lineOptions);
+            try {
 
-            List<LatLng> LPoints = lineOptions.getPoints();
-            sumDist = 0;
-            if (LPoints.get(1) != null) {
-                for (int k = 0; k < LPoints.size() - 1; k++) {
-                    sumDist = sumDist + distFrom(LPoints.get(k), LPoints.get(k + 1));
+                mMap.addPolyline(lineOptions);
+
+                List<LatLng> LPoints = lineOptions.getPoints();
+
+
+                sumDist = 0;
+                if (LPoints.get(1) != null) {
+                    for (int k = 0; k < LPoints.size() - 1; k++) {
+                        sumDist = sumDist + distFrom(LPoints.get(k), LPoints.get(k + 1));
+                    }
+                } else {
+                    LatLng myOrigin = new LatLng(location.getLatitude(), location.getLongitude());
+                    sumDist = distFrom(myOrigin, LPoints.get(0));
                 }
-            } else {
-                LatLng myOrigin = new LatLng(location.getLatitude(), location.getLongitude());
-                sumDist = distFrom(myOrigin, LPoints.get(0));
+                int timeEst;
+
+                timeEst = (int) sumDist / 333; // Average Driving speed in Heraklion 20km/h or 333m/min
+
+                //  searchText.setText("Distance: " + sumDist+ "Time: "+timeEst);
+            } catch (NullPointerException nullEx) {
+                nullEx.printStackTrace();
+                displayExceptionMessage(nullEx.getMessage());
+                startNavigation();
+                Log.i("Map Requests", "amount exceeded");
             }
-            int timeEst;
-
-            timeEst = (int) sumDist / 333; // Average Driving speed in Heraklion 20km/h or 333m/min
-            //  searchText.setText("Distance: " + sumDist+ "Time: "+timeEst);
-
         }
+    }
+
+    public void displayExceptionMessage(String msg) {
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 
     private String getDirectionsUrl(LatLng origin, LatLng dest) {

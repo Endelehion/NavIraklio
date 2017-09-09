@@ -7,18 +7,6 @@
     android:layout_height="match_parent">
 
 
-    <TextView
-        android:id="@+id/titleMsgText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:text="Find Nearest Route From"
-        android:textAlignment="center"
-        android:textSize="17sp"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="81dp" />
-
     <Button
         android:id="@+id/findButton"
         android:layout_width="88dp"
@@ -28,19 +16,6 @@
         tools:layout_editor_absoluteY="81dp"
         android:layout_above="@+id/map"
         android:layout_alignParentEnd="true" />
-
-    <ToggleButton
-        android:id="@+id/customMarkerToggle"
-        android:layout_width="88dp"
-        android:layout_height="wrap_content"
-        android:text="ToggleButton"
-        android:textOff="Custom Marker"
-        android:textOn="Custom Marker"
-        android:textSize="11sp"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="81dp"
-        android:layout_below="@+id/titleMsgText"
-        android:layout_alignEnd="@+id/titleMsgText" />
 
     <fragment
         android:id="@+id/map"
@@ -53,30 +28,17 @@
         tools:layout_editor_absoluteX="8dp"
         tools:layout_editor_absoluteY="8dp"
         android:layout_alignParentBottom="true"
-        android:layout_below="@+id/customMarkerToggle" />
-
-    <ToggleButton
-        android:id="@+id/myLocationToggle"
-        android:layout_width="88dp"
-        android:layout_height="wrap_content"
-        android:text="My Location"
-        android:textOff="My Location"
-        android:textOn="My Location"
-        android:textSize="11sp"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="81dp"
-        android:layout_below="@+id/titleMsgText"
-        android:layout_alignParentStart="true" />
+        android:layout_below="@+id/destinationText" />
 
     <TextView
         android:id="@+id/destinationText"
         android:layout_width="680dp"
         android:layout_height="50dp"
-        android:layout_above="@+id/map"
-        android:layout_toEndOf="@+id/titleMsgText"
         android:text="Destination:"
         android:textAlignment="center"
-        android:textSize="25sp" />
+        android:textSize="25sp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
 
     <Button
         android:id="@+id/mapConfirmBtn"

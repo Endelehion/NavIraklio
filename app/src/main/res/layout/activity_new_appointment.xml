@@ -117,8 +117,8 @@
         android:layout_height="79dp"
         android:text="set Date &amp; Time"
         app:layout_constraintTop_toTopOf="@+id/guideline13"
-        android:layout_marginTop="71dp"
-        android:layout_marginLeft="236dp"
+        android:layout_marginTop="254dp"
+        android:layout_marginLeft="118dp"
         app:layout_constraintLeft_toLeftOf="@+id/guideline12" />
 
     <Button
@@ -141,36 +141,16 @@
         app:layout_constraintTop_toTopOf="@+id/guideline13"
         android:layout_marginTop="382dp" />
 
-    <TextView
-        android:id="@+id/addressText"
-        android:layout_width="198dp"
-        android:layout_height="65dp"
-        android:layout_marginBottom="122dp"
-        android:layout_marginRight="25dp"
-        android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
-
-    <TextView
-        android:id="@+id/addressLabel"
-        android:layout_width="109dp"
-        android:layout_height="51dp"
-        android:layout_marginBottom="136dp"
-        android:layout_marginLeft="0dp"
-        android:gravity="center"
-        android:text="Address"
-        android:textSize="25dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="@+id/guideline12" />
-
     <Button
-        android:id="@+id/setLocationBtn"
+        android:id="@+id/movieBtn"
         android:layout_width="92dp"
         android:layout_height="79dp"
-        android:text="Set Location"
-        android:layout_marginRight="16dp"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline13"
-        android:layout_marginTop="186dp" />
+        android:layout_marginBottom="128dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:text="Choose Movie"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
