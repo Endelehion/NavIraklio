@@ -22,93 +22,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d9f1127b-78f8-4fff-b05d-ec4e5afa92e5" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/AmericanMade_Poster-web.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/Detroit_Poster-web.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/Dunkirk_Poster-web.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/Hitman_Poster-web.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/LoganLucky_Poster-web.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/Smurfs_Poster-web.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/SonOfBigfoot_Poster-web.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/Valerian_Poster-web.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/american_made_poster.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/despicable_me3_poster.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/detroit_poster.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/dunkirk_poster.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/hitman_poster.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/logan_lucky_poster.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/smurfs_poster.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/son_of_bigfoot_poster.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/valerian_poster.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-mdpi/american_made_poster.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-mdpi/despicable_me3_poster.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-mdpi/detroit_poster.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-mdpi/dunkirk_poster.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-mdpi/hitman_poster.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-mdpi/logan_lucky_poster.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-mdpi/smurfs_poster.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-mdpi/son_of_bigfoot_poster.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-mdpi/valerian_poster.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/american_made_poster.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/despicable_me3_poster.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/detroit_poster.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/dunkirk_poster.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/hitman_poster.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/logan_lucky_poster.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/smurfs_poster.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/son_of_bigfoot_poster.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/valerian_poster.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/american_made_poster.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/despicable_me3_poster.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/detroit_poster.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/dunkirk_poster.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/hitman_poster.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/logan_lucky_poster.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/smurfs_poster.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/son_of_bigfoot_poster.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/valerian_poster.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxxhdpi/american_made_poster.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxxhdpi/despicable_me3_poster.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxxhdpi/detroit_poster.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxxhdpi/dunkirk_poster.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxxhdpi/hitman_poster.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxxhdpi/logan_lucky_poster.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxxhdpi/smurfs_poster.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxxhdpi/son_of_bigfoot_poster.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxxhdpi/valerian_poster.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/varda/naviraklio/Movie.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/varda/naviraklio/MoviePicker.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_movie_picker.xml" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/varda/naviraklio/GasStation.java" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/varda/naviraklio/Coordinate.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/varda/naviraklio/Place.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/res/layout-land/activity_calendar.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout-land/activity_organizer.xml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/res/layout-sw600dp-land/activity_calendar.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout-sw600dp-land/activity_organizer.xml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/res/layout-sw600dp/activity_calendar.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout-sw600dp/activity_organizer.xml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_calendar.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_organizer.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/layout-land/activity_movie_picker.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/layout-sw600dp-land/activity_movie_picker.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/layout-sw600dp/activity_movie_picker.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/3.3/taskArtifacts/fileHashes.bin" afterPath="$PROJECT_DIR$/.gradle/3.3/taskArtifacts/fileHashes.bin" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/3.3/taskArtifacts/fileSnapshots.bin" afterPath="$PROJECT_DIR$/.gradle/3.3/taskArtifacts/fileSnapshots.bin" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/3.3/taskArtifacts/taskArtifacts.bin" afterPath="$PROJECT_DIR$/.gradle/3.3/taskArtifacts/taskArtifacts.bin" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/3.3/taskArtifacts/taskArtifacts.lock" afterPath="$PROJECT_DIR$/.gradle/3.3/taskArtifacts/taskArtifacts.lock" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/3.3/tasks/_app_compileDebugJavaWithJavac/localClassSetAnalysis/localClassSetAnalysis.bin" afterPath="$PROJECT_DIR$/.gradle/3.3/tasks/_app_compileDebugJavaWithJavac/localClassSetAnalysis/localClassSetAnalysis.bin" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/3.3/tasks/_app_compileDebugJavaWithJavac/localClassSetAnalysis/localClassSetAnalysis.lock" afterPath="$PROJECT_DIR$/.gradle/3.3/tasks/_app_compileDebugJavaWithJavac/localClassSetAnalysis/localClassSetAnalysis.lock" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/3.3/tasks/_app_compileDebugJavaWithJavac/localJarClasspathSnapshot/localJarClasspathSnapshot.lock" afterPath="$PROJECT_DIR$/.gradle/3.3/tasks/_app_compileDebugJavaWithJavac/localJarClasspathSnapshot/localJarClasspathSnapshot.lock" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/varda/naviraklio/Appointment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/varda/naviraklio/Appointment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/varda/naviraklio/ComparatorCoord.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/varda/naviraklio/ComparatorCoord.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/varda/naviraklio/DateTimePick.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/varda/naviraklio/DateTimePick.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/varda/naviraklio/InstantMap.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/varda/naviraklio/InstantMap.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/varda/naviraklio/NewAppointment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/varda/naviraklio/NewAppointment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/varda/naviraklio/Organizer.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/varda/naviraklio/Organizer.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/varda/naviraklio/PlanMap.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/varda/naviraklio/PlanMap.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout-land/activity_new_appointment.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout-land/activity_new_appointment.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout-land/activity_plan_map.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout-land/activity_plan_map.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout-sw600dp-land/activity_new_appointment.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout-sw600dp-land/activity_new_appointment.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout-sw600dp-land/activity_plan_map.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout-sw600dp-land/activity_plan_map.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout-sw600dp/activity_new_appointment.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout-sw600dp/activity_new_appointment.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout-sw600dp/activity_plan_map.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout-sw600dp/activity_plan_map.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_home.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_home.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_new_appointment.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_new_appointment.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_plan_map.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_plan_map.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/intermediates/dex-cache/cache.xml" afterPath="$PROJECT_DIR$/build/intermediates/dex-cache/cache.xml" />
     </list>
     <ignored path="NavIraklio.iws" />
@@ -172,7 +95,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="AndroidManifest.xml" pinned="false" current-in-tab="true">
+      <file leaf-file-name="AndroidManifest.xml" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
           <provider editor-type-id="android-manifest">
             <state />
@@ -195,31 +118,6 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MoviePicker.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/varda/naviraklio/MoviePicker.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="187">
-              <caret line="12" column="1" selection-start-line="12" selection-start-column="1" selection-end-line="12" selection-end-column="1" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="NewAppointment.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/varda/naviraklio/NewAppointment.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="41">
-              <caret line="31" column="17" selection-start-line="31" selection-start-column="17" selection-end-line="31" selection-end-column="17" />
-              <folding>
-                <element signature="e#2728#2965#0" expanded="true" />
-                <element signature="e#2964#2965#0" expanded="true" />
-                <element signature="e#3557#3831#0" expanded="true" />
-                <element signature="e#3830#3831#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="activity_new_appointment.xml" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/res/layout-land/activity_new_appointment.xml">
           <provider selected="true" editor-type-id="android-designer2">
@@ -235,12 +133,38 @@
       </file>
       <file leaf-file-name="activity_new_appointment.xml" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/res/layout-sw600dp/activity_new_appointment.xml">
-          <provider editor-type-id="android-designer2">
+          <provider selected="true" editor-type-id="android-designer2">
             <state />
           </provider>
-          <provider selected="true" editor-type-id="text-editor">
+          <provider editor-type-id="text-editor">
             <state relative-caret-position="544">
               <caret line="154" column="4" selection-start-line="154" selection-start-column="4" selection-end-line="154" selection-end-column="4" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="activity_movie_picker.xml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/res/layout-sw600dp/activity_movie_picker.xml">
+          <provider selected="true" editor-type-id="android-designer2">
+            <state />
+          </provider>
+          <provider editor-type-id="text-editor">
+            <state relative-caret-position="272">
+              <caret line="296" column="20" selection-start-line="296" selection-start-column="20" selection-end-line="296" selection-end-column="20" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="activity_movie_picker.xml" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/src/main/res/layout-sw600dp-land/activity_movie_picker.xml">
+          <provider selected="true" editor-type-id="android-designer2">
+            <state />
+          </provider>
+          <provider editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -2669,8 +2593,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/app/src/main/res/layout-xlarge/activity_calendar.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout-xlarge-land/activity_calendar.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout-sw600dp/activity_home.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout-sw600dp-land/activity_home.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_map.xml" />
@@ -2720,6 +2642,8 @@
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/varda/naviraklio/NewAppointment.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_movie_picker.xml" />
         <option value="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout-sw600dp/activity_movie_picker.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout-sw600dp-land/activity_movie_picker.xml" />
       </list>
     </option>
   </component>
@@ -2843,6 +2767,28 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="activity_new_appointment.xml" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResGroupNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="NavIraklio" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="layout" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderTypeNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="activity_movie_picker.xml" />
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResGroupNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -3484,7 +3430,14 @@
       <option name="project" value="LOCAL" />
       <updated>1504605015926</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="Movie Picker  first Implementation">
+      <created>1504999348359</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1504999348359</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="TodoView">
@@ -3501,7 +3454,7 @@
     <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2914349" sideWeight="0.4728145" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16017798" sideWeight="0.45362473" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.16017798" sideWeight="0.45362473" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -3568,20 +3521,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/array.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="7" column="19" selection-start-line="7" selection-start-column="19" selection-end-line="7" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$USER_HOME$/AppData/Local/Android/sdk/extras/android/m2repository/com/android/support/support-fragment/25.3.0/support-fragment-25.3.0-sources.jar!/android/support/v4/app/FragmentActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="243">
-          <caret line="147" column="19" selection-start-line="147" selection-start-column="19" selection-end-line="147" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/AppData/Local/Android/sdk/sources/android-25/android/app/Activity.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="183">
@@ -3985,17 +3924,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout-sw600dp/activity_new_appointment.xml">
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="544">
-          <caret line="154" column="4" selection-start-line="154" selection-start-column="4" selection-end-line="154" selection-end-column="4" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout-sw600dp-land/activity_new_appointment.xml">
       <provider selected="true" editor-type-id="android-designer2">
         <state />
@@ -4025,6 +3953,39 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="511">
           <caret line="72" column="44" selection-start-line="72" selection-start-column="44" selection-end-line="72" selection-end-column="44" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout-sw600dp/activity_new_appointment.xml">
+      <provider selected="true" editor-type-id="android-designer2">
+        <state />
+      </provider>
+      <provider editor-type-id="text-editor">
+        <state relative-caret-position="544">
+          <caret line="154" column="4" selection-start-line="154" selection-start-column="4" selection-end-line="154" selection-end-column="4" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout-sw600dp/activity_movie_picker.xml">
+      <provider selected="true" editor-type-id="android-designer2">
+        <state />
+      </provider>
+      <provider editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="296" column="20" selection-start-line="296" selection-start-column="20" selection-end-line="296" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout-sw600dp-land/activity_movie_picker.xml">
+      <provider selected="true" editor-type-id="android-designer2">
+        <state />
+      </provider>
+      <provider editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
