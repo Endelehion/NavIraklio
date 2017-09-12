@@ -67,6 +67,8 @@
         android:layout_marginStart="2dp"
         android:layout_marginTop="165dp"
         android:text="TextView"
+        android:scrollbars = "vertical"
+        android:textSize="12sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

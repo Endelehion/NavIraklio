@@ -197,7 +197,7 @@
                         android:layout_alignParentStart="true"
                         android:layout_below="@+id/americanMadeTitle"
                         android:paddingLeft="5dp"
-                        android:text="Rating: R \n Duration: 115min \n Genre: Action | Biography | Crime \n Cast: TomCruise, Domhnall Gleeson \n Plot: A pilot lands work for the CIA and as a drug runner in the south during the 1980s " />
+                        android:text="Rating: R \n Duration: 115min \n Genre: Action | Biography | Crime \n Directed by: Doug Liman\n Plot: A pilot lands work for the CIA and as a drug runner in the south during the 1980s " />
 
                     <TextView
                         android:id="@+id/americanMadeTitle"

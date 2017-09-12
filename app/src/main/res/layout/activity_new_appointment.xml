@@ -57,9 +57,9 @@
 
     <TextView
         android:id="@+id/dateText"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="85dp"
+        android:layout_width="236dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="91dp"
         android:layout_marginTop="121dp"
         android:layout_weight="1"
         android:ems="10"
@@ -70,25 +70,12 @@
         tools:text="__/__/____" />
 
     <TextView
-        android:id="@+id/timeEndText"
-        android:layout_width="104dp"
-        android:layout_height="36dp"
-        android:layout_marginLeft="121dp"
-        android:layout_marginTop="186dp"
-        android:ems="10"
-        android:inputType="time"
-        android:textSize="30dp"
-        app:layout_constraintLeft_toLeftOf="@+id/guideline12"
-        app:layout_constraintTop_toTopOf="@+id/guideline13"
-        tools:text="0:00" />
-
-    <TextView
-        android:id="@+id/textView10"
-        android:layout_width="116dp"
+        android:id="@+id/durationText"
+        android:layout_width="wrap_content"
         android:layout_height="38dp"
         android:layout_marginLeft="0dp"
-        android:layout_marginTop="235dp"
-        android:text="Duration"
+        android:layout_marginTop="214dp"
+        android:text="Duration: "
         android:textSize="30dp"
         app:layout_constraintLeft_toLeftOf="@+id/guideline12"
         app:layout_constraintTop_toTopOf="parent" />
@@ -117,7 +104,7 @@
         android:layout_height="79dp"
         android:text="set Date &amp; Time"
         app:layout_constraintTop_toTopOf="@+id/guideline13"
-        android:layout_marginTop="254dp"
+        android:layout_marginTop="351dp"
         android:layout_marginLeft="118dp"
         app:layout_constraintLeft_toLeftOf="@+id/guideline12" />
 
@@ -145,12 +132,35 @@
         android:id="@+id/movieBtn"
         android:layout_width="92dp"
         android:layout_height="79dp"
-        android:layout_marginBottom="128dp"
+        android:layout_marginBottom="31dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:text="Choose Movie"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
+
+    <TextView
+        android:id="@+id/cinemaLabel"
+        android:layout_width="344dp"
+        android:layout_height="47dp"
+        android:layout_marginBottom="198dp"
+        android:layout_marginLeft="-7dp"
+        android:text="Cinema: "
+        android:textSize="25sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline12"
+        tools:layout_editor_absoluteY="266dp" />
+
+    <TextView
+        android:id="@+id/movieTitleLabel"
+        android:layout_width="344dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="158dp"
+        android:layout_marginLeft="-8dp"
+        android:text="Movie: "
+        android:textSize="25sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline12" />
 
 </android.support.constraint.ConstraintLayout>

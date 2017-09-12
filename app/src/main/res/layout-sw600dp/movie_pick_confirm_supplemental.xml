@@ -26,32 +26,34 @@
 
     <TextView
         android:id="@+id/moviePickedTitle"
-        android:layout_width="235dp"
-        android:layout_height="43dp"
+        android:layout_width="410dp"
+        android:layout_height="45dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="0dp"
         android:gravity="center"
         android:text="TextView"
         android:textAlignment="center"
+        android:textSize="30sp"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="0dp"
-        android:layout_marginRight="0dp"
-        tools:layout_editor_absoluteX="125dp" />
+        tools:layout_editor_absoluteX="190dp" />
 
     <TextView
         android:id="@+id/moviePickedInfo"
-        android:layout_width="235dp"
-        android:layout_height="123dp"
+        android:layout_width="408dp"
+        android:layout_height="237dp"
+        android:layout_marginRight="0dp"
         android:layout_marginTop="42dp"
         android:text="TextView"
+        android:textSize="18sp"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="125dp"
-        android:layout_marginRight="0dp" />
+        tools:layout_editor_absoluteX="192dp" />
 
     <ImageView
         android:id="@+id/moviePickedImage"
-        android:layout_width="123dp"
-        android:layout_height="163dp"
+        android:layout_width="188dp"
+        android:layout_height="283dp"
         android:scaleType="centerCrop"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -61,34 +63,35 @@
 
     <TextView
         android:id="@+id/moviePickedDescription"
-        android:layout_width="357dp"
-        android:layout_height="118dp"
+        android:layout_width="594dp"
+        android:layout_height="191dp"
         android:layout_marginLeft="2dp"
         android:layout_marginStart="2dp"
-        android:layout_marginTop="165dp"
+        android:layout_marginTop="284dp"
         android:text="TextView"
+        android:textSize="18sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ListView
         android:id="@+id/daysRadioList"
-        android:layout_width="178dp"
-        android:layout_height="171dp"
+        android:layout_width="233dp"
+        android:layout_height="290dp"
         android:layout_marginBottom="57dp"
         android:layout_marginLeft="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginRight="0dp" />
+        tools:layout_editor_absoluteY="476dp" />
 
     <ListView
         android:id="@+id/hoursRadioList"
-        android:layout_width="182dp"
-        android:layout_height="171dp"
+        android:layout_width="351dp"
+        android:layout_height="290dp"
         android:layout_marginBottom="57dp"
-        android:layout_marginRight="-22dp"
+        android:layout_marginRight="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        tools:layout_editor_absoluteX="178dp"
-        tools:layout_editor_absoluteY="283dp" />
+        tools:layout_editor_absoluteX="249dp"
+        tools:layout_editor_absoluteY="476dp" />
 
 </android.support.constraint.ConstraintLayout>
