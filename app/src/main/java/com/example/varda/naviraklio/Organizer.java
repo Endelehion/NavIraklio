@@ -393,7 +393,7 @@ public class Organizer extends AppCompatActivity {
             Appointment receivedAppointment;
             receivedAppointment = data.getParcelableExtra("appointKey");
             receivedDestination=receivedAppointment.getPlace();
-           int adapterIndex = listViewAp.getCheckedItemPosition();
+           int adapterIndex = listViewAp.getCheckedItemPosition();   //TODO return dates and movie
             if (adapterIndex != -1) {
                 arListAp.get(adapterIndex).setPlace(receivedDestination);
              //   arListAp.get(adapterIndex).getPlace().setAddress(receivedDestination.getAddress());

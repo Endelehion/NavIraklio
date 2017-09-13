@@ -2,30 +2,22 @@ package com.example.varda.naviraklio;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.constraint.ConstraintLayout;
-import android.support.constraint.solver.widgets.ConstraintAnchor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RadioGroup;
-import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
-
-import static android.R.attr.id;
-import static android.R.attr.subtitleTextAppearance;
+import java.util.Calendar;
+import java.util.Date;
 
 public class MoviePicker extends AppCompatActivity {
 
@@ -34,10 +26,16 @@ public class MoviePicker extends AppCompatActivity {
     private ArrayList<String> daysList, hoursList;
     private ImageView moviePickedImage;
     private ArrayAdapter daysAdapter, hoursAdapter;
-    private ListView daysRadioList, hoursRadioList;
-    private Button moviePickedCancelBtn,moviePickedConfirmBtn;
-    int layoutId;
-    String whichMovie;
+    private ListView daysRadioList, hoursRadioList, movieDateListView;
+    private Button moviePickedCancelBtn, moviePickedConfirmBtn, setMovieDateBtn, movieBackBtn;
+    private ArrayList<String> movieDates;
+    private String dayString;
+    private String cinemaString;
+    private String movieDuration;
+    private String whichMovie;
+    private String mode;
+    private int hour, min, layoutId;
+    private String dateString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,10 +44,14 @@ public class MoviePicker extends AppCompatActivity {
             layoutId = savedInstanceState.getInt("layoutIdKey", R.layout.activity_movie_picker);
             whichMovie = savedInstanceState.getString("whichMovieKey", "");
             hoursList = savedInstanceState.getStringArrayList("hoursListKey");
+            mode = savedInstanceState.getString("modeKey", mode);
+
         } else {
             layoutId = R.layout.activity_movie_picker;
             whichMovie = "";
             hoursList = new ArrayList<>();
+            mode = "TimePick";
+            movieDates = new ArrayList<>();
         }
         setContentView(layoutId);
         if (layoutId == R.layout.activity_movie_picker) {
@@ -57,7 +59,6 @@ public class MoviePicker extends AppCompatActivity {
         } else {
             createMoviePanel(whichMovie);
         }
-
 
 
     }
@@ -138,9 +139,11 @@ public class MoviePicker extends AppCompatActivity {
     public void createMoviePanel(String movie) {
         layoutId = R.layout.movie_pick_confirm_supplemental;
         setContentView(layoutId);
-
-        moviePickedConfirmBtn=(Button) findViewById(R.id.moviePickedConfirmBtn);
-        moviePickedCancelBtn=(Button) findViewById(R.id.moviePickedCancelBtn);
+        movieBackBtn = (Button) findViewById((R.id.movieBackBtn));
+        setMovieDateBtn = (Button) findViewById(R.id.setMovieDateBtn);
+        movieDateListView = (ListView) findViewById(R.id.dateListView);
+        moviePickedConfirmBtn = (Button) findViewById(R.id.moviePickedConfirmBtn);
+        moviePickedCancelBtn = (Button) findViewById(R.id.moviePickedCancelBtn);
         moviePickedTitle = (TextView) findViewById(R.id.moviePickedTitle);
         moviePickedImage = (ImageView) findViewById(R.id.moviePickedImage);
         moviePickedDescription = (TextView) findViewById(R.id.moviePickedDescription);
@@ -159,34 +162,80 @@ public class MoviePicker extends AppCompatActivity {
         hoursRadioList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         hoursAdapter.notifyDataSetChanged();
 
+        setUpListViews(mode);
+
+        movieBackBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                movieDates.clear();
+                movieDateListView.clearChoices();
+                mode = "TimePick";
+                setUpListViews(mode);
+            }
+        });
+
+        setMovieDateBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int mins, movieHour, movieMin;
+                String tempStr;
+                Date temp;
+                if (daysRadioList.getCheckedItemPosition() != -1) {
+                    if (hoursRadioList.getCheckedItemPosition() != -1) {
+                        dayString = daysList.get(daysRadioList.getCheckedItemPosition());
+                        cinemaString = hoursList.get(hoursRadioList.getCheckedItemPosition());
+                        cinemaString = hoursList.get(hoursRadioList.getCheckedItemPosition()).substring(0, cinemaString.indexOf(":") - 2);
+                        tempStr = hoursList.get(hoursRadioList.getCheckedItemPosition());
+                        movieHour=Integer.parseInt(hoursList.get(hoursRadioList.getCheckedItemPosition()).substring(tempStr.indexOf(":")-2,tempStr.indexOf(":")));
+                        movieMin=Integer.parseInt(hoursList.get(hoursRadioList.getCheckedItemPosition()).substring(tempStr.indexOf(":")+1,tempStr.indexOf(":")+3));
+                        SimpleDateFormat fullDate = new SimpleDateFormat("EEE dd MM yyyy HH:mm");
+
+                        mins = Integer.parseInt(moviePickedInfo.getText().toString().
+                                substring(moviePickedInfo.getText().toString().indexOf("Duration: ") + 10, moviePickedInfo.getText().toString().indexOf("min")));
+                        hour = mins / 60;
+                        min = mins % 60;
+                        movieDuration = (mins / 60) + ":" + (mins % 60);
+                        SimpleDateFormat dayOfWeek = new SimpleDateFormat("EEEE");
+                        Calendar cal = Calendar.getInstance();
+                        Date currDate = cal.getTime();
+                        while (!dayOfWeek.format(currDate).equals(dayString)) {
+                            cal.setTime(currDate);
+                            cal.add(Calendar.DATE, 1);
+                            currDate = cal.getTime();
+                        }
+                        cal.set(Calendar.HOUR, movieHour);
+                        cal.set(Calendar.MINUTE, movieMin);
+                        movieDates = new ArrayList<>();
+                        for (int i = 0; i < 10; i++) {
+                            cal.add(Calendar.WEEK_OF_YEAR, 1);
+                            temp = cal.getTime();
+                            movieDates.add(fullDate.format(temp));    //init 10 next daysOfWeek for Dialog
+                        }
+                        mode = "DatePick";
+                        setUpListViews(mode);
+
+                    }
+
+                }
+            }
+
+        });
+
         moviePickedConfirmBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String dayString,hourString,cinemaString,movieDuration;
-
-                if(daysRadioList.getCheckedItemPosition()!=-1){
-                    if(hoursRadioList.getCheckedItemPosition()!=-1){
-                        dayString=daysList.get(daysRadioList.getCheckedItemPosition());
-                        hourString=hoursList.get(hoursRadioList.getCheckedItemPosition());
-                        hourString=hoursList.get(hoursRadioList.getCheckedItemPosition()).substring(hourString.indexOf(":")-2);
-                        cinemaString=hoursList.get(hoursRadioList.getCheckedItemPosition());
-                        cinemaString=hoursList.get(hoursRadioList.getCheckedItemPosition()).substring(0,cinemaString.indexOf(":")-2);
-                        int mins;
-
-                        mins=Integer.parseInt(moviePickedInfo.getText().toString().
-                                substring(moviePickedInfo.getText().toString().indexOf("Duration: ")+10,moviePickedInfo.getText().toString().indexOf("min")));
-                        movieDuration=(mins/60)+":"+(mins%60);
-
-                        Intent resultIntent = new Intent();
-                        resultIntent.putExtra("moviePickedDayKey",dayString);
-                        resultIntent.putExtra("moviePickedHourKey",hourString);
-                        resultIntent.putExtra("moviePickedCinemaKey",cinemaString);
-                        resultIntent.putExtra("moviePickedTitleKey",moviePickedTitle.getText());
-                        resultIntent.putExtra("moviePickedDurationKey",movieDuration);
-                        setResult(Activity.RESULT_OK, resultIntent);
-                        finish();
-                    }
+                if (movieDateListView.getCheckedItemPosition() != -1) {
+                    Intent resultIntent = new Intent();
+                    dateString = movieDates.get(movieDateListView.getCheckedItemPosition());
+                    resultIntent.putExtra("moviePickedDateKey", dateString);
+                    resultIntent.putExtra("moviePickedCinemaKey", cinemaString);
+                    resultIntent.putExtra("moviePickedTitleKey", moviePickedTitle.getText());
+                    resultIntent.putExtra("moviePickedDurationKey", movieDuration);
+                    setResult(Activity.RESULT_OK, resultIntent);
+                    finish();
                 }
+
+
             }
         });
 
@@ -368,8 +417,7 @@ public class MoviePicker extends AppCompatActivity {
                     hoursRadioList.setSelectionAfterHeaderView();
                 }
             });
-        }
-else if(movie.equals("Detroit")){
+        } else if (movie.equals("Detroit")) {
             moviePickedImage.setImageResource(R.drawable.detroit_poster);
 
             daysList.add("Monday");
@@ -401,8 +449,7 @@ else if(movie.equals("Detroit")){
                     hoursRadioList.setSelectionAfterHeaderView();
                 }
             });
-        }
-        else if(movie.equals("Smurfs")){
+        } else if (movie.equals("Smurfs")) {
             moviePickedImage.setImageResource(R.drawable.smurfs_poster);
 
             daysList.add("Monday");
@@ -414,30 +461,28 @@ else if(movie.equals("Detroit")){
             daysList.add("Sunday");
             moviePickedTitle.setText("Smurfs: The Lost Village");
             moviePickedInfo.setText("Rating: PG \n Duration: 115min \n Genre: Animation | Adventure | Family \n Directed by: Kelly Asbury");
-                    moviePickedDescription.setText("Best friends Smurfette (Demi Lovato), Brainy (Danny Pudi), Clumsy (Jack McBrayer) " +
-                            "and Hefty (Joe Manganiello) use a special map that guides them through the Forbidden Forest, an enchanted " +
-                            "wonderland that's filled with magical creatures. Their adventure leads them on a course " +
-                            "to discover the biggest secret in Smurf history as they race against time and the evil wizard Gargamel (Rainn Wilson) to find a mysterious village.");
+            moviePickedDescription.setText("Best friends Smurfette (Demi Lovato), Brainy (Danny Pudi), Clumsy (Jack McBrayer) " +
+                    "and Hefty (Joe Manganiello) use a special map that guides them through the Forbidden Forest, an enchanted " +
+                    "wonderland that's filled with magical creatures. Their adventure leads them on a course " +
+                    "to discover the biggest secret in Smurf history as they race against time and the evil wizard Gargamel (Rainn Wilson) to find a mysterious village.");
             daysRadioList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     hoursList.clear();
                     String selectedDay = daysList.get(daysRadioList.getCheckedItemPosition());
-                        if (selectedDay.equals("Saturday") || selectedDay.equals("Sunday")) {
-                            hoursList.add("Texnopolis 16:30");
-                            hoursList.add("Texnopolis 18:30");
-                        }
-                        else{
-                            hoursList.add("Texnopolis 16:30");
-                        }
-                        hoursList.add("Kornaros 18:30");
+                    if (selectedDay.equals("Saturday") || selectedDay.equals("Sunday")) {
+                        hoursList.add("Texnopolis 16:30");
+                        hoursList.add("Texnopolis 18:30");
+                    } else {
+                        hoursList.add("Texnopolis 16:30");
+                    }
+                    hoursList.add("Kornaros 18:30");
                     hoursAdapter.notifyDataSetChanged();
                     hoursRadioList.clearChoices();
                     hoursRadioList.setSelectionAfterHeaderView();
                 }
             });
-        }
-        else if(movie.equals("Logan Lucky")){
+        } else if (movie.equals("Logan Lucky")) {
             moviePickedImage.setImageResource(R.drawable.logan_lucky_poster);
 
             daysList.add("Monday");
@@ -449,10 +494,10 @@ else if(movie.equals("Detroit")){
             daysList.add("Sunday");
             moviePickedTitle.setText("Logan Lucky");
             moviePickedInfo.setText("Rating: PG-13 \n Duration: 115min \n Genre: Comedy | Crime | Drama \n Directed by: Steven Soderbergh");
-                    moviePickedDescription.setText("West Virginia family man Jimmy Logan teams up with his one-armed brother Clyde " +
-                                    "and sister Mellie to steal money from the Charlotte Motor Speedway in North Carolina. Jimmy also " +
-                                    "recruits demolition expert Joe Bang to help them break into the track's underground system. " +
-                                    "Complications arise when a mix-up forces the crew to pull off the heist during a popular NASCAR race while also trying to dodge a relentless FBI agent.");
+            moviePickedDescription.setText("West Virginia family man Jimmy Logan teams up with his one-armed brother Clyde " +
+                    "and sister Mellie to steal money from the Charlotte Motor Speedway in North Carolina. Jimmy also " +
+                    "recruits demolition expert Joe Bang to help them break into the track's underground system. " +
+                    "Complications arise when a mix-up forces the crew to pull off the heist during a popular NASCAR race while also trying to dodge a relentless FBI agent.");
             daysRadioList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -465,8 +510,7 @@ else if(movie.equals("Detroit")){
                     hoursRadioList.setSelectionAfterHeaderView();
                 }
             });
-        }
-        else if(movie.equals("Hitman")){
+        } else if (movie.equals("Hitman")) {
             moviePickedImage.setImageResource(R.drawable.hitman_poster);
 
             daysList.add("Monday");
@@ -478,7 +522,7 @@ else if(movie.equals("Detroit")){
             daysList.add("Sunday");
             moviePickedTitle.setText("The Hitman's Bodyguard");
             moviePickedInfo.setText("Rating: R \n Duration: 111min \n Genre: Action | Comedy \n Directed by: Patrick Hughes");
-                    moviePickedDescription.setText("The world's top protection agent is called upon to guard the life of his mortal enemy," +
+            moviePickedDescription.setText("The world's top protection agent is called upon to guard the life of his mortal enemy," +
                     " one of the world's most notorious hit men. The relentless bodyguard and manipulative assassin have been on the " +
                     "opposite end of the bullet for years and are thrown together for a wildly outrageous 24 hours. " +
                     "During their journey from England to the Hague, they encounter high-speed car chases, outlandish boat " +
@@ -497,6 +541,33 @@ else if(movie.equals("Detroit")){
         }
 
 
+    }
+
+    public void setUpListViews(String mode) {
+        if (mode.equals("DatePick")) {
+            ArrayAdapter dateAdapter = new ArrayAdapter<>(MoviePicker.this, android.R.layout.simple_list_item_single_choice, movieDates);
+
+            movieDateListView.setAdapter(dateAdapter);
+            movieDateListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+
+            setMovieDateBtn.setVisibility(ListView.INVISIBLE);
+            daysRadioList.setVisibility(ListView.INVISIBLE);
+            hoursRadioList.setVisibility(ListView.INVISIBLE);
+            moviePickedCancelBtn.setVisibility(View.INVISIBLE);
+            movieBackBtn.setVisibility(View.VISIBLE);
+            movieDateListView.setVisibility(ListView.VISIBLE);
+            moviePickedConfirmBtn.setVisibility(ListView.VISIBLE);
+        } else if (mode.equals("TimePick")) {
+
+            movieDateListView.setVisibility(ListView.INVISIBLE);
+            moviePickedConfirmBtn.setVisibility(ListView.INVISIBLE);
+            movieBackBtn.setVisibility(View.INVISIBLE);
+            setMovieDateBtn.setVisibility(ListView.VISIBLE);
+            moviePickedCancelBtn.setVisibility(View.VISIBLE);
+            daysRadioList.setVisibility(ListView.VISIBLE);
+            hoursRadioList.setVisibility(ListView.VISIBLE);
+
+        }
 
     }
 
@@ -519,6 +590,8 @@ else if(movie.equals("Detroit")){
         savedInstanceState.putInt("layoutIdKey", layoutId);
         savedInstanceState.putString("whichMovieKey", whichMovie);
         savedInstanceState.putStringArrayList("hoursListKey", hoursList);
+        savedInstanceState.putString("modeKey", mode);
+        savedInstanceState.putStringArrayList("movieDatesKey", movieDates);
 
     }
 

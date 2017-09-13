@@ -1,7 +1,10 @@
 package com.example.varda.naviraklio;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -13,6 +16,7 @@ import android.widget.TextView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -24,8 +28,8 @@ public class NewAppointment extends AppCompatActivity {
     private TextView dateText;
     private Button setDateTimeBtn, movieBtn, confirmAppointmentBtn;
     private TextView durationText, movieTitleLabel, cinemaLabel;
-    private String duration, cinemaStringLabel, movieStringLabel,mode,cinemaDateString;
-    private SimpleDateFormat inputDate,shownDate;
+    private String duration, cinemaStringLabel, movieStringLabel, mode, cinemaDateString;
+    private String moviePickedDate;
 
 
     @Override
@@ -33,17 +37,19 @@ public class NewAppointment extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_appointment);
         if (savedInstanceState != null) {
-            dateString = savedInstanceState.getString("dateStringKey","");
-            cinemaStringLabel = savedInstanceState.getString("cinemaStringLabelKey","");
-            movieStringLabel = savedInstanceState.getString("movieStringLabelKey","");
-            duration = savedInstanceState.getString("durationStringKey","");
+            dateString = savedInstanceState.getString("dateStringKey", "");
+            cinemaStringLabel = savedInstanceState.getString("cinemaStringLabelKey", "");
+            movieStringLabel = savedInstanceState.getString("movieStringLabelKey", "");
+            duration = savedInstanceState.getString("durationStringKey", "");
             mode = savedInstanceState.getString("modeKey");
+            moviePickedDate = savedInstanceState.getString("moviePickedDateKey");
         } else {
             dateString = "";
             duration = "";
             cinemaStringLabel = "";
             movieStringLabel = "";
-            mode="Supermarket";
+            mode = "Supermarket";
+            moviePickedDate = "";
         }
 
 
@@ -64,7 +70,7 @@ public class NewAppointment extends AppCompatActivity {
             setUpCinema();
         } else if (mode.equals("Gas Station")) {
             setUpGasStation();
-        } else  if (mode.equals("Supermarket")) {
+        } else if (mode.equals("Supermarket")) {
             setUpSupermarket();
         }
 
@@ -72,13 +78,13 @@ public class NewAppointment extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (spinner.getSelectedItem().toString().equals("Cinema")) {
-                    mode="Cinema";
+                    mode = "Cinema";
                     setUpCinema();
                 } else if (spinner.getSelectedItem().toString().equals("Gas Station")) {
-                    mode="Gas Station";
+                    mode = "Gas Station";
                     setUpGasStation();
                 } else if (spinner.getSelectedItem().toString().equals("Supermarket")) {
-                    mode="Supermarket";
+                    mode = "Supermarket";
                     setUpSupermarket();
                 }
             }
@@ -131,7 +137,7 @@ public class NewAppointment extends AppCompatActivity {
             setUpCinema();
         } else if (mode.equals("Gas Station")) {
             setUpGasStation();
-        } else  if (mode.equals("Supermarket")) {
+        } else if (mode.equals("Supermarket")) {
             setUpSupermarket();
         }
     }
@@ -150,27 +156,12 @@ public class NewAppointment extends AppCompatActivity {
                 duration = data.getStringExtra("moviePickedDurationKey");
                 movieStringLabel = data.getStringExtra("moviePickedTitleKey");
                 cinemaStringLabel = data.getStringExtra("moviePickedCinemaKey");
-                String day,hour;
-                day=data.getStringExtra("moviePickedDayKey");
-                hour=data.getStringExtra("moviePickedHourKey");
-
-                //TODO single choice Dialog
-
-
-                Date tempDate=null;
-                inputDate=new SimpleDateFormat("EEEEEEEEE HH:mm");
-               // inputDate.format(3,5,1990,day,hour);   //TODO copy createdate method from Organizer
-                try {
-                   tempDate = inputDate.parse(day+" "+hour);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                System.out.println("sdate: "+inputDate.toString()+" date: "+tempDate);
-                System.out.println("koulis " + movieStringLabel + duration + cinemaStringLabel);
+                moviePickedDate = data.getStringExtra("moviePickedDateKey");
 
             }
         }
     }
+
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
@@ -179,7 +170,8 @@ public class NewAppointment extends AppCompatActivity {
         savedInstanceState.putString("cinemaStringLabelKey", cinemaStringLabel);
         savedInstanceState.putString("movieStringLabelKey", movieStringLabel);
         savedInstanceState.putString("durationStringKey", duration);
-        savedInstanceState.putString("modeKey",mode);
+        savedInstanceState.putString("modeKey", mode);
+        savedInstanceState.putString("moviePickedDateKey", moviePickedDate);
     }
 
     @Override
@@ -189,7 +181,8 @@ public class NewAppointment extends AppCompatActivity {
         cinemaStringLabel = savedInstanceState.getString("cinemaStringLabelKey");
         movieStringLabel = savedInstanceState.getString("movieStringLabelKey");
         duration = savedInstanceState.getString("durationStringKey");
-        mode= savedInstanceState.getString("modeKey");
+        mode = savedInstanceState.getString("modeKey");
+        moviePickedDate = savedInstanceState.getString("moviePickedDateKey");
     }
 
 
@@ -203,8 +196,9 @@ public class NewAppointment extends AppCompatActivity {
         movieTitleLabel.setVisibility(View.VISIBLE);
         cinemaLabel.setVisibility(View.VISIBLE);
         durationText.setText("Duration: " + duration);
-        cinemaLabel.setText("Cinema: "+cinemaStringLabel);
-        movieTitleLabel.setText("Movie: "+movieStringLabel);
+        cinemaLabel.setText("Cinema: " + cinemaStringLabel);
+        movieTitleLabel.setText("Movie: " + movieStringLabel);
+        dateText.setText(moviePickedDate);
     }
 
     public void setUpGasStation() {

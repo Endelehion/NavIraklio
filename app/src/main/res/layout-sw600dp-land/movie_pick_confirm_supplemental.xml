@@ -7,6 +7,36 @@
     android:layout_height="match_parent">
 
     <Button
+        android:id="@+id/movieBackBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="9dp"
+        android:layout_marginLeft="0dp"
+        android:text="Back"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
+    <ListView
+        android:id="@+id/dateListView"
+        android:layout_width="337dp"
+        android:layout_height="349dp"
+        android:layout_marginBottom="57dp"
+        android:layout_marginLeft="515dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        tools:layout_editor_absoluteY="57dp" />
+
+    <Button
+        android:id="@+id/setMovieDateBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="9dp"
+        android:layout_marginRight="-10dp"
+        android:text="Set Date"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <Button
         android:id="@+id/moviePickedCancelBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
