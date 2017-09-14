@@ -6,6 +6,16 @@
     android:layout_height="match_parent"
     tools:context="com.example.varda.naviraklio.NewAppointment">
 
+    <Button
+        android:id="@+id/setLocationBtn"
+        android:layout_width="110dp"
+        android:layout_height="55dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginRight="316dp"
+        android:text="Set Location"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
     <TextView
         android:id="@+id/cinemaLabel"
         android:layout_width="199dp"

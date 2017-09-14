@@ -74,7 +74,7 @@
         android:layout_width="wrap_content"
         android:layout_height="38dp"
         android:layout_marginLeft="0dp"
-        android:layout_marginTop="214dp"
+        android:layout_marginTop="204dp"
         android:text="Duration: "
         android:textSize="30dp"
         app:layout_constraintLeft_toLeftOf="@+id/guideline12"
@@ -144,23 +144,32 @@
         android:id="@+id/cinemaLabel"
         android:layout_width="344dp"
         android:layout_height="47dp"
-        android:layout_marginBottom="198dp"
-        android:layout_marginLeft="-7dp"
+        android:layout_marginBottom="195dp"
+        android:layout_marginLeft="0dp"
         android:text="Cinema: "
         android:textSize="25sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="@+id/guideline12"
-        tools:layout_editor_absoluteY="266dp" />
+        app:layout_constraintLeft_toLeftOf="@+id/guideline12" />
 
     <TextView
         android:id="@+id/movieTitleLabel"
         android:layout_width="344dp"
         android:layout_height="40dp"
-        android:layout_marginBottom="158dp"
+        android:layout_marginBottom="121dp"
         android:layout_marginLeft="-8dp"
         android:text="Movie: "
         android:textSize="25sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="@+id/guideline12" />
+
+    <Button
+        android:id="@+id/setLocationBtn"
+        android:layout_width="96dp"
+        android:layout_height="59dp"
+        android:layout_marginRight="-1dp"
+        android:layout_marginTop="195dp"
+        android:text="Set Location"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

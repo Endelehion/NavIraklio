@@ -54,6 +54,7 @@ import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -71,7 +72,7 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
     private LocationRequest mLocationRequest;
     private final int REQUEST_CHECK_SETTINGS = 1, PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 9, PLACE_PICKER_REQUEST = 2;// unique identifiers
     private boolean clickedflag;
-    private String selectedTypeString;
+    private String selectedTypeString, receivedDateString;
     private final String APPOINTMENT_STRINGID = "appointKey";
     private LatLng whereNow;
     private Marker currMark;
@@ -79,10 +80,10 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
     private double sumDist;
     private TextView destinationText;
     private ToggleButton myLocationToggle, customMarkerToggle;
-    String[] placeTypes;
+    private String[] placeTypes;
     private Place destination;
-    List<Place> superMarkets,cinemas,gasStations;
-    private ArrayList<Appointment> receivedAppointmentList;
+    private ArrayList<Appointment> receivedAppointList;
+    private ArrayList<Place> superMarkets, cinemas, gasStations;
     private Intent receivedIntent;
     private int receivedListIndex;
     private SimpleDateFormat dateFormat;
@@ -117,8 +118,9 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
         dateFormat = new SimpleDateFormat("EEE dd MMM yyyy HH:mm");
         receivedIntent = getIntent();
         receivedIntent.getIntExtra("listIndexKey", receivedListIndex);
-        receivedAppointmentList = receivedIntent.getParcelableArrayListExtra("listKey");
-        selectedTypeString=receivedAppointmentList.get(receivedListIndex).getPlace().getCoordType();
+        receivedDateString = receivedIntent.getStringExtra("dateKey");
+        receivedAppointList = receivedIntent.getParcelableArrayListExtra("listKey");
+        selectedTypeString = receivedAppointList.get(receivedListIndex).getPlace().getCoordType();
 
         createCoordinates();
     }
@@ -138,8 +140,8 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
             public void onClick(View v) {
                 if (destination != null) {
                     Intent resultIntent = new Intent();
-                    receivedAppointmentList.get(receivedListIndex).setPlace(destination);
-                    resultIntent.putExtra(APPOINTMENT_STRINGID, receivedAppointmentList.get(receivedListIndex));
+                    receivedAppointList.get(receivedListIndex).setPlace(destination);
+                    resultIntent.putExtra(APPOINTMENT_STRINGID, receivedAppointList.get(receivedListIndex));
                     setResult(Activity.RESULT_OK, resultIntent);
                     finish();
                 }
@@ -184,7 +186,12 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
             addCurrentLocationMarker();
             origin = new LatLng(location.getLatitude(), location.getLongitude());
             if (selectedTypeString != null) {
-                findPlace(selectedTypeString);
+
+                try {
+                    findPlace(selectedTypeString);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
                 destinationText.setText("Destination: " + destination.getAddress());
             }
 
@@ -199,82 +206,115 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
     }
 
     public void checkCloseAppointments() {
-        Date past20min,after20min;
+        Date past20min, after20min;
         try {
-            past20min=dateFormat.parse(receivedAppointmentList.get(receivedListIndex).getDateString());
+            past20min = dateFormat.parse(receivedAppointList.get(receivedListIndex).getDateString());
         } catch (ParseException e) {
             e.printStackTrace();
         }
 
-        for (int i = 0; i < receivedAppointmentList.size(); i++) {
+        for (int i = 0; i < receivedAppointList.size(); i++) {
 
         }
 
     }
 
-    protected void findPlace(String place) {
-        double dist;
-        double tempDist;
+    protected void findPlace(String place) throws ParseException {
+
+
+        boolean nullFlag = false, appointValid = true;
+        ArrayList<Place> placeList = new ArrayList<>();
+
+
         switch (place) {
             case "Supermarket":
-
-                dist = distFrom(origin, superMarkets.get(0).getCoord());
-                Place nearestSupermarket = superMarkets.get(0);
-                for (Place tempCoor : superMarkets) {
-                    tempDist = distFrom(origin, tempCoor.getCoord());
-                    if (tempDist < dist) {
-                        dist = tempDist;
-                        nearestSupermarket = tempCoor;
-                    }
-                }
-
-                destination = nearestSupermarket;
-
-
+                placeList = superMarkets;
                 break;
             case "Cinema":
-                dist = distFrom(origin, cinemas.get(0).getCoord());
-
-                Place nearestCinema = cinemas.get(0);
-                for (Place tempCoor : cinemas) {
-                    tempDist = distFrom(origin, tempCoor.getCoord());
-                    if (tempDist < dist) {
-                        dist = tempDist;
-                        nearestCinema = tempCoor;
-                    }
-                }
-
-                destination = nearestCinema;
+                placeList = cinemas;
                 break;
             case "Gas Station":
-                dist = distFrom(origin, gasStations.get(0).getCoord());
-                Place nearestGasStation = gasStations.get(0);
-                for (Place tempCoor : gasStations) {
-                    tempDist = distFrom(origin, tempCoor.getCoord());
-                    if (tempDist < dist) {
-                        dist = tempDist;
-                        nearestGasStation = tempCoor;
-                    }
-                }
-
-                destination = nearestGasStation;
+                placeList = gasStations;
                 break;
             default:
                 Toast.makeText(PlanMap.this, "No Place selected", Toast.LENGTH_SHORT).show();
                 destination = null;
+                nullFlag = true;
                 break;
         }
-        if (destination != null) {
+        if (!nullFlag) {
+            Date appointTime, timeWindowStart, timeWindowEnd, tempDate,nowTime,mornRushHourStart,mornRushHourEnd,noonRushHourStart,noonRushHourEnd;
+            Calendar cal = Calendar.getInstance();
+            nowTime=cal.getTime();
+            cal.set(Calendar.HOUR,8);
+            cal.set(Calendar.MINUTE,0);
+            mornRushHourStart=cal.getTime();
+            cal.add(Calendar.HOUR,1);
+            mornRushHourEnd=cal.getTime();
+            cal.set(Calendar.HOUR,13);
+            noonRushHourStart=cal.getTime();
+            cal.add(Calendar.HOUR,2);
+            noonRushHourEnd=cal.getTime();
+
+            appointTime = dateFormat.parse(receivedDateString);
+            cal.setTime(appointTime);
+            cal.add(Calendar.MINUTE, -5);
+            timeWindowStart = cal.getTime();
+            cal.setTime(appointTime);
+            cal.add(Calendar.MINUTE, 5);
+            timeWindowEnd = cal.getTime();
+
+            for (int i = 0; i < receivedAppointList.size(); i++) {
+                tempDate = dateFormat.parse(receivedAppointList.get(i).getDateString());
+
+                if (tempDate.after(timeWindowStart) && tempDate.before(timeWindowEnd)) {
+                    appointValid=false;
+                    break;
+                }
+                else if(nowTime.after(mornRushHourStart) && nowTime.before(mornRushHourEnd) || nowTime.after(noonRushHourStart) && nowTime.before(noonRushHourEnd)){
+                    //max distance 8km min rush hour avg speed 14km/h max time 34min,
+                    //normal avg speed 25km/h max time 19min
+                    cal.setTime(nowTime);
+                    cal.add(Calendar.MINUTE,34);//TODO synthikes
+                }
+            }
+            destination = findNearestPlace(placeList);
+
+
             // Getting URL to the Google Directions API
 
-            String url = getDirectionsUrl(origin, destination.getCoord());
+            if (appointValid) {
 
-            DownloadTask downloadTask = new DownloadTask();
 
-            // Start downloading json data from Google Directions API
-            downloadTask.execute(url);
+                String url = getDirectionsUrl(origin, destination.getCoord());
 
+                DownloadTask downloadTask = new DownloadTask();
+
+                // Start downloading json data from Google Directions API
+                downloadTask.execute(url);
+            }
         }
+    }
+
+    public int calculateTravelTime(LatLng origin, LatLng destination) {
+        int x = 1;
+        //TODO calc time
+        return x;
+    }
+
+    public Place findNearestPlace(ArrayList<Place> placeList) {
+        double dist, tempDist;
+        Place nearestPlace;
+        dist = distFrom(origin, placeList.get(0).getCoord());
+        nearestPlace = placeList.get(0);
+        for (Place tempCoor : placeList) {
+            tempDist = distFrom(origin, tempCoor.getCoord());
+            if (tempDist < dist) {
+                dist = tempDist;
+                nearestPlace = tempCoor;
+            }
+        }
+        return nearestPlace;
     }
 
     protected void createLocationRequest() {
@@ -369,34 +409,34 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
 
     void createCoordinates() {
         superMarkets = new ArrayList<>();
-        superMarkets.add(new Place(new LatLng(35.340685, 25.133643), "Chalkiadakis", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.337384, 25.121930), "LIDL", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.338468, 25.139354), "AB", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.337481, 25.132863), "BAZAAR", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.339136, 25.155434), "Sklavenitis", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.341716, 25.136238), "papadaki", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.326724, 25.131095), "Sklavenitis", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.326251, 25.138878), "Sklavenitis", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.337651, 25.126895), "Chalkiadakis", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.338751, 25.119835), "Chalkiadakis", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.324666, 25.133577), "Ariadni", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.334394, 25.115245), "INKA", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.324695, 25.124600), "AB", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.323925, 25.112541), "LIDL", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.319163, 25.144127), "INKA", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.324660, 25.124514), "AB", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.318393, 25.148246), "Chalkiadakis", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.331733, 25.137689), "Chalkiadakis", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.330157, 25.132282), "Chalkiadakis", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.334359, 25.158718), "Chalkiadakis Max", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.329072, 25.119279), "Chalkiadakis", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.343307, 25.155190), "My Cretan Goods", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.336788, 25.133692), "Alati tis Gis", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.330241, 25.124522), "Kouts", "Supermarket",9,21));
+        superMarkets.add(new Place(new LatLng(35.340685, 25.133643), "Chalkiadakis", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.337384, 25.121930), "LIDL", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.338468, 25.139354), "AB", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.337481, 25.132863), "BAZAAR", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.339136, 25.155434), "Sklavenitis", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.341716, 25.136238), "papadaki", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.326724, 25.131095), "Sklavenitis", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.326251, 25.138878), "Sklavenitis", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.337651, 25.126895), "Chalkiadakis", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.338751, 25.119835), "Chalkiadakis", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.324666, 25.133577), "Ariadni", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.334394, 25.115245), "INKA", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.324695, 25.124600), "AB", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.323925, 25.112541), "LIDL", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.319163, 25.144127), "INKA", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.324660, 25.124514), "AB", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.318393, 25.148246), "Chalkiadakis", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.331733, 25.137689), "Chalkiadakis", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.330157, 25.132282), "Chalkiadakis", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.334359, 25.158718), "Chalkiadakis Max", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.329072, 25.119279), "Chalkiadakis", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.343307, 25.155190), "My Cretan Goods", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.336788, 25.133692), "Alati tis Gis", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.330241, 25.124522), "Kouts", "Supermarket", 9, 21));
 
 
         //zografou
-        superMarkets.add(new Place(new LatLng(37.977817, 23.769849), "Daily Lewf. Papagou 114", "Supermarket",9,21));
+        superMarkets.add(new Place(new LatLng(37.977817, 23.769849), "Daily Lewf. Papagou 114", "Supermarket", 9, 21));
         Collections.sort(superMarkets, new ComparatorCoord());
 
 
@@ -433,14 +473,14 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
 
 
         cinemas = new ArrayList<>();
-        cinemas.add(new Place(new LatLng(35.339880, 25.119728), "Odeon Talos", "Cinema",16,2));
-        cinemas.add(new Place(new LatLng(35.340889, 25.136980), "Vintsenzos Kornaros", "Cinema",16,2));
-        cinemas.add(new Place(new LatLng(35.338375, 25.136216), "Astoria", "Cinema",16,2));
-        cinemas.add(new Place(new LatLng(35.335669, 25.070682), "Texnopolis", "Cinema",16,2));
-        cinemas.add(new Place(new LatLng(35.337980, 25.158230), "Cine Studio", "Cinema",16,2));
-        cinemas.add(new Place(new LatLng(35.338573, 25.129685), "Dedalos Club", "Cinema",16,2));
+        cinemas.add(new Place(new LatLng(35.339880, 25.119728), "Odeon Talos", "Cinema", 16, 2));
+        cinemas.add(new Place(new LatLng(35.340889, 25.136980), "Vintsenzos Kornaros", "Cinema", 16, 2));
+        cinemas.add(new Place(new LatLng(35.338375, 25.136216), "Astoria", "Cinema", 16, 2));
+        cinemas.add(new Place(new LatLng(35.335669, 25.070682), "Texnopolis", "Cinema", 16, 2));
+        cinemas.add(new Place(new LatLng(35.337980, 25.158230), "Cine Studio", "Cinema", 16, 2));
+        cinemas.add(new Place(new LatLng(35.338573, 25.129685), "Dedalos Club", "Cinema", 16, 2));
         //zografou
-        cinemas.add(new Place(new LatLng(37.977369, 23.770716), "Aleka", "Cinema",16,2));
+        cinemas.add(new Place(new LatLng(37.977369, 23.770716), "Aleka", "Cinema", 16, 2));
         Collections.sort(cinemas, new ComparatorCoord());
 
 
@@ -594,23 +634,6 @@ protected void checkPermissions(){
                 Toast toasty = Toast.makeText(PlanMap.this, "gps remains disabled", Toast.LENGTH_SHORT);
                 toasty.show();
             }
-        }
-        if (requestCode == PLACE_PICKER_REQUEST
-                && resultCode == PlanMap.RESULT_OK) {
-
-            final com.google.android.gms.location.places.Place place = PlacePicker.getPlace(this, data);
-            final CharSequence name = place.getName();
-            final CharSequence address = place.getAddress();
-            String attributions = (String) place.getAttributions();
-            if (attributions == null) {
-                attributions = "";
-            }
-
-            // searchText.setText(name + " " + address);
-
-
-        } else {
-            super.onActivityResult(requestCode, resultCode, data);
         }
 
 

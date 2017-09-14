@@ -27,7 +27,7 @@ public class Organizer extends AppCompatActivity {
     private final Calendar calendar = Calendar.getInstance();
     private int year, month, day;
     private Button newAp, delAp;
-    private ArrayList<Appointment> arListAp;
+    private ArrayList<Appointment> appointArrayList;
     private ArrayAdapter adapterAp;
     private ListView listViewAp;
     private String dateString, receivedDate, receivedType;
@@ -49,19 +49,19 @@ public class Organizer extends AppCompatActivity {
         datePicker.updateDate(year, month, day);
         sdateFormat = new SimpleDateFormat("EEE dd MMM yyyy HH:mm");
 
-        arListAp = new ArrayList<>();
+        appointArrayList = new ArrayList<>();
 
         dateString = sdateFormat.format(createDate(day, month, 2017, 15, 35));
-        arListAp.add(new Appointment(arListAp.size(), " 13:00", new Place(new LatLng(37.977817, 23.769849), dateString, "Cinema",16,2)));
+        appointArrayList.add(new Appointment(appointArrayList.size(), " 13:00", new Place(new LatLng(37.977817, 23.769849), dateString, "Cinema",16,2)));
 
         dateString = sdateFormat.format(createDate(7, 7, 2017, 12, 55));
-        arListAp.add(new Appointment(arListAp.size(), " 14:00", new Place(new LatLng(37.977812, 23.769841), dateString, "Supermarket",16,2)));
+        appointArrayList.add(new Appointment(appointArrayList.size(), " 14:00", new Place(new LatLng(37.977812, 23.769841), dateString, "Supermarket",16,2)));
         stringList = new ArrayList<>();
-        for (int i = 0; i < arListAp.size(); i++) {
-            int id = arListAp.get(i).getId();
-            String address = arListAp.get(i).getPlace().getAddress();
-            String type = arListAp.get(i).getPlace().getCoordType();
-            String date = arListAp.get(i).getDateString();
+        for (int i = 0; i < appointArrayList.size(); i++) {
+            int id = appointArrayList.get(i).getId();
+            String address = appointArrayList.get(i).getPlace().getAddress();
+            String type = appointArrayList.get(i).getPlace().getCoordType();
+            String date = appointArrayList.get(i).getDateString();
             stringList.add(id + " " + address + " " + type + " " + date);
         }
 
@@ -81,7 +81,7 @@ public class Organizer extends AppCompatActivity {
                 int adapterIndex;
                 adapterIndex = listViewAp.getCheckedItemPosition();
                 if (adapterIndex != -1) {
-                    arListAp.remove(adapterIndex);
+                    appointArrayList.remove(adapterIndex);
                     stringList.remove(adapterIndex);
                     adapterAp.notifyDataSetChanged();
                     listViewAp.clearChoices();
@@ -97,6 +97,7 @@ public class Organizer extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Organizer.this, NewAppointment.class);
+                intent.putParcelableArrayListExtra("appointArrayListKey", appointArrayList);
                 startActivityForResult(intent, REQUEST_APPOINTMENT_DATE);
             }
         });
@@ -108,10 +109,10 @@ public class Organizer extends AppCompatActivity {
                 adapterIndex = listViewAp.getCheckedItemPosition();
                 if (adapterIndex != -1) {
                     Intent locationIntent = new Intent(Organizer.this, PlanMap.class);
-                    String passedString = arListAp.get(adapterIndex).getPlace().getCoordType();
+                    String passedString = appointArrayList.get(adapterIndex).getPlace().getCoordType();
                     locationIntent.putExtra("typeKey", passedString);
                     locationIntent.putExtra("listIndexKey", adapterIndex);
-                    locationIntent.putParcelableArrayListExtra("listKey", arListAp);
+                    locationIntent.putParcelableArrayListExtra("listKey", appointArrayList);
                     startActivityForResult(locationIntent, REQUEST_LOCATION_STRING);
 
                 } else {
@@ -380,10 +381,10 @@ public class Organizer extends AppCompatActivity {
 
             receivedDate = data.getStringExtra("dateKey");
             receivedType = data.getStringExtra("typeKey");
-            arListAp.add(new Appointment(arListAp.size(), receivedDate,new Place(receivedType)));
-            int id = arListAp.get(arListAp.size() - 1).getId();
-            String type = arListAp.get(arListAp.size() - 1).getPlace().getCoordType();
-            String date = arListAp.get(arListAp.size() - 1).getDateString();
+            appointArrayList.add(new Appointment(appointArrayList.size(), receivedDate,new Place(receivedType)));
+            int id = appointArrayList.get(appointArrayList.size() - 1).getId();
+            String type = appointArrayList.get(appointArrayList.size() - 1).getPlace().getCoordType();
+            String date = appointArrayList.get(appointArrayList.size() - 1).getDateString();
             stringList.add(id + " " + type + " " + date);
             adapterAp.notifyDataSetChanged();
         }
@@ -393,12 +394,11 @@ public class Organizer extends AppCompatActivity {
             Appointment receivedAppointment;
             receivedAppointment = data.getParcelableExtra("appointKey");
             receivedDestination=receivedAppointment.getPlace();
-           int adapterIndex = listViewAp.getCheckedItemPosition();   //TODO return dates and movie
+           int adapterIndex = listViewAp.getCheckedItemPosition();
             if (adapterIndex != -1) {
-                arListAp.get(adapterIndex).setPlace(receivedDestination);
-             //   arListAp.get(adapterIndex).getPlace().setAddress(receivedDestination.getAddress());
-             //   arListAp.get(adapterIndex).getPlace().setCoord(receivedDestination.getCoord());
-
+                appointArrayList.get(adapterIndex).setPlace(receivedDestination);
+             //   appointArrayList.get(adapterIndex).getPlace().setAddress(receivedDestination.getAddress());
+             //   appointArrayList.get(adapterIndex).getPlace().setCoord(receivedDestination.getCoord());
 
             } else {
                 Toast.makeText(Organizer.this, "No Appointments Selected", Toast.LENGTH_SHORT).show();

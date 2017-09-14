@@ -18,6 +18,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 public class MoviePicker extends AppCompatActivity {
 
@@ -188,14 +190,13 @@ public class MoviePicker extends AppCompatActivity {
                         tempStr = hoursList.get(hoursRadioList.getCheckedItemPosition());
                         movieHour=Integer.parseInt(hoursList.get(hoursRadioList.getCheckedItemPosition()).substring(tempStr.indexOf(":")-2,tempStr.indexOf(":")));
                         movieMin=Integer.parseInt(hoursList.get(hoursRadioList.getCheckedItemPosition()).substring(tempStr.indexOf(":")+1,tempStr.indexOf(":")+3));
-                        SimpleDateFormat fullDate = new SimpleDateFormat("EEE dd MM yyyy HH:mm");
 
                         mins = Integer.parseInt(moviePickedInfo.getText().toString().
                                 substring(moviePickedInfo.getText().toString().indexOf("Duration: ") + 10, moviePickedInfo.getText().toString().indexOf("min")));
                         hour = mins / 60;
                         min = mins % 60;
                         movieDuration = (mins / 60) + ":" + (mins % 60);
-                        SimpleDateFormat dayOfWeek = new SimpleDateFormat("EEEE");
+                        SimpleDateFormat dayOfWeek = new SimpleDateFormat("EEEE",Locale.getDefault());
                         Calendar cal = Calendar.getInstance();
                         Date currDate = cal.getTime();
                         while (!dayOfWeek.format(currDate).equals(dayString)) {
@@ -206,10 +207,15 @@ public class MoviePicker extends AppCompatActivity {
                         cal.set(Calendar.HOUR, movieHour);
                         cal.set(Calendar.MINUTE, movieMin);
                         movieDates = new ArrayList<>();
+                        SimpleDateFormat fullDate = new SimpleDateFormat("EEE dd MM yyyy HH:mm",Locale.getDefault());
+                        TimeZone timeZone;
+                        timeZone = TimeZone.getTimeZone("Europe/Athens");
+                        fullDate.setTimeZone(timeZone);  //TODO check timezone @ 11:30pm
                         for (int i = 0; i < 10; i++) {
                             cal.add(Calendar.WEEK_OF_YEAR, 1);
+
                             temp = cal.getTime();
-                            movieDates.add(fullDate.format(temp));    //init 10 next daysOfWeek for Dialog
+                            movieDates.add(fullDate.format(temp));    //init 10 next daysOfWeek
                         }
                         mode = "DatePick";
                         setUpListViews(mode);

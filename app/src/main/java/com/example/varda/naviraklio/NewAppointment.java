@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -26,10 +27,11 @@ public class NewAppointment extends AppCompatActivity {
     private String[] placeTypes;
     String dateString;
     private TextView dateText;
-    private Button setDateTimeBtn, movieBtn, confirmAppointmentBtn;
+    private Button setDateTimeBtn, movieBtn, confirmAppointmentBtn,setLocationBtn;
     private TextView durationText, movieTitleLabel, cinemaLabel;
     private String duration, cinemaStringLabel, movieStringLabel, mode, cinemaDateString;
     private String moviePickedDate;
+    private ArrayList<Appointment> receivedAppointArrayList;
 
 
     @Override
@@ -51,8 +53,10 @@ public class NewAppointment extends AppCompatActivity {
             mode = "Supermarket";
             moviePickedDate = "";
         }
+        Intent receivecIntent =new Intent();
+        receivedAppointArrayList= receivecIntent.getParcelableArrayListExtra("appointListKey");
 
-
+        setLocationBtn = (Button) findViewById(R.id.setLocationBtn);
         spinner = (Spinner) findViewById(R.id.spinner);
         placeTypes = getResources().getStringArray(R.array.place_type);
         ArrayAdapter dataAdapter = new ArrayAdapter<String>(NewAppointment.this, android.R.layout.simple_spinner_item, placeTypes);
@@ -73,6 +77,27 @@ public class NewAppointment extends AppCompatActivity {
         } else if (mode.equals("Supermarket")) {
             setUpSupermarket();
         }
+
+        setLocationBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                int index=receivedAppointArrayList.size()-1;
+                if (!receivedAppointArrayList.isEmpty() || !dateText.getText().equals("")) {
+                    Intent locationIntent = new Intent(NewAppointment.this, PlanMap.class);
+                    String passedString = receivedAppointArrayList.get(index).getPlace().getCoordType();
+                    locationIntent.putExtra("typeKey", passedString);
+                    locationIntent.putExtra("listIndexKey", index);
+                    locationIntent.putParcelableArrayListExtra("listKey", receivedAppointArrayList);
+                    locationIntent.putExtra("dateKey",dateText.getText());
+                    startActivityForResult(locationIntent, REQUEST_LOCATION_STRING);
+
+                } else {
+                    Toast.makeText(NewAppointment.this, "No Appointments Selected", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -110,7 +135,7 @@ public class NewAppointment extends AppCompatActivity {
             public void onClick(View v) {
                 if (!dateString.equals(null)) {
                     Intent resultIntent = new Intent();
-                    resultIntent.putExtra("dateKey", dateString);
+                    resultIntent.putExtra("dateKey", dateText.getText());
                     resultIntent.putExtra("typeKey", spinner.getSelectedItem().toString());
                     setResult(Activity.RESULT_OK, resultIntent);
                     finish();
