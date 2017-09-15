@@ -32,11 +32,14 @@ import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static android.Manifest.permission.READ_CONTACTS;
+
+
 
 /**
  * A login screen that offers login via username/password.
@@ -112,12 +115,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+
+
+
     }
 
-    protected void goCheatHome(View view){
-        Intent homeIntent=new Intent(LoginActivity.this, Home.class);
+    protected void goCheatHome(View view) {
+        Intent homeIntent = new Intent(LoginActivity.this, Home.class);
         startActivity(homeIntent);
     }
+
     private void populateAutoComplete() {
         if (!mayRequestContacts()) {
             return;
@@ -215,7 +222,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(true);
             mAuthTask = new UserLoginTask(username, password);
             mAuthTask.execute((Void) null);
-            Intent goHome=new Intent(LoginActivity.this, Home.class);
+            Intent goHome = new Intent(LoginActivity.this, Home.class);
             startActivity(goHome);
         }
     }

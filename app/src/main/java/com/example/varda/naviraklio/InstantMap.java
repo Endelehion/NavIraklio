@@ -55,6 +55,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import static com.google.android.gms.location.LocationServices.*;
 
@@ -76,9 +77,18 @@ public class InstantMap extends FragmentActivity implements OnMapReadyCallback, 
     private double sumDist;
     Spinner spinner;
     String[] placeTypes;
-    List<Place> superMarkets;
-    List<Place> gasStations;
-    List<Place> cinemas;
+    private List<Place> superMarkets;
+    private List<Place> gasStations;
+    private List<Place> cinemas;
+    private ArrayList<TimeRoutes> timeRoutes;
+    private int indexy = 0;
+    private boolean sup = true, gas = false, cin = false;
+    double euclidDistance;
+    TimeRoutes currentTimeRoute;
+    LatLng orig = new LatLng(35.329490, 25.134992);
+    LatLng desty;
+    private double actualDistance;
+    double sumDistD = 0, sumTimeD = 0, avgTimeDivergence, avgDistanceDivergence;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,8 +119,17 @@ public class InstantMap extends FragmentActivity implements OnMapReadyCallback, 
         findButton = (Button) findViewById(R.id.findButton);
         whereAmI = (Button) findViewById(R.id.whereAmI);
         createCoordinates();
+        timeRoutes = new ArrayList<>();
+
     }
 
+    public double getActualDistance() {
+        return actualDistance;
+    }
+
+    public void setActualDistance(double actualDistance) {
+        this.actualDistance = actualDistance;
+    }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -142,7 +161,15 @@ public class InstantMap extends FragmentActivity implements OnMapReadyCallback, 
         whereAmI.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                clickedflag = true;
+
+                if (indexy < superMarkets.size()) {
+                    desty = superMarkets.get(indexy).getCoord();
+
+                    euclidDistance = distFrom(orig, desty);
+                    navigateFromTo(orig, desty);
+                    indexy++;
+                }
+              /*  clickedflag = true;
                 createLocation();
                 if (location != null) {
                     Log.i("Location Info", "Location achieved!");
@@ -154,14 +181,19 @@ public class InstantMap extends FragmentActivity implements OnMapReadyCallback, 
                     Log.i("Location Info", "Location not Available");
                 }
 
-
+*/
             }
         });
+
 
         findButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mMap.clear();
+                avgDistanceDivergence = sumDistD / timeRoutes.size();
+                avgTimeDivergence = sumTimeD / timeRoutes.size();
+                Log.i("CoordStatistic: ", "Average Distance Divergence:" + avgDistanceDivergence + " Average Time Divergence:" + avgTimeDivergence);
+                Log.i("CoordStatistic: ", "Total Number of " + timeRoutes.size() + " samples");
+             /*   mMap.clear();
                 clickedflag = true;
                 createLocation();
                 if (location != null) {
@@ -176,8 +208,7 @@ public class InstantMap extends FragmentActivity implements OnMapReadyCallback, 
                     checkSettings();
                     Log.i("Location Info", "Location not Available");
                 }
-
-
+*/
 
             }
         });
@@ -201,6 +232,27 @@ public class InstantMap extends FragmentActivity implements OnMapReadyCallback, 
         */
 
     }
+
+    public void printStats() {
+        if (indexy < superMarkets.size()) {
+            desty = superMarkets.get(indexy).getCoord();
+            actualDistance = sumDist;
+            timeRoutes.add(new TimeRoutes(orig, desty, euclidDistance, actualDistance));
+            currentTimeRoute = timeRoutes.get(timeRoutes.size() - 1);
+            sumDistD += timeRoutes.get(timeRoutes.size() - 1).getDistanceDivergence();
+            sumTimeD += timeRoutes.get(timeRoutes.size() - 1).getTimeDivergence();
+            Log.i("CoordStatistic: ", "Destination: " + currentTimeRoute.getDestination() + " EuclidDistance: " + currentTimeRoute.getEuclidDistance() + " ActualDistance: " + currentTimeRoute.getActualDistance() + "Distance Divergence: " + currentTimeRoute.getDistanceDivergence() + " Time Divergence: " + currentTimeRoute.getTimeDivergence());
+
+        } else {
+            Toast.makeText(InstantMap.this, "all done", Toast.LENGTH_SHORT).show();
+            Log.i("CoordStatistic:", "Done");
+            avgDistanceDivergence = sumDistD / timeRoutes.size();
+            avgTimeDivergence = sumTimeD / timeRoutes.size();
+            Log.i("CoordStatistic: ", "Average Distance Divergence:" + avgDistanceDivergence + " Average Time Divergence:" + avgTimeDivergence);
+            Log.i("CoordStatistic: ", "Total Number of " + timeRoutes.size() + " samples");
+        }
+    }
+
 
     protected void findPlace(String place) {
         LatLng origin;
@@ -261,13 +313,7 @@ public class InstantMap extends FragmentActivity implements OnMapReadyCallback, 
                 break;
         }
         if (dest != null) {
-            // Getting URL to the Google Directions API
-            String url = getDirectionsUrl(origin, dest);
-
-            DownloadTask downloadTask = new DownloadTask();
-
-            // Start downloading json data from Google Directions API
-            downloadTask.execute(url);
+            navigateFromTo(origin, dest);
 
         }
     }
@@ -277,6 +323,18 @@ public class InstantMap extends FragmentActivity implements OnMapReadyCallback, 
         mLocationRequest.setInterval(10000);
         mLocationRequest.setFastestInterval(5000);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+    }
+
+    public void navigateFromTo(LatLng origin, LatLng dest) {
+        // Getting URL to the Google Directions API
+        String url = getDirectionsUrl(origin, dest);
+
+        DownloadTask downloadTask = new DownloadTask();
+
+        // Start downloading json data from Google Directions API
+
+        downloadTask.execute(url);
+
     }
 
     protected void checkSettings() {
@@ -364,36 +422,35 @@ public class InstantMap extends FragmentActivity implements OnMapReadyCallback, 
 
     void createCoordinates() {
         superMarkets = new ArrayList<>();
-        superMarkets.add(new Place(new LatLng(35.340685, 25.133643), "Chalkiadakis", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.337384, 25.121930), "LIDL", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.338468, 25.139354), "AB", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.337481, 25.132863), "BAZAAR", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.339136, 25.155434), "Sklavenitis", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.341716, 25.136238), "papadaki", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.326724, 25.131095), "Sklavenitis", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.326251, 25.138878), "Sklavenitis", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.337651, 25.126895), "Chalkiadakis", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.338751, 25.119835), "Chalkiadakis", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.324666, 25.133577), "Ariadni", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.334394, 25.115245), "INKA", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.324695, 25.124600), "AB", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.323925, 25.112541), "LIDL", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.319163, 25.144127), "INKA", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.324660, 25.124514), "AB", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.318393, 25.148246), "Chalkiadakis", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.331733, 25.137689), "Chalkiadakis", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.330157, 25.132282), "Chalkiadakis", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.334359, 25.158718), "Chalkiadakis Max", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.329072, 25.119279), "Chalkiadakis", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.343307, 25.155190), "My Cretan Goods", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.336788, 25.133692), "Alati tis Gis", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.330241, 25.124522), "Kouts", "Supermarket",9,21));
+        superMarkets.add(new Place(new LatLng(35.340685, 25.133643), "Chalkiadakis", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.337384, 25.121930), "LIDL", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.338468, 25.139354), "AB", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.337481, 25.132863), "BAZAAR", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.339136, 25.155434), "Sklavenitis", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.341716, 25.136238), "papadaki", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.326724, 25.131095), "Sklavenitis", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.326251, 25.138878), "Sklavenitis", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.337651, 25.126895), "Chalkiadakis", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.338751, 25.119835), "Chalkiadakis", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.324666, 25.133577), "Ariadni", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.334394, 25.115245), "INKA", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.324695, 25.124600), "AB", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.323925, 25.112541), "LIDL", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.319163, 25.144127), "INKA", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.324660, 25.124514), "AB", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.318393, 25.148246), "Chalkiadakis", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.331733, 25.137689), "Chalkiadakis", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.330157, 25.132282), "Chalkiadakis", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.334359, 25.158718), "Chalkiadakis Max", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.329072, 25.119279), "Chalkiadakis", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.343307, 25.155190), "My Cretan Goods", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.336788, 25.133692), "Alati tis Gis", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.330241, 25.124522), "Kouts", "Supermarket", 9, 21));
 
 
         //zografou
-        superMarkets.add(new Place(new LatLng(37.977817, 23.769849), "Daily Lewf. Papagou 114", "Supermarket",9,21));
+        superMarkets.add(new Place(new LatLng(37.977817, 23.769849), "Daily Lewf. Papagou 114", "Supermarket", 9, 21));
         Collections.sort(superMarkets, new ComparatorCoord());
-
 
 
         gasStations = new ArrayList<>();
@@ -430,14 +487,14 @@ public class InstantMap extends FragmentActivity implements OnMapReadyCallback, 
 
 
         cinemas = new ArrayList<>();
-        cinemas.add(new Place(new LatLng(35.339880, 25.119728), "Odeon Talos", "Cinema",16,2));
-        cinemas.add(new Place(new LatLng(35.340889, 25.136980), "Vintsenzos Kornaros", "Cinema",16,2));
-        cinemas.add(new Place(new LatLng(35.338375, 25.136216), "Astoria", "Cinema",16,2));
-        cinemas.add(new Place(new LatLng(35.335669, 25.070682), "Texnopolis", "Cinema",16,2));
-        cinemas.add(new Place(new LatLng(35.337980, 25.158230), "Cine Studio", "Cinema",16,2));
-        cinemas.add(new Place(new LatLng(35.338573, 25.129685), "Dedalos Club", "Cinema",16,2));
+        cinemas.add(new Place(new LatLng(35.339880, 25.119728), "Odeon Talos", "Cinema", 16, 2));
+        cinemas.add(new Place(new LatLng(35.340889, 25.136980), "Vintsenzos Kornaros", "Cinema", 16, 2));
+        cinemas.add(new Place(new LatLng(35.338375, 25.136216), "Astoria", "Cinema", 16, 2));
+        cinemas.add(new Place(new LatLng(35.335669, 25.070682), "Texnopolis", "Cinema", 16, 2));
+        cinemas.add(new Place(new LatLng(35.337980, 25.158230), "Cine Studio", "Cinema", 16, 2));
+        cinemas.add(new Place(new LatLng(35.338573, 25.129685), "Dedalos Club", "Cinema", 16, 2));
         //zografou
-        cinemas.add(new Place(new LatLng(37.977369, 23.770716), "Aleka", "Cinema",16,2));
+        cinemas.add(new Place(new LatLng(37.977369, 23.770716), "Aleka", "Cinema", 16, 2));
         Collections.sort(cinemas, new ComparatorCoord());
 
 
@@ -722,24 +779,30 @@ protected void checkPermissions(){
             }*/
 
 // Drawing polyline in the Google InstantMap for the i-th route
-            mMap.addPolyline(lineOptions);
+            try {
+                mMap.addPolyline(lineOptions);
 
-            List<LatLng>LPoints=lineOptions.getPoints();
-            sumDist=0;
-            if (LPoints.get(1) != null) {
-                for (int k = 0; k < LPoints.size() - 1; k++) {
-                    sumDist = sumDist + distFrom(LPoints.get(k), LPoints.get(k + 1));
+                List<LatLng> LPoints = lineOptions.getPoints();
+                sumDist = 0;
+                if (LPoints.get(1) != null) {
+                    for (int k = 0; k < LPoints.size() - 1; k++) {
+                        sumDist = sumDist + distFrom(LPoints.get(k), LPoints.get(k + 1));
+                    }
+                } else {
+                    LatLng myOrigin = new LatLng(location.getLatitude(), location.getLongitude());
+                    sumDist = distFrom(myOrigin, LPoints.get(0));
                 }
-            } else {
-                LatLng myOrigin = new LatLng(location.getLatitude(), location.getLongitude());
-                sumDist = distFrom(myOrigin,  LPoints.get(0));
+                int timeEst;
+
+                timeEst = (int) sumDist / 333; // Average Driving speed in Heraklion 20km/h or 333m/min
+                searchText.setText("Distance: " + sumDist + "Time: " + timeEst);
+                printStats();
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+                navigateFromTo(orig, desty);
             }
-            int timeEst;
-
-            timeEst=(int) sumDist/333; // Average Driving speed in Heraklion 20km/h or 333m/min
-            searchText.setText("Distance: " + sumDist+ "Time: "+timeEst);
-
         }
+
     }
 
     private String getDirectionsUrl(LatLng origin, LatLng dest) {

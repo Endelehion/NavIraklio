@@ -14,6 +14,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.util.FloatMath;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -33,7 +34,6 @@ import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.location.places.Places;
-import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -87,6 +87,7 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
     private Intent receivedIntent;
     private int receivedListIndex;
     private SimpleDateFormat dateFormat;
+    private int receivedDuration;
 
 
     @Override
@@ -120,9 +121,13 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
         receivedIntent.getIntExtra("listIndexKey", receivedListIndex);
         receivedDateString = receivedIntent.getStringExtra("dateKey");
         receivedAppointList = receivedIntent.getParcelableArrayListExtra("listKey");
+        receivedIntent.getIntExtra("durationMinsKey", receivedDuration);
         selectedTypeString = receivedAppointList.get(receivedListIndex).getPlace().getCoordType();
 
         createCoordinates();
+
+
+        calcDist(superMarkets.get(1).getCoord(),gasStations.get(1).getCoord());
     }
 
 
@@ -223,6 +228,8 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
 
 
         boolean nullFlag = false, appointValid = true;
+        int travelTime;
+        double distance;
         ArrayList<Place> placeList = new ArrayList<>();
 
 
@@ -243,39 +250,55 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
                 break;
         }
         if (!nullFlag) {
-            Date appointTime, timeWindowStart, timeWindowEnd, tempDate,nowTime,mornRushHourStart,mornRushHourEnd,noonRushHourStart,noonRushHourEnd;
+            Date appointTime, timeWindowStart, timeWindowEnd, appointTimeFrame[], listDateTimeFrame[], nowArriveTime, listTime, nowTime, mornRushHourStart, mornRushHourEnd, noonRushHourStart, noonRushHourEnd;
             Calendar cal = Calendar.getInstance();
-            nowTime=cal.getTime();
-            cal.set(Calendar.HOUR,8);
-            cal.set(Calendar.MINUTE,0);
-            mornRushHourStart=cal.getTime();
-            cal.add(Calendar.HOUR,1);
-            mornRushHourEnd=cal.getTime();
-            cal.set(Calendar.HOUR,13);
-            noonRushHourStart=cal.getTime();
-            cal.add(Calendar.HOUR,2);
-            noonRushHourEnd=cal.getTime();
+            int listDuration;
+            nowTime = cal.getTime();
+            cal.set(Calendar.HOUR, 8);
+            cal.set(Calendar.MINUTE, 0);
+            mornRushHourStart = cal.getTime();
+            cal.add(Calendar.HOUR, 1);
+            mornRushHourEnd = cal.getTime();
+            cal.set(Calendar.HOUR, 13);
+            noonRushHourStart = cal.getTime();
+            cal.add(Calendar.HOUR, 2);
+            noonRushHourEnd = cal.getTime();
 
-            appointTime = dateFormat.parse(receivedDateString);
-            cal.setTime(appointTime);
-            cal.add(Calendar.MINUTE, -5);
-            timeWindowStart = cal.getTime();
-            cal.setTime(appointTime);
-            cal.add(Calendar.MINUTE, 5);
-            timeWindowEnd = cal.getTime();
+            appointTime = dateFormat.parse(receivedDateString);                         //appointTime: Tested Appointment Date
+            appointTimeFrame = appointWindow(appointTime, receivedDuration);               //appointTimeFrame[1]: Tested Appointment start, appointTimeFrame[0]: Tested Appointment end, all with added 5min window
 
-            for (int i = 0; i < receivedAppointList.size(); i++) {
-                tempDate = dateFormat.parse(receivedAppointList.get(i).getDateString());
+            if (nowTime.after(mornRushHourStart) && nowTime.before(mornRushHourEnd) || nowTime.after(noonRushHourStart) && nowTime.before(noonRushHourEnd)) {//if rushHour
+                //max euclidDistance 8km min rush hour avg speed 14km/h max time 34min,
+                distance = distFrom(origin, destination.getCoord());
 
-                if (tempDate.after(timeWindowStart) && tempDate.before(timeWindowEnd)) {
-                    appointValid=false;
-                    break;
-                }
-                else if(nowTime.after(mornRushHourStart) && nowTime.before(mornRushHourEnd) || nowTime.after(noonRushHourStart) && nowTime.before(noonRushHourEnd)){
-                    //max distance 8km min rush hour avg speed 14km/h max time 34min,
-                    //normal avg speed 25km/h max time 19min
+            } else {
+                travelTime = 19; //normal avg speed 25km/h max time 19min
+            }
+            cal.setTime(nowTime);
+          //  cal.add(Calendar.MINUTE, travelTime);
+            nowArriveTime = cal.getTime();
+            if (appointTimeFrame[0].after(nowArriveTime)) {                         //check if he can make it in time,  appointment valid only if now+travelTime < appointmentStart
+
+                for (int i = 0; i < receivedAppointList.size(); i++) {              //check other appointments
+
+                    listTime = dateFormat.parse(receivedAppointList.get(i).getDateString());  //listTime: appointment(s) Date on List
+                    listDuration = receivedAppointList.get(i).getDuration();                      //listDuration: appointment(s) int duration on list
+                    listDateTimeFrame = appointWindow(listTime, listDuration);                     //listDateTimeFrame[0]: appointment Start on list  , listDateTimeFrame[1]: appointment End on list , all with added 5min window
+                    boolean appBefore = listDateTimeFrame[1].before(appointTimeFrame[1]) && appointTimeFrame[0].before(listDateTimeFrame[1]);   //appointStart < listEnd < appointEnd
+                    boolean appSame = appointTimeFrame[0] == listDateTimeFrame[0] && appointTimeFrame[1] == listDateTimeFrame[1]; //appointStart == listStart && appointEnd == listEnd
+                    boolean appAfter = listDateTimeFrame[0].after(appointTimeFrame[0]) && listDateTimeFrame[0].before(appointTimeFrame[1]);  //appointStart < listStart < appointEnd
+
+
+                  //  boolean twoAppsValid = listDateTimeFrame[
+
+                    if (appBefore || appSame || appAfter) {  //0 is windowStart  1 is windowEnd
+                        appointValid = false;
+                        break;
+                    } else if (appointTimeFrame[0].before(listTime)) {
+                        travelTime = 34;
+                    }
                     cal.setTime(nowTime);
-                    cal.add(Calendar.MINUTE,34);//TODO synthikes
+
                 }
             }
             destination = findNearestPlace(placeList);
@@ -294,6 +317,19 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
                 downloadTask.execute(url);
             }
         }
+    }
+
+    public Date[] appointWindow(Date appointTime, int duration) {
+        Date timeWindow[] = new Date[2];
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(appointTime);
+        cal.add(Calendar.MINUTE, -5);
+        timeWindow[0] = cal.getTime();
+        cal.setTime(appointTime);
+        cal.add(Calendar.MINUTE, duration + 5);
+        timeWindow[1] = cal.getTime();
+        return timeWindow;
+
     }
 
     public int calculateTravelTime(LatLng origin, LatLng destination) {
@@ -486,6 +522,24 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
 
     }
 
+    public static double calcDist(LatLng latlang1, LatLng latlang2) {
+        double lat1 = latlang1.latitude;
+        double lng1 = latlang1.longitude;
+        double lat2 = latlang2.latitude;
+        double lng2 = latlang2.longitude;
+
+        double earthRadius = 3958.75;
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLng = Math.toRadians(lng2 - lng1);
+        double sindLat = Math.sin(dLat / 2);
+        double sindLng = Math.sin(dLng / 2);
+        double a = Math.pow(sindLat, 2) + Math.pow(sindLng, 2)
+                * Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2));
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        double dist = earthRadius * c;
+        System.out.println("harv dist: "+dist);
+        return dist;
+    }
 
     public static double distFrom(LatLng latlang1, LatLng latlang2) {
         float[] results = new float[3];
@@ -507,6 +561,7 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         double dist = earthRadius * c;
         System.out.println(dist);*/
+        System.out.println("/n Loc dist: "+dist);
         return dist;
     }
 

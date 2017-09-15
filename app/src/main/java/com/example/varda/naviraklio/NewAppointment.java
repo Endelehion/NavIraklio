@@ -27,7 +27,7 @@ public class NewAppointment extends AppCompatActivity {
     private String[] placeTypes;
     String dateString;
     private TextView dateText;
-    private Button setDateTimeBtn, movieBtn, confirmAppointmentBtn,setLocationBtn;
+    private Button setDateTimeBtn, movieBtn, confirmAppointmentBtn, setLocationBtn;
     private TextView durationText, movieTitleLabel, cinemaLabel;
     private String duration, cinemaStringLabel, movieStringLabel, mode, cinemaDateString;
     private String moviePickedDate;
@@ -53,9 +53,9 @@ public class NewAppointment extends AppCompatActivity {
             mode = "Supermarket";
             moviePickedDate = "";
         }
-        Intent receivecIntent =new Intent();
-        receivedAppointArrayList= receivecIntent.getParcelableArrayListExtra("appointListKey");
-
+        Intent receivedIntent = getIntent();
+        receivedAppointArrayList = new ArrayList<>();
+        receivedAppointArrayList = receivedIntent.getParcelableArrayListExtra("listKey");
         setLocationBtn = (Button) findViewById(R.id.setLocationBtn);
         spinner = (Spinner) findViewById(R.id.spinner);
         placeTypes = getResources().getStringArray(R.array.place_type);
@@ -82,23 +82,29 @@ public class NewAppointment extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                int index=receivedAppointArrayList.size()-1;
-                if (!receivedAppointArrayList.isEmpty() || !dateText.getText().equals("")) {
+
+                if (receivedAppointArrayList != null && !receivedAppointArrayList.isEmpty() && !dateString.equals("") && !durationText.getText().equals("Duration: ")) {
+                    int index = receivedAppointArrayList.size() - 1;
+                    int minDuration, hours, mins;
+
+                    hours = Integer.parseInt(durationText.getText().toString().substring(durationText.getText().toString().indexOf("on: ")+4, durationText.getText().toString().indexOf("on: ")+5));
+                    mins = Integer.parseInt(durationText.getText().toString().substring(durationText.getText().toString().indexOf("on: ") + 6, durationText.getText().toString().indexOf("on: ") + 8));
+                    minDuration = hours*60 + mins;
                     Intent locationIntent = new Intent(NewAppointment.this, PlanMap.class);
                     String passedString = receivedAppointArrayList.get(index).getPlace().getCoordType();
                     locationIntent.putExtra("typeKey", passedString);
                     locationIntent.putExtra("listIndexKey", index);
                     locationIntent.putParcelableArrayListExtra("listKey", receivedAppointArrayList);
-                    locationIntent.putExtra("dateKey",dateText.getText());
+                    locationIntent.putExtra("dateKey", dateText.getText());
+                    locationIntent.putExtra("durationMinsKey", minDuration);
                     startActivityForResult(locationIntent, REQUEST_LOCATION_STRING);
 
                 } else {
-                    Toast.makeText(NewAppointment.this, "No Appointments Selected", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(NewAppointment.this, "All fields must be filled before location set", Toast.LENGTH_SHORT).show();
                 }
 
             }
         });
-
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -216,6 +222,7 @@ public class NewAppointment extends AppCompatActivity {
     }
 
     public void setUpCinema() {
+        dateString=moviePickedDate;
         setDateTimeBtn.setVisibility(View.GONE);
         movieBtn.setVisibility(View.VISIBLE);
         movieTitleLabel.setVisibility(View.VISIBLE);
@@ -223,7 +230,7 @@ public class NewAppointment extends AppCompatActivity {
         durationText.setText("Duration: " + duration);
         cinemaLabel.setText("Cinema: " + cinemaStringLabel);
         movieTitleLabel.setText("Movie: " + movieStringLabel);
-        dateText.setText(moviePickedDate);
+        dateText.setText(dateString);
     }
 
     public void setUpGasStation() {

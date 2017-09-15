@@ -36,6 +36,7 @@ public class Organizer extends AppCompatActivity {
     ArrayList<String> stringList;
     private ArrayList<Movie> movieList;
     private List<Place> superMarkets,cinemas,gasStations;
+    private int receivedDuration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,10 +53,10 @@ public class Organizer extends AppCompatActivity {
         appointArrayList = new ArrayList<>();
 
         dateString = sdateFormat.format(createDate(day, month, 2017, 15, 35));
-        appointArrayList.add(new Appointment(appointArrayList.size(), " 13:00", new Place(new LatLng(37.977817, 23.769849), dateString, "Cinema",16,2)));
+        appointArrayList.add(new Appointment(appointArrayList.size(), " 13:00",114, new Place(new LatLng(37.977817, 23.769849), dateString,"Cinema",16,2)));
 
         dateString = sdateFormat.format(createDate(7, 7, 2017, 12, 55));
-        appointArrayList.add(new Appointment(appointArrayList.size(), " 14:00", new Place(new LatLng(37.977812, 23.769841), dateString, "Supermarket",16,2)));
+        appointArrayList.add(new Appointment(appointArrayList.size(), " 14:00",40, new Place(new LatLng(37.977812, 23.769841), dateString, "Supermarket",16,2)));
         stringList = new ArrayList<>();
         for (int i = 0; i < appointArrayList.size(); i++) {
             int id = appointArrayList.get(i).getId();
@@ -97,7 +98,7 @@ public class Organizer extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Organizer.this, NewAppointment.class);
-                intent.putParcelableArrayListExtra("appointArrayListKey", appointArrayList);
+                intent.putParcelableArrayListExtra("listKey", appointArrayList);
                 startActivityForResult(intent, REQUEST_APPOINTMENT_DATE);
             }
         });
@@ -381,7 +382,8 @@ public class Organizer extends AppCompatActivity {
 
             receivedDate = data.getStringExtra("dateKey");
             receivedType = data.getStringExtra("typeKey");
-            appointArrayList.add(new Appointment(appointArrayList.size(), receivedDate,new Place(receivedType)));
+            data.getIntExtra("durationKey",receivedDuration);
+            appointArrayList.add(new Appointment(appointArrayList.size(), receivedDate,receivedDuration,new Place(receivedType)));
             int id = appointArrayList.get(appointArrayList.size() - 1).getId();
             String type = appointArrayList.get(appointArrayList.size() - 1).getPlace().getCoordType();
             String date = appointArrayList.get(appointArrayList.size() - 1).getDateString();
