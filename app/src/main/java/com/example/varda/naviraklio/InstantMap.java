@@ -80,15 +80,8 @@ public class InstantMap extends FragmentActivity implements OnMapReadyCallback, 
     private List<Place> superMarkets;
     private List<Place> gasStations;
     private List<Place> cinemas;
-    private ArrayList<TimeRoutes> timeRoutes;
-    private int indexy = 0;
-    private boolean sup = true, gas = false, cin = false;
-    double euclidDistance;
-    TimeRoutes currentTimeRoute;
-    LatLng orig = new LatLng(35.329490, 25.134992);
-    LatLng desty;
-    private double actualDistance;
-    double sumDistD = 0, sumTimeD = 0, avgTimeDivergence, avgDistanceDivergence;
+    private LatLng origin,destination;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,17 +112,10 @@ public class InstantMap extends FragmentActivity implements OnMapReadyCallback, 
         findButton = (Button) findViewById(R.id.findButton);
         whereAmI = (Button) findViewById(R.id.whereAmI);
         createCoordinates();
-        timeRoutes = new ArrayList<>();
+
 
     }
 
-    public double getActualDistance() {
-        return actualDistance;
-    }
-
-    public void setActualDistance(double actualDistance) {
-        this.actualDistance = actualDistance;
-    }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -161,17 +147,10 @@ public class InstantMap extends FragmentActivity implements OnMapReadyCallback, 
         whereAmI.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if (indexy < superMarkets.size()) {
-                    desty = superMarkets.get(indexy).getCoord();
-
-                    euclidDistance = distFrom(orig, desty);
-                    navigateFromTo(orig, desty);
-                    indexy++;
-                }
-              /*  clickedflag = true;
+                clickedflag = true;
                 createLocation();
                 if (location != null) {
+                    origin=new LatLng(location.getLatitude(),location.getLongitude());
                     Log.i("Location Info", "Location achieved!");
                     addCurrentLocationMarker();
                 } else {
@@ -181,7 +160,7 @@ public class InstantMap extends FragmentActivity implements OnMapReadyCallback, 
                     Log.i("Location Info", "Location not Available");
                 }
 
-*/
+
             }
         });
 
@@ -189,14 +168,11 @@ public class InstantMap extends FragmentActivity implements OnMapReadyCallback, 
         findButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                avgDistanceDivergence = sumDistD / timeRoutes.size();
-                avgTimeDivergence = sumTimeD / timeRoutes.size();
-                Log.i("CoordStatistic: ", "Average Distance Divergence:" + avgDistanceDivergence + " Average Time Divergence:" + avgTimeDivergence);
-                Log.i("CoordStatistic: ", "Total Number of " + timeRoutes.size() + " samples");
-             /*   mMap.clear();
+                mMap.clear();
                 clickedflag = true;
                 createLocation();
                 if (location != null) {
+                    origin=new LatLng(location.getLatitude(),location.getLongitude());
                     Log.i("Location Info", "Location achieved!");
                     addCurrentLocationMarker();
                     String spinnerSelection;
@@ -208,7 +184,7 @@ public class InstantMap extends FragmentActivity implements OnMapReadyCallback, 
                     checkSettings();
                     Log.i("Location Info", "Location not Available");
                 }
-*/
+
 
             }
         });
@@ -233,33 +209,13 @@ public class InstantMap extends FragmentActivity implements OnMapReadyCallback, 
 
     }
 
-    public void printStats() {
-        if (indexy < superMarkets.size()) {
-            desty = superMarkets.get(indexy).getCoord();
-            actualDistance = sumDist;
-            timeRoutes.add(new TimeRoutes(orig, desty, euclidDistance, actualDistance));
-            currentTimeRoute = timeRoutes.get(timeRoutes.size() - 1);
-            sumDistD += timeRoutes.get(timeRoutes.size() - 1).getDistanceDivergence();
-            sumTimeD += timeRoutes.get(timeRoutes.size() - 1).getTimeDivergence();
-            Log.i("CoordStatistic: ", "Destination: " + currentTimeRoute.getDestination() + " EuclidDistance: " + currentTimeRoute.getEuclidDistance() + " ActualDistance: " + currentTimeRoute.getActualDistance() + "Distance Divergence: " + currentTimeRoute.getDistanceDivergence() + " Time Divergence: " + currentTimeRoute.getTimeDivergence());
 
-        } else {
-            Toast.makeText(InstantMap.this, "all done", Toast.LENGTH_SHORT).show();
-            Log.i("CoordStatistic:", "Done");
-            avgDistanceDivergence = sumDistD / timeRoutes.size();
-            avgTimeDivergence = sumTimeD / timeRoutes.size();
-            Log.i("CoordStatistic: ", "Average Distance Divergence:" + avgDistanceDivergence + " Average Time Divergence:" + avgTimeDivergence);
-            Log.i("CoordStatistic: ", "Total Number of " + timeRoutes.size() + " samples");
-        }
-    }
 
 
     protected void findPlace(String place) {
-        LatLng origin;
+
         double dist;
-        LatLng dest;
         double tempDist;
-        origin = new LatLng(location.getLatitude(), location.getLongitude());
         switch (place) {
             case "Supermarket":
 
@@ -274,7 +230,7 @@ public class InstantMap extends FragmentActivity implements OnMapReadyCallback, 
                 }
 
 
-                dest = nearestSupermarket.getCoord();
+                destination = nearestSupermarket.getCoord();
 
 
                 break;
@@ -291,7 +247,7 @@ public class InstantMap extends FragmentActivity implements OnMapReadyCallback, 
                 }
 
 
-                dest = nearestCinema.getCoord();
+                destination = nearestCinema.getCoord();
                 break;
             case "Gas Station":
                 dist = distFrom(origin, gasStations.get(0).getCoord());
@@ -305,16 +261,15 @@ public class InstantMap extends FragmentActivity implements OnMapReadyCallback, 
                 }
 
 
-                dest = nearestGasStation.getCoord();
+                destination = nearestGasStation.getCoord();
                 break;
             default:
                 Toast.makeText(InstantMap.this, "No Place selected", Toast.LENGTH_SHORT).show();
-                dest = null;
+                destination = null;
                 break;
         }
-        if (dest != null) {
-            navigateFromTo(origin, dest);
-
+        if (destination != null) {
+            navigateFromTo(origin, destination);
         }
     }
 
@@ -325,9 +280,9 @@ public class InstantMap extends FragmentActivity implements OnMapReadyCallback, 
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
 
-    public void navigateFromTo(LatLng origin, LatLng dest) {
+    public void navigateFromTo(LatLng origin, LatLng destination) {
         // Getting URL to the Google Directions API
-        String url = getDirectionsUrl(origin, dest);
+        String url = getDirectionsUrl(origin, destination);
 
         DownloadTask downloadTask = new DownloadTask();
 
@@ -796,10 +751,16 @@ protected void checkPermissions(){
 
                 timeEst = (int) sumDist / 333; // Average Driving speed in Heraklion 20km/h or 333m/min
                 searchText.setText("Distance: " + sumDist + "Time: " + timeEst);
-                printStats();
+
             } catch (NullPointerException e) {
                 e.printStackTrace();
-                navigateFromTo(orig, desty);
+                Toast.makeText(InstantMap.this,"too many requests, retrying...",Toast.LENGTH_SHORT);
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e1) {
+                    e1.printStackTrace();
+                }
+                navigateFromTo(origin, destination);
             }
         }
 

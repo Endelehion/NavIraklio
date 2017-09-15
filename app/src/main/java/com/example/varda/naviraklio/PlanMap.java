@@ -815,9 +815,15 @@ protected void checkPermissions(){
                 //  searchText.setText("Distance: " + sumDist+ "Time: "+timeEst);
             } catch (NullPointerException nullEx) {
                 nullEx.printStackTrace();
-                displayExceptionMessage(nullEx.getMessage());
-                startNavigation();
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                displayExceptionMessage("Too many requests, Retrying...");
                 Log.i("Map Requests", "amount exceeded");
+                startNavigation();
+
             }
         }
     }
