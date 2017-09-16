@@ -127,7 +127,7 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
         createCoordinates();
 
 
-        calcDist(superMarkets.get(1).getCoord(),gasStations.get(1).getCoord());
+        calcDist(superMarkets.get(1).getCoord(), gasStations.get(1).getCoord());
     }
 
 
@@ -210,25 +210,12 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
 
     }
 
-    public void checkCloseAppointments() {
-        Date past20min, after20min;
-        try {
-            past20min = dateFormat.parse(receivedAppointList.get(receivedListIndex).getDateString());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        for (int i = 0; i < receivedAppointList.size(); i++) {
-
-        }
-
-    }
 
     protected void findPlace(String place) throws ParseException {
 
 
         boolean nullFlag = false, appointValid = true;
-        int travelTime;
+        int originToMainTravelTime, originToSecondTravelTime, mainToSecondTravelTime;
         double distance;
         ArrayList<Place> placeList = new ArrayList<>();
 
@@ -249,10 +236,16 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
                 nullFlag = true;
                 break;
         }
+
+
         if (!nullFlag) {
-            Date appointTime, timeWindowStart, timeWindowEnd, appointTimeFrame[], listDateTimeFrame[], nowArriveTime, listTime, nowTime, mornRushHourStart, mornRushHourEnd, noonRushHourStart, noonRushHourEnd;
+            Date appointTime, secondAppointWindowBefore[], secondAppointWindowAfter[], appointTimeFrame[], listDateTimeFrame[], listDateTimeFrameBefore[], listDateTimeFrameAfter[], nowArriveTime, listTime, nowTime, mornRushHourStart, mornRushHourEnd, noonRushHourStart, noonRushHourEnd;
             Calendar cal = Calendar.getInstance();
-            int listDuration;
+            double xA = origin.latitude, yA = origin.longitude;
+            int listDuration, maxTravelTime;
+            boolean isRushHour;
+            double avgDivergence = 1.8784960720510757;
+            destination = findNearestPlace(placeList);
             nowTime = cal.getTime();
             cal.set(Calendar.HOUR, 8);
             cal.set(Calendar.MINUTE, 0);
@@ -265,77 +258,149 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
             noonRushHourEnd = cal.getTime();
 
             appointTime = dateFormat.parse(receivedDateString);                         //appointTime: Tested Appointment Date
-            appointTimeFrame = appointWindow(appointTime, receivedDuration);               //appointTimeFrame[1]: Tested Appointment start, appointTimeFrame[0]: Tested Appointment end, all with added 5min window
+            appointTimeFrame = appointWindow(appointTime, receivedDuration, -5, 5);               //appointTimeFrame[1]: Tested Appointment start, appointTimeFrame[0]: Tested Appointment end, all with added 5min window
 
             if (nowTime.after(mornRushHourStart) && nowTime.before(mornRushHourEnd) || nowTime.after(noonRushHourStart) && nowTime.before(noonRushHourEnd)) {//if rushHour
                 //max euclidDistance 8km min rush hour avg speed 14km/h max time 34min,
                 distance = distFrom(origin, destination.getCoord());
-
+                maxTravelTime = (int) Math.ceil(8000 / 233.3333);
+                isRushHour = true;
             } else {
-                travelTime = 19; //normal avg speed 25km/h max time 19min
+                maxTravelTime = (int) Math.ceil(8000 / 416.6666); //normal avg speed 25km/h max time 19min
+                isRushHour = false;
             }
             cal.setTime(nowTime);
-          //  cal.add(Calendar.MINUTE, travelTime);
             nowArriveTime = cal.getTime();
-            if (appointTimeFrame[0].after(nowArriveTime)) {                         //check if he can make it in time,  appointment valid only if now+travelTime < appointmentStart
+            originToMainTravelTime = calculateTravelTime(origin, destination.getCoord(), avgDivergence, isRushHour);
+            if (appointTimeFrame[0].after(nowArriveTime)) {                 //check if he can make it in time,  appointment valid only if now+travelTime < appointmentStart
 
-                for (int i = 0; i < receivedAppointList.size(); i++) {              //check other appointments
+                for (int i = 0; i < receivedAppointList.size(); i++) {      //check other appointments
 
-                    listTime = dateFormat.parse(receivedAppointList.get(i).getDateString());  //listTime: appointment(s) Date on List
-                    listDuration = receivedAppointList.get(i).getDuration();                      //listDuration: appointment(s) int duration on list
-                    listDateTimeFrame = appointWindow(listTime, listDuration);                     //listDateTimeFrame[0]: appointment Start on list  , listDateTimeFrame[1]: appointment End on list , all with added 5min window
-                    boolean appBefore = listDateTimeFrame[1].before(appointTimeFrame[1]) && appointTimeFrame[0].before(listDateTimeFrame[1]);   //appointStart < listEnd < appointEnd
-                    boolean appSame = appointTimeFrame[0] == listDateTimeFrame[0] && appointTimeFrame[1] == listDateTimeFrame[1]; //appointStart == listStart && appointEnd == listEnd
-                    boolean appAfter = listDateTimeFrame[0].after(appointTimeFrame[0]) && listDateTimeFrame[0].before(appointTimeFrame[1]);  //appointStart < listStart < appointEnd
+                    listTime = dateFormat.parse(receivedAppointList.get(i).getDateString());            //listTime: appointment(s) Date on List
+                    listDuration = receivedAppointList.get(i).getDuration();                            //listDuration: appointment(s) int duration on list
+                    mainToSecondTravelTime = calculateTravelTime(destination.getCoord(), receivedAppointList.get(i).getPlace().getCoord(), avgDivergence, isRushHour);
+
+                    listDateTimeFrameBefore = appointWindow(listTime, listDuration, -5, mainToSecondTravelTime + 5);                                          //listDateTimeFrameBefore[0]: Tested appointment Start time, listDateTimeFrameAfter[1]: Tested appointment EndTime plus the travelTime from main to tested locations, all with added 5min window
+                    listDateTimeFrame = appointWindow(listTime, listDuration, -5, 5);                                                                         //listDateTimeFrameAfter[0]: Tested appointment Start time minus the travelTime from main to tested locations, listDateTimeFrameAfter[1]: Tested appointment EndTime, all with added 5min window
+                    listDateTimeFrameAfter = appointWindow(listTime, listDuration, -mainToSecondTravelTime-5, 5);                                             //listDateTimeFrameAfter[0]: Tested appointment Start time, listDateTimeFrameAfter[1]: Tested appointment EndTime, all with added 5min window
+                    boolean appBefore = listDateTimeFrameBefore[1].before(appointTimeFrame[1]) && appointTimeFrame[0].before(listDateTimeFrameBefore[1]);   //Case main appointment start is within ending time of tested appointment, ending time is the actual time plus the travel time from tested to main appointment locations, appointStart < listEnd < appointEnd
+                    boolean appSame = appointTimeFrame[0] == listDateTimeFrame[0] && appointTimeFrame[1] == listDateTimeFrame[1];               //Case main appointment is at the same time with tested appointment, appointStart == listStart && appointEnd == listEnd
+                    boolean appAfter = listDateTimeFrameAfter[0].after(appointTimeFrame[0]) && listDateTimeFrameAfter[0].before(appointTimeFrame[1]);       //Case main appointment is within the starting time of tested appointment, starting time of tested appointment is the actual time minus the travelTime from main to tested appointment locations,  locationappointStart < listStart < appointEnd
+                    boolean appInside=listDateTimeFrame[0].before(appointTimeFrame[0]) && appointTimeFrame[0].before(listDateTimeFrame[1]) && appointTimeFrame[1].after(listDateTimeFrame[0]) && appointTimeFrame[1].before(listDateTimeFrame[1]);
+
+                    originToSecondTravelTime = calculateTravelTime(origin, receivedAppointList.get(i).getPlace().getCoord(), avgDivergence, isRushHour);
+                    secondAppointWindowBefore = appointWindow(appointTime, 0, -originToSecondTravelTime - 5, -5);                                   // for second appointment to be valid BEFORE main appointment the second must be originToSecondTravelTime mins BEFORE the start of main at the most.
+                    secondAppointWindowAfter = appointWindow(appointTime, receivedDuration, receivedDuration + 5, originToSecondTravelTime + 5);    // for second appointment to be valid AFTER main appointment the second must be originToSecondTravelTime mins AFTER the end of main at the most.
+
+                    boolean secondAppValidBefore = listDateTimeFrameBefore[1].after(secondAppointWindowBefore[0]) && listDateTimeFrameBefore[1].before(secondAppointWindowBefore[1]); //second appointment window
+                    boolean secondAppValidAfter = listDateTimeFrameBefore[0].after(secondAppointWindowAfter[0]) && listDateTimeFrameBefore[0].before(secondAppointWindowAfter[1]);
 
 
-                  //  boolean twoAppsValid = listDateTimeFrame[
+                    double xC = receivedAppointList.get(i).getPlace().getCoord().latitude, yC = receivedAppointList.get(i).getPlace().getCoord().longitude;
+                    double xB = destination.getCoord().latitude, yB = destination.getCoord().longitude;        // Origin(xA,yA)  MainAppointment(xB,yB)  SecondAppointment(xC,yC), Conditions for secondary Appointment to be in the same Direction as main.
+                    boolean xyPosB = xB > xA && yB > yA && xC >= xA && xC <= xB && yC >= yA && xC <= yB;       // if(xA<xB) and yA<yB then for secondary to be in the same direction: xA<=xC<=xB  and yA<=yC<=yB  must be true
+                    boolean xyNegB = xB < xA && yB < yA && xC <= xA && xC >= xB && yC <= yA && yC >= yB;       // if(xA>xB) and yA>yB then for secondary to be in the same direction: xB<=xC<=xA  and yB<=yC<=yA  must be true
+                    boolean xPosyNegB = xB > xA && yB < yA && xC >= xA && xC <= xB && yC <= yA && yC >= yB;    // if(xA<xB) and yA>yB then for secondary to be in the same direction: xA<=xC<=xB  and yB<=yC<=yA  must be true
+                    boolean xNegyPosB = xB < xA && yB > yA && xC <= xA && xC >= xB && yC >= yA && yC <= yB;    // if(xA>xB) and yA<yB then for secondary to be in the same direction: xB<=xC<=xA  and yA<=yC<=yB  must be true
+                    boolean isInSameDirection = xyPosB || xyNegB || xPosyNegB || xNegyPosB;
 
-                    if (appBefore || appSame || appAfter) {  //0 is windowStart  1 is windowEnd
-                        appointValid = false;
+
+                    if (appBefore || appSame || appAfter || appInside) {  //Check if main appointment overlaps with another at the selected time
+                        appointValid = false;  //TODO message and send him back to newAppointment
+                        Toast.makeText(PlanMap.this, "Main Appointment overlaps with secondary", Toast.LENGTH_SHORT).show();
+                        Log.i("AppointmentControl", "Main Appointment overlaps with secondary, Main start time:" + appointTimeFrame[0] + " end time:" + appointTimeFrame[1]);
+                        Log.i("AppointmentControl", "MMain Appointment overlaps with secondary, Main Coordinates:" + origin);
+                        Log.i("AppointmentControl", "Main Appointment overlaps with secondary, Secondary start time:" + appointTimeFrame[0] + " end time:" + appointTimeFrame[1]);
+                        Log.i("AppointmentControl", "Main Appointment overlaps with secondary, Secondary Coordinates:" + receivedAppointList.get(i).getPlace().getCoord());
                         break;
-                    } else if (appointTimeFrame[0].before(listTime)) {
-                        travelTime = 34;
+                    } else if (secondAppValidBefore) {    //check if secondary appointment ends before main appointment
+                        if (isInSameDirection) {//check if secondary appointment is in the same direction with main
+                            //TODO break and navigate 2,1
+                            Toast.makeText(PlanMap.this, "Secondary Appointment on the way valid before main", Toast.LENGTH_SHORT).show();
+                            Log.i("AppointmentControl", "Secondary Appointment on the way valid before main, Main start time:" + appointTimeFrame[0] + " end time:" + appointTimeFrame[1]);
+                            Log.i("AppointmentControl", "Secondary Appointment on the way valid before main, Main Coordinates:" + origin);
+                            Log.i("AppointmentControl", "Secondary Appointment on the way valid before main, Secondary start time:" + appointTimeFrame[0] + " end time:" + appointTimeFrame[1]);
+                            Log.i("AppointmentControl", "Secondary Appointment on the way valid before main, Secondary Coordinates:" + receivedAppointList.get(i).getPlace().getCoord());
+                            break;
+                        } else {
+                            //TODO dialog asking user if he wants to go out of his way for secondary appointmennt, break, if yes navigate 2,1 if no navigate 1
+                            Toast.makeText(PlanMap.this, "Secondary Appointment out of the way valid before main", Toast.LENGTH_SHORT).show();
+                            Log.i("AppointmentControl", "Secondary Appointment  out of the way valid before main, Main start time:" + appointTimeFrame[0] + " end time:" + appointTimeFrame[1]);
+                            Log.i("AppointmentControl", "Secondary Appointment  out of the way valid before main, Main Coordinates:" + origin);
+                            Log.i("AppointmentControl", "Secondary Appointment  out of the way valid before main, Secondary start time:" + appointTimeFrame[0] + " end time:" + appointTimeFrame[1]);
+                            Log.i("AppointmentControl", "Secondary Appointment  out of the way valid before main, Secondary Coordinates:" + receivedAppointList.get(i).getPlace().getCoord());
+                            break;
+                        }
+                    } else if (secondAppValidAfter) {    //check if secondary appointment starts after main appointment
+                        Toast.makeText(PlanMap.this, "Secondary Appointment on the way valid after main", Toast.LENGTH_SHORT).show();
+                        Log.i("AppointmentControl", "Secondary Appointment on the way valid after main, Main start time:" + appointTimeFrame[0] + " end time:" + appointTimeFrame[1]);
+                        Log.i("AppointmentControl", "Secondary Appointment on the way valid after main, Main Coordinates:" + origin);
+                        Log.i("AppointmentControl", "Secondary Appointment on the way valid after main, Secondary start time:" + appointTimeFrame[0] + " end time:" + appointTimeFrame[1]);
+                        Log.i("AppointmentControl", "Secondary Appointment on the way valid after main, Secondary Coordinates:" + receivedAppointList.get(i).getPlace().getCoord());
+                        break;
+                        //TODO break and navigate 1,2
+                    } else {
+                        //TODO navigate 1 and break;
+                        Toast.makeText(PlanMap.this, "Appointment Valid", Toast.LENGTH_SHORT).show();
+                        Log.i("AppointmentControl", "Appointment Valid, Main start time:" + appointTimeFrame[0] + " end time:" + appointTimeFrame[1]);
+                        Log.i("AppointmentControl", "Appointment Valid, Main Coordinates:" + origin);
+                        Log.i("AppointmentControl", "Appointment Valid, Destination Coordinates:" + destination.getCoord());
+                        break;
                     }
-                    cal.setTime(nowTime);
-
                 }
+                cal.setTime(nowTime);
             }
-            destination = findNearestPlace(placeList);
-
-
-            // Getting URL to the Google Directions API
-
             if (appointValid) {
-
-
-                String url = getDirectionsUrl(origin, destination.getCoord());
-
-                DownloadTask downloadTask = new DownloadTask();
-
-                // Start downloading json data from Google Directions API
-                downloadTask.execute(url);
+                Toast.makeText(PlanMap.this, "Cant Make it in Time", Toast.LENGTH_SHORT).show();
+                Log.i("AppointmentControl", "Cant make it in time, Main start time:" + appointTimeFrame[0] + " end time:" + appointTimeFrame[1]);
+                Log.i("AppointmentControl", "Cant make it in time, Main Coordinates:" + origin);
             }
         }
+
+
+        //TODO Delete when done testing
+        appointValid = false;
+
+        // Getting URL to the Google Directions API
+        if (appointValid) {
+
+
+            String url = getDirectionsUrl(origin, destination.getCoord());
+
+            DownloadTask downloadTask = new DownloadTask();
+
+            // Start downloading json data from Google Directions API
+            downloadTask.execute(url);
+        }
+
     }
 
-    public Date[] appointWindow(Date appointTime, int duration) {
+    public Date[] appointWindow(Date appointTime, int duration, int startOffset, int endOffset) {
         Date timeWindow[] = new Date[2];
         Calendar cal = Calendar.getInstance();
         cal.setTime(appointTime);
-        cal.add(Calendar.MINUTE, -5);
+        cal.add(Calendar.MINUTE, startOffset);
         timeWindow[0] = cal.getTime();
         cal.setTime(appointTime);
-        cal.add(Calendar.MINUTE, duration + 5);
+        cal.add(Calendar.MINUTE, duration + endOffset);
         timeWindow[1] = cal.getTime();
         return timeWindow;
 
     }
 
-    public int calculateTravelTime(LatLng origin, LatLng destination) {
-        int x = 1;
-        //TODO calc time
-        return x;
+    public int calculateTravelTime(LatLng origin, LatLng destination, double divergence, boolean rushHour) {
+        int travelTime;
+        double avgSpeed, distance;
+        if (rushHour) {
+            avgSpeed = 233.3333;
+        }         // rush hour avg speed 14km/h == 233.3333m/min
+        else {
+            avgSpeed = 416.6666;          //normal avg speed 25km/h == 416.6666m/min
+        }
+        distance = divergence * distFrom(origin, destination);
+        travelTime = (int) Math.ceil(distance / avgSpeed);
+
+        return travelTime;
     }
 
     public Place findNearestPlace(ArrayList<Place> placeList) {
@@ -537,7 +602,7 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
                 * Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2));
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         double dist = earthRadius * c;
-        System.out.println("harv dist: "+dist);
+        System.out.println("harv dist: " + dist);
         return dist;
     }
 
@@ -561,7 +626,6 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         double dist = earthRadius * c;
         System.out.println(dist);*/
-        System.out.println("/n Loc dist: "+dist);
         return dist;
     }
 

@@ -207,7 +207,7 @@ public class MoviePicker extends AppCompatActivity {
                         cal.set(Calendar.HOUR, movieHour);
                         cal.set(Calendar.MINUTE, movieMin);
                         movieDates = new ArrayList<>();
-                        SimpleDateFormat fullDate = new SimpleDateFormat("EEE dd MM yyyy HH:mm",Locale.getDefault());
+                        SimpleDateFormat fullDate = new SimpleDateFormat("EEE dd MMM yyyy HH:mm",Locale.getDefault());
                         TimeZone timeZone;
                         timeZone = TimeZone.getTimeZone("Europe/Athens");
                         fullDate.setTimeZone(timeZone);  //TODO check timezone @ 11:30pm

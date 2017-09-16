@@ -95,7 +95,7 @@ public class NewAppointment extends AppCompatActivity {
                     locationIntent.putExtra("typeKey", passedString);
                     locationIntent.putExtra("listIndexKey", index);
                     locationIntent.putParcelableArrayListExtra("listKey", receivedAppointArrayList);
-                    locationIntent.putExtra("dateKey", dateText.getText());
+                    locationIntent.putExtra("dateKey", dateString);
                     locationIntent.putExtra("durationMinsKey", minDuration);
                     startActivityForResult(locationIntent, REQUEST_LOCATION_STRING);
 

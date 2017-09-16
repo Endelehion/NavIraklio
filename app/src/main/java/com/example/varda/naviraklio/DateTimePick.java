@@ -42,7 +42,7 @@ public class DateTimePick extends AppCompatActivity {
         timeToggle = (Button) findViewById(R.id.timeToggle);
         okButtonDate = (Button) findViewById(R.id.okButtonDate);
         cancelButtonDate = (Button) findViewById(R.id.cancelButtonDate);
-        selectedDateTime = new SimpleDateFormat("EEE d MMM yyyy HH:mm");
+        selectedDateTime = new SimpleDateFormat("EEE dd MMM yyyy HH:mm");
         datePicker.setVisibility(View.VISIBLE);
         timePicker.setVisibility(View.GONE);
         printDateTime();

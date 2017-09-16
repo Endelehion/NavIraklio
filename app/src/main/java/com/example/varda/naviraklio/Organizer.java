@@ -52,11 +52,11 @@ public class Organizer extends AppCompatActivity {
 
         appointArrayList = new ArrayList<>();
 
-        dateString = sdateFormat.format(createDate(day, month, 2017, 15, 35));
-        appointArrayList.add(new Appointment(appointArrayList.size(), " 13:00",114, new Place(new LatLng(37.977817, 23.769849), dateString,"Cinema",16,2)));
+        dateString = sdateFormat.format(createDate(16, 8, 2017, 14, 00));
+        appointArrayList.add(new Appointment(appointArrayList.size(), dateString,114, new Place(new LatLng(37.977817, 23.769849), "kapou 2","Cinema",16,2)));
 
         dateString = sdateFormat.format(createDate(7, 7, 2017, 12, 55));
-        appointArrayList.add(new Appointment(appointArrayList.size(), " 14:00",40, new Place(new LatLng(37.977812, 23.769841), dateString, "Supermarket",16,2)));
+        appointArrayList.add(new Appointment(appointArrayList.size(), dateString,40, new Place(new LatLng(37.977812, 23.769841), "ekei 8", "Supermarket",16,2)));
         stringList = new ArrayList<>();
         for (int i = 0; i < appointArrayList.size(); i++) {
             int id = appointArrayList.get(i).getId();
