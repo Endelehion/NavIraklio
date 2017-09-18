@@ -134,7 +134,7 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
         receivedAppointList = receivedIntent.getParcelableArrayListExtra("listKey");
         receivedIntent.getIntExtra("durationMinsKey", receivedDuration);
         receivedDurationInSec =receivedDuration*60;
-        selectedTypeString = receivedAppointList.get(receivedListIndex).getPlace().getCoordType();
+        selectedTypeString = receivedIntent.getStringExtra("typeKey");
 
         createCoordinates();
 
@@ -157,8 +157,7 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
             public void onClick(View v) {
                 if (destination != null) {
                     Intent resultIntent = new Intent();
-                    receivedAppointList.get(receivedListIndex).setPlace(destination);
-                    resultIntent.putExtra(APPOINTMENT_STRINGID, receivedAppointList.get(receivedListIndex));
+                    resultIntent.putExtra("destinationKey",destination);
                     setResult(Activity.RESULT_OK, resultIntent);
                     finish();
                 }
@@ -209,7 +208,7 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                destinationText.setText("Destination: " + destination.getAddress());
+
             }
 
         } else {
@@ -401,8 +400,7 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
                 Toast.makeText(PlanMap.this, "appoint invalid confirm", Toast.LENGTH_SHORT).show();
                 Log.i("AppointmentControl", "invalid confirm");
             }
-            //TODO Delete when done testing
-            appointValid = false;
+
 
             // Getting URL to the Google Directions API
             if (appointValid) {
@@ -478,8 +476,8 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
         cal.setTime(appointTimeFrame[1]);
         cal.add(Calendar.SECOND,mainToSecondTravelTime);
         arrivalSecondAfter = cal.getTime();                                                                                                   //listDateTimeFrameAfter[0]: Tested appointment Start time minus the travelTime from main to tested locations, listDateTimeFrameAfter[1]: Tested appointment EndTime, all with added 5min window
-        appBeforeWithTravelTime = listDateTimeFrame[1].before(appointTimeFrame[1]) && appointTimeFrame[0].before(listDateTimeFrame[1]) || arrivalSecondBefore.after(listDateTimeFrame[0]);   //Case main appointment start is within ending time of tested appointment, ending time is the actual time plus the travel time from tested to main appointment locations, appointStart < listEnd < appointEnd
-        appAfterWithTravelTime = listDateTimeFrame[0].after(appointTimeFrame[0]) && listDateTimeFrame[0].before(appointTimeFrame[1]) || arrivalSecondAfter.after(listDateTimeFrame[0]);       //Case main appointment is within the starting time of tested appointment, starting time of tested appointment is the actual time minus the travelTime from main to tested appointment locations,  locationAppointStart < listStart < appointEnd
+        appBeforeWithTravelTime = listDateTimeFrame[1].before(appointTimeFrame[1]) && appointTimeFrame[0].before(listDateTimeFrame[1]) || arrivalSecondBefore.after(listDateTimeFrame[0]) && listDateTimeFrame[1].before(appointTimeFrame[0]) && listDateTimeFrame[0].after(nowTime);   //Case main appointment start is within ending time of tested appointment, ending time is the actual time plus the travel time from tested to main appointment locations, appointStart < listEnd < appointEnd
+        appAfterWithTravelTime = listDateTimeFrame[0].after(appointTimeFrame[0]) && listDateTimeFrame[0].before(appointTimeFrame[1]) || arrivalSecondAfter.after(listDateTimeFrame[0]) && listDateTimeFrame[0].after(appointTimeFrame[1]) && listDateTimeFrame[0].after(nowTime);       //Case main appointment is within the starting time of tested appointment, starting time of tested appointment is the actual time minus the travelTime from main to tested appointment locations,  locationAppointStart < listStart < appointEnd
         appSame = appointTimeFrame[0] == listDateTimeFrame[0] && appointTimeFrame[1] == listDateTimeFrame[1];                           //Case main appointment is at the same time with tested appointment, appointStart == listStart && appointEnd == listEnd
         appAfterWithoutTravelTime = listDateTimeFrame[0].after(appointTimeFrame[0]) && listDateTimeFrame[0].before(appointTimeFrame[1]);       //Case main appointment is within the starting time of tested appointment,  locationAppointStart < listStart < appointEnd
         appBeforeWithoutTravelTime = listDateTimeFrame[1].before(appointTimeFrame[1]) && appointTimeFrame[0].before(listDateTimeFrame[1]);   //Case main appointment start is within ending time of tested appointment,  appointStart < listEnd < appointEnd
@@ -488,7 +486,7 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
         appInside = listDateTimeFrame[0].before(appointTimeFrame[0]) && appointTimeFrame[0].before(listDateTimeFrame[1]) && appointTimeFrame[1].after(listDateTimeFrame[0]) && appointTimeFrame[1].before(listDateTimeFrame[1]);  //Case main appointment's start and end times are within tested appointment's timeFrame   listAppointStart < appointStart < listAppointEnd  &&  listAppointStart < appointEnd <listAppointEnd
         appInclusive = listDateTimeFrame[0].after(appointTimeFrame[0]) && listDateTimeFrame[0].before(appointTimeFrame[1]) && listDateTimeFrame[1].after(appointTimeFrame[0]) && listDateTimeFrame[1].before(appointTimeFrame[1]); //Case tested appointment's start and end times are within main appointment's timeFrame  appointStart < listAppointStart < appointEnd   &&  appointStart < listAppointEnd <appointEnd
 
-
+/*
         cal.setTime(nowTime);                                                                       //second appointment 10min wait window
         cal.add(Calendar.SECOND, originToSecondTravelTime + listDuration + mainToSecondTravelTime);
         appointArriveTimeAfterSecond = cal.getTime();                                               //appointArriveTimeAfterSecond: the arrival time for main appointment after the secondary appointment
@@ -511,7 +509,7 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
 
         boolean isSecondAppAfterMain = (appointTimeFrame[1].before(listDateTimeFrame[0])); //true if tested appointment start time is after nowTime and end time is before the main appointment's start time
         isSecondAppointAfterValid = isSecondAppAfterMain && appointArriveTimeBeforeSecond.before(listDateTimeFrame[0]) && appointArriveTimeBeforeSecond.after(tenMinBeforeSecondAppoint); // appointArriveTimeBeforeSecond must be within 10min window before tested appointment's start for main appointment to be valid
-
+*/
 
     }
 
@@ -1021,7 +1019,7 @@ protected void checkPermissions(){
                 int timeEst;
 
                 timeEst = (int) sumDist / 333; // Average Driving speed in Heraklion 20km/h or 333m/min
-
+                destinationText.setText("Destination: " + destination.getAddress());
                 //  searchText.setText("Distance: " + sumDist+ "Time: "+timeEst);
             } catch (NullPointerException nullEx) {
                 nullEx.printStackTrace();

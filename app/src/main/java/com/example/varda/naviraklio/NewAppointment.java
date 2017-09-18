@@ -91,8 +91,7 @@ public class NewAppointment extends AppCompatActivity {
                     mins = Integer.parseInt(durationText.getText().toString().substring(durationText.getText().toString().indexOf("on: ") + 6, durationText.getText().toString().indexOf("on: ") + 8));
                     minDuration = hours*60 + mins;
                     Intent locationIntent = new Intent(NewAppointment.this, PlanMap.class);
-                    String passedString = receivedAppointArrayList.get(index).getPlace().getCoordType();
-                    locationIntent.putExtra("typeKey", passedString);
+                    locationIntent.putExtra("typeKey", mode);
                     locationIntent.putExtra("listIndexKey", index);
                     locationIntent.putParcelableArrayListExtra("listKey", receivedAppointArrayList);
                     locationIntent.putExtra("dateKey", dateString);
