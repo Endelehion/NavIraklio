@@ -35,7 +35,7 @@ public class Organizer extends AppCompatActivity {
     private Button navigateBtn;
     ArrayList<String> stringList;
     private ArrayList<Movie> movieList;
-    private List<Place> superMarkets,cinemas,gasStations;
+    private List<Place> superMarkets, cinemas, gasStations;
     private int receivedDuration;
 
     @Override
@@ -51,12 +51,17 @@ public class Organizer extends AppCompatActivity {
         sdateFormat = new SimpleDateFormat("EEE dd MMM yyyy HH:mm");
 
         appointArrayList = new ArrayList<>();
+        createCoordinates();
+        dateString = sdateFormat.format(createDate(17, 8, 2017, 7, 00));
+        appointArrayList.add(new Appointment(appointArrayList.size(), dateString, 114, new Place(new LatLng(37.977817, 23.769849), "kapou 2", "Cinema", 16, 2)));
 
-        dateString = sdateFormat.format(createDate(16, 8, 2017, 14, 00));
-        appointArrayList.add(new Appointment(appointArrayList.size(), dateString,114, new Place(new LatLng(37.977817, 23.769849), "kapou 2","Cinema",16,2)));
+        dateString = sdateFormat.format(createDate(18, 8, 2017, 13, 30));
+      //  appointArrayList.add(new Appointment(appointArrayList.size(), dateString, 5, new Place(gasStations.get(2).getCoord(), "ekei 8", "Gas Station", 16, 2)));
+       // dateString = sdateFormat.format(createDate(18, 8, 2017, 20, 00));
+        appointArrayList.add(new Appointment(appointArrayList.size(), dateString, 5, new Place(new LatLng(37.974960, 23.763609), "ekei 8", "Gas Station", 16, 2)));
+        dateString = sdateFormat.format(createDate(18, 8, 2017, 20, 00));
+        appointArrayList.add(new Appointment(appointArrayList.size(), dateString, 114, new Place(new LatLng(37.977817, 23.769849), "kapou 2", "Cinema", 12, 2)));
 
-        dateString = sdateFormat.format(createDate(7, 7, 2017, 12, 55));
-        appointArrayList.add(new Appointment(appointArrayList.size(), dateString,40, new Place(new LatLng(37.977812, 23.769841), "ekei 8", "Supermarket",16,2)));
         stringList = new ArrayList<>();
         for (int i = 0; i < appointArrayList.size(); i++) {
             int id = appointArrayList.get(i).getId();
@@ -285,39 +290,37 @@ public class Organizer extends AppCompatActivity {
     }
 
 
-
     void createCoordinates() {
         superMarkets = new ArrayList<>();
-        superMarkets.add(new Place(new LatLng(35.340685, 25.133643), "Chalkiadakis", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.337384, 25.121930), "LIDL", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.338468, 25.139354), "AB", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.337481, 25.132863), "BAZAAR", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.339136, 25.155434), "Sklavenitis", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.341716, 25.136238), "papadaki", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.326724, 25.131095), "Sklavenitis", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.326251, 25.138878), "Sklavenitis", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.337651, 25.126895), "Chalkiadakis", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.338751, 25.119835), "Chalkiadakis", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.324666, 25.133577), "Ariadni", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.334394, 25.115245), "INKA", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.324695, 25.124600), "AB", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.323925, 25.112541), "LIDL", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.319163, 25.144127), "INKA", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.324660, 25.124514), "AB", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.318393, 25.148246), "Chalkiadakis", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.331733, 25.137689), "Chalkiadakis", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.330157, 25.132282), "Chalkiadakis", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.334359, 25.158718), "Chalkiadakis Max", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.329072, 25.119279), "Chalkiadakis", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.343307, 25.155190), "My Cretan Goods", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.336788, 25.133692), "Alati tis Gis", "Supermarket",9,21));
-        superMarkets.add(new Place(new LatLng(35.330241, 25.124522), "Kouts", "Supermarket",9,21));
+        superMarkets.add(new Place(new LatLng(35.340685, 25.133643), "Chalkiadakis", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.337384, 25.121930), "LIDL", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.338468, 25.139354), "AB", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.337481, 25.132863), "BAZAAR", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.339136, 25.155434), "Sklavenitis", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.341716, 25.136238), "papadaki", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.326724, 25.131095), "Sklavenitis", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.326251, 25.138878), "Sklavenitis", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.337651, 25.126895), "Chalkiadakis", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.338751, 25.119835), "Chalkiadakis", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.324666, 25.133577), "Ariadni", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.334394, 25.115245), "INKA", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.324695, 25.124600), "AB", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.323925, 25.112541), "LIDL", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.319163, 25.144127), "INKA", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.324660, 25.124514), "AB", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.318393, 25.148246), "Chalkiadakis", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.331733, 25.137689), "Chalkiadakis", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.330157, 25.132282), "Chalkiadakis", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.334359, 25.158718), "Chalkiadakis Max", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.329072, 25.119279), "Chalkiadakis", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.343307, 25.155190), "My Cretan Goods", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.336788, 25.133692), "Alati tis Gis", "Supermarket", 9, 21));
+        superMarkets.add(new Place(new LatLng(35.330241, 25.124522), "Kouts", "Supermarket", 9, 21));
 
 
         //zografou
-        superMarkets.add(new Place(new LatLng(37.977817, 23.769849), "Daily Lewf. Papagou 114", "Supermarket",9,21));
+        superMarkets.add(new Place(new LatLng(37.977817, 23.769849), "Daily Lewf. Papagou 114", "Supermarket", 9, 21));
         Collections.sort(superMarkets, new ComparatorCoord());
-
 
 
         gasStations = new ArrayList<>();
@@ -354,18 +357,19 @@ public class Organizer extends AppCompatActivity {
 
 
         cinemas = new ArrayList<>();
-        cinemas.add(new Place(new LatLng(35.339880, 25.119728), "Odeon Talos", "Cinema",16,2));
-        cinemas.add(new Place(new LatLng(35.340889, 25.136980), "Vintsenzos Kornaros", "Cinema",16,2));
-        cinemas.add(new Place(new LatLng(35.338375, 25.136216), "Astoria", "Cinema",16,2));
-        cinemas.add(new Place(new LatLng(35.335669, 25.070682), "Texnopolis", "Cinema",16,2));
-        cinemas.add(new Place(new LatLng(35.337980, 25.158230), "Cine Studio", "Cinema",16,2));
-        cinemas.add(new Place(new LatLng(35.338573, 25.129685), "Dedalos Club", "Cinema",16,2));
+        cinemas.add(new Place(new LatLng(35.339880, 25.119728), "Odeon Talos", "Cinema", 16, 2));
+        cinemas.add(new Place(new LatLng(35.340889, 25.136980), "Vintsenzos Kornaros", "Cinema", 16, 2));
+        cinemas.add(new Place(new LatLng(35.338375, 25.136216), "Astoria", "Cinema", 16, 2));
+        cinemas.add(new Place(new LatLng(35.335669, 25.070682), "Texnopolis", "Cinema", 16, 2));
+        cinemas.add(new Place(new LatLng(35.337980, 25.158230), "Cine Studio", "Cinema", 16, 2));
+        cinemas.add(new Place(new LatLng(35.338573, 25.129685), "Dedalos Club", "Cinema", 16, 2));
         //zografou
-        cinemas.add(new Place(new LatLng(37.977369, 23.770716), "Aleka", "Cinema",16,2));
+        cinemas.add(new Place(new LatLng(37.977369, 23.770716), "Aleka", "Cinema", 16, 2));
         Collections.sort(cinemas, new ComparatorCoord());
 
 
     }
+
     Date createDate(int day, int month, int year, int hour, int minute) {
         Date myDate;
         GregorianCalendar gre = new GregorianCalendar(year, month, day, hour, minute);
@@ -382,8 +386,8 @@ public class Organizer extends AppCompatActivity {
 
             receivedDate = data.getStringExtra("dateKey");
             receivedType = data.getStringExtra("typeKey");
-            data.getIntExtra("durationKey",receivedDuration);
-            appointArrayList.add(new Appointment(appointArrayList.size(), receivedDate,receivedDuration,new Place(receivedType)));
+            data.getIntExtra("durationKey", receivedDuration);
+            appointArrayList.add(new Appointment(appointArrayList.size(), receivedDate, receivedDuration, new Place(receivedType)));
             int id = appointArrayList.get(appointArrayList.size() - 1).getId();
             String type = appointArrayList.get(appointArrayList.size() - 1).getPlace().getCoordType();
             String date = appointArrayList.get(appointArrayList.size() - 1).getDateString();
@@ -391,16 +395,16 @@ public class Organizer extends AppCompatActivity {
             adapterAp.notifyDataSetChanged();
         }
         if (requestCode == REQUEST_LOCATION_STRING
-                && resultCode == Organizer.RESULT_OK){
+                && resultCode == Organizer.RESULT_OK) {
             super.onActivityResult(requestCode, resultCode, data);
             Appointment receivedAppointment;
             receivedAppointment = data.getParcelableExtra("appointKey");
-            receivedDestination=receivedAppointment.getPlace();
-           int adapterIndex = listViewAp.getCheckedItemPosition();
+            receivedDestination = receivedAppointment.getPlace();
+            int adapterIndex = listViewAp.getCheckedItemPosition();
             if (adapterIndex != -1) {
                 appointArrayList.get(adapterIndex).setPlace(receivedDestination);
-             //   appointArrayList.get(adapterIndex).getPlace().setAddress(receivedDestination.getAddress());
-             //   appointArrayList.get(adapterIndex).getPlace().setCoord(receivedDestination.getCoord());
+                //   appointArrayList.get(adapterIndex).getPlace().setAddress(receivedDestination.getAddress());
+                //   appointArrayList.get(adapterIndex).getPlace().setCoord(receivedDestination.getCoord());
 
             } else {
                 Toast.makeText(Organizer.this, "No Appointments Selected", Toast.LENGTH_SHORT).show();
