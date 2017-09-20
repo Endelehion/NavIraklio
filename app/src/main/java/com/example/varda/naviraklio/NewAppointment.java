@@ -26,12 +26,13 @@ public class NewAppointment extends AppCompatActivity {
     private Spinner spinner;
     private String[] placeTypes;
     String dateString;
-    private TextView dateText;
-    private Button setDateTimeBtn, movieBtn, confirmAppointmentBtn, setLocationBtn;
+    private TextView dateText,typeLabel;
+    private Button setDateTimeBtn, movieBtn, confirmAppointmentBtn, setLocationBtn,cancelNewAppointBtn;
     private TextView durationText, movieTitleLabel, cinemaLabel;
     private String duration, cinemaStringLabel, movieStringLabel, mode, cinemaDateString;
     private String moviePickedDate;
     private ArrayList<Appointment> receivedAppointArrayList;
+    private Place receivedDestination;
 
 
     @Override
@@ -45,6 +46,7 @@ public class NewAppointment extends AppCompatActivity {
             duration = savedInstanceState.getString("durationStringKey", "");
             mode = savedInstanceState.getString("modeKey");
             moviePickedDate = savedInstanceState.getString("moviePickedDateKey");
+            receivedDestination = savedInstanceState.getParcelable("destinationKey");
         } else {
             dateString = "";
             duration = "";
@@ -52,6 +54,7 @@ public class NewAppointment extends AppCompatActivity {
             movieStringLabel = "";
             mode = "Supermarket";
             moviePickedDate = "";
+            receivedDestination = null;
         }
         Intent receivedIntent = getIntent();
         receivedAppointArrayList = new ArrayList<>();
@@ -65,10 +68,12 @@ public class NewAppointment extends AppCompatActivity {
         dateText = (TextView) findViewById(R.id.dateText);
         movieBtn = (Button) findViewById(R.id.movieBtn);
         setDateTimeBtn = (Button) findViewById(R.id.setDateTimeBtn);
+        cancelNewAppointBtn = (Button) findViewById(R.id.cancelNewAppointBtn);
         confirmAppointmentBtn = (Button) findViewById(R.id.confirmAppointmentBtn);
         durationText = (TextView) findViewById(R.id.durationText);
         movieTitleLabel = (TextView) findViewById(R.id.movieTitleLabel);
         cinemaLabel = (TextView) findViewById(R.id.cinemaLabel);
+        typeLabel=(TextView) findViewById(R.id.typeLabel);
         updateStartText();
         if (mode.equals("Cinema")) {
             setUpCinema();
@@ -76,6 +81,8 @@ public class NewAppointment extends AppCompatActivity {
             setUpGasStation();
         } else if (mode.equals("Supermarket")) {
             setUpSupermarket();
+        } else if(mode.equals("Ragnarok")){
+            invokeRagnarok();
         }
 
         setLocationBtn.setOnClickListener(new View.OnClickListener() {
@@ -87,15 +94,22 @@ public class NewAppointment extends AppCompatActivity {
                     int index = receivedAppointArrayList.size() - 1;
                     int minDuration, hours, mins;
 
-                    hours = Integer.parseInt(durationText.getText().toString().substring(durationText.getText().toString().indexOf("on: ")+4, durationText.getText().toString().indexOf("on: ")+5));
+                    hours = Integer.parseInt(durationText.getText().toString().substring(durationText.getText().toString().indexOf("on: ") + 4, durationText.getText().toString().indexOf("on: ") + 5));
                     mins = Integer.parseInt(durationText.getText().toString().substring(durationText.getText().toString().indexOf("on: ") + 6, durationText.getText().toString().indexOf("on: ") + 8));
-                    minDuration = hours*60 + mins;
+                    minDuration = hours * 60 + mins;
                     Intent locationIntent = new Intent(NewAppointment.this, PlanMap.class);
-                    locationIntent.putExtra("typeKey", mode);
+                    if(spinner.getSelectedItemPosition()!=-1){
+                        locationIntent.putExtra("typeKey", spinner.getSelectedItem().toString());
+                    }else{
+                        locationIntent.putExtra("typeKey", "Supermarket");
+                    }
                     locationIntent.putExtra("listIndexKey", index);
                     locationIntent.putParcelableArrayListExtra("listKey", receivedAppointArrayList);
                     locationIntent.putExtra("dateKey", dateString);
                     locationIntent.putExtra("durationMinsKey", minDuration);
+                    if(mode.equals("Cinema")){
+                        locationIntent.putExtra("cinemaKey",cinemaStringLabel);
+                    }
                     startActivityForResult(locationIntent, REQUEST_LOCATION_STRING);
 
                 } else {
@@ -104,6 +118,17 @@ public class NewAppointment extends AppCompatActivity {
 
             }
         });
+
+        cancelNewAppointBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent();
+                setResult(Activity.RESULT_CANCELED,intent);
+                finish();
+            }
+        });
+
+
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -138,12 +163,21 @@ public class NewAppointment extends AppCompatActivity {
         confirmAppointmentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!dateString.equals(null)) {
+                if (!dateString.equals(null) && mode.equals("Ragnarok")) {
                     Intent resultIntent = new Intent();
-                    resultIntent.putExtra("dateKey", dateText.getText());
-                    resultIntent.putExtra("typeKey", spinner.getSelectedItem().toString());
+                    resultIntent.putExtra("destinationKey", receivedDestination);
+                    resultIntent.putExtra("dateKey", dateString);
+                    if(spinner.getSelectedItemPosition()!=-1){
+                        resultIntent.putExtra("typeKey", spinner.getSelectedItem().toString());
+                    }else{
+                        resultIntent.putExtra("typeKey", "Supermarket");
+                    }
+
                     setResult(Activity.RESULT_OK, resultIntent);
                     finish();
+                }
+                else{
+                    Toast.makeText(NewAppointment.this,"Date or Location not set",Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -158,6 +192,12 @@ public class NewAppointment extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent intent=new Intent();
+        setResult(Activity.RESULT_CANCELED,intent);
+        super.onBackPressed();
+    }
 
     @Override
     protected void onResume() {
@@ -169,6 +209,8 @@ public class NewAppointment extends AppCompatActivity {
             setUpGasStation();
         } else if (mode.equals("Supermarket")) {
             setUpSupermarket();
+        } else if (mode.equals(("Ragnarok"))){
+            invokeRagnarok();
         }
     }
 
@@ -190,6 +232,13 @@ public class NewAppointment extends AppCompatActivity {
 
             }
         }
+        if (requestCode == REQUEST_LOCATION_STRING) {
+            if (resultCode == Activity.RESULT_OK) {
+                receivedDestination = data.getParcelableExtra("destinationKey");
+                mode = "Ragnarok";
+                invokeRagnarok();
+            }
+        }
     }
 
 
@@ -202,6 +251,7 @@ public class NewAppointment extends AppCompatActivity {
         savedInstanceState.putString("durationStringKey", duration);
         savedInstanceState.putString("modeKey", mode);
         savedInstanceState.putString("moviePickedDateKey", moviePickedDate);
+        savedInstanceState.putParcelable("destinationKey", receivedDestination);
     }
 
     @Override
@@ -213,6 +263,7 @@ public class NewAppointment extends AppCompatActivity {
         duration = savedInstanceState.getString("durationStringKey");
         mode = savedInstanceState.getString("modeKey");
         moviePickedDate = savedInstanceState.getString("moviePickedDateKey");
+        receivedDestination = savedInstanceState.getParcelable("destinationKey");
     }
 
 
@@ -221,7 +272,7 @@ public class NewAppointment extends AppCompatActivity {
     }
 
     public void setUpCinema() {
-        dateString=moviePickedDate;
+        dateString = moviePickedDate;
         setDateTimeBtn.setVisibility(View.GONE);
         movieBtn.setVisibility(View.VISIBLE);
         movieTitleLabel.setVisibility(View.VISIBLE);
@@ -246,6 +297,13 @@ public class NewAppointment extends AppCompatActivity {
         movieTitleLabel.setVisibility(View.INVISIBLE);
         cinemaLabel.setVisibility(View.INVISIBLE);
         durationText.setText("Duration: 0:40");
+    }
+    public void invokeRagnarok(){
+        movieBtn.setVisibility(View.INVISIBLE);
+        setLocationBtn.setVisibility(View.INVISIBLE);
+        setDateTimeBtn.setVisibility(View.INVISIBLE);
+        spinner.setVisibility(View.INVISIBLE);
+        typeLabel.setVisibility(View.INVISIBLE);
     }
 
 }

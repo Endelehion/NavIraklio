@@ -21,7 +21,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 public class Organizer extends AppCompatActivity {
-    private static final int REQUEST_APPOINTMENT_DATE = 22, REQUEST_LOCATION_STRING = 34;
+    private static final int REQUEST_NEW_APPOINTMENT = 22, REQUEST_LOCATION_MAP = 34;
     private DatePicker datePicker;
     private SimpleDateFormat sdateFormat;
     private final Calendar calendar = Calendar.getInstance();
@@ -104,7 +104,7 @@ public class Organizer extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(Organizer.this, NewAppointment.class);
                 intent.putParcelableArrayListExtra("listKey", appointArrayList);
-                startActivityForResult(intent, REQUEST_APPOINTMENT_DATE);
+                startActivityForResult(intent, REQUEST_NEW_APPOINTMENT);
             }
         });
 
@@ -119,7 +119,9 @@ public class Organizer extends AppCompatActivity {
                     locationIntent.putExtra("typeKey", passedString);
                     locationIntent.putExtra("listIndexKey", adapterIndex);
                     locationIntent.putParcelableArrayListExtra("listKey", appointArrayList);
-                    startActivityForResult(locationIntent, REQUEST_LOCATION_STRING);
+                    locationIntent.putExtra("dateKey", appointArrayList.get(adapterIndex).dateString);
+                    locationIntent.putExtra("durationMinsKey",appointArrayList.get(adapterIndex).getDuration());
+                    startActivityForResult(locationIntent, REQUEST_LOCATION_MAP);
 
                 } else {
                     Toast.makeText(Organizer.this, "No Appointments Selected", Toast.LENGTH_SHORT).show();
@@ -380,35 +382,21 @@ public class Organizer extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Check which request we're responding to
-        if (requestCode == REQUEST_APPOINTMENT_DATE
+        if (requestCode == REQUEST_NEW_APPOINTMENT
                 && resultCode == Organizer.RESULT_OK) {
             super.onActivityResult(requestCode, resultCode, data);
 
             receivedDate = data.getStringExtra("dateKey");
             receivedType = data.getStringExtra("typeKey");
+            receivedDestination = data.getParcelableExtra("destinationKey");
             data.getIntExtra("durationKey", receivedDuration);
-            appointArrayList.add(new Appointment(appointArrayList.size(), receivedDate, receivedDuration, new Place(receivedType)));
+            Appointment receivedAppointment=new Appointment(appointArrayList.size()-1,receivedDate,receivedDuration,receivedDestination);
+            appointArrayList.add(receivedAppointment);
             int id = appointArrayList.get(appointArrayList.size() - 1).getId();
             String type = appointArrayList.get(appointArrayList.size() - 1).getPlace().getCoordType();
             String date = appointArrayList.get(appointArrayList.size() - 1).getDateString();
             stringList.add(id + " " + type + " " + date);
             adapterAp.notifyDataSetChanged();
-        }
-        if (requestCode == REQUEST_LOCATION_STRING
-                && resultCode == Organizer.RESULT_OK) {
-            super.onActivityResult(requestCode, resultCode, data);
-            Appointment receivedAppointment;
-            receivedAppointment = data.getParcelableExtra("appointKey");
-            receivedDestination = receivedAppointment.getPlace();
-            int adapterIndex = listViewAp.getCheckedItemPosition();
-            if (adapterIndex != -1) {
-                appointArrayList.get(adapterIndex).setPlace(receivedDestination);
-                //   appointArrayList.get(adapterIndex).getPlace().setAddress(receivedDestination.getAddress());
-                //   appointArrayList.get(adapterIndex).getPlace().setCoord(receivedDestination.getCoord());
-
-            } else {
-                Toast.makeText(Organizer.this, "No Appointments Selected", Toast.LENGTH_SHORT).show();
-            }
         }
 
 

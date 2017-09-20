@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Layout;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -51,6 +53,7 @@ public class DateTimePick extends AppCompatActivity {
         okButtonDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                printDateTime();
                 GregorianCalendar greg = (GregorianCalendar) GregorianCalendar.getInstance();
                 Date currDate = greg.getTime(), selDate;
                 String dateSet;
@@ -78,6 +81,7 @@ public class DateTimePick extends AppCompatActivity {
 
             }
         });
+
 
 
         dateToggle.setOnClickListener(new View.OnClickListener() {
@@ -111,6 +115,8 @@ public class DateTimePick extends AppCompatActivity {
 
             }
         });
+
+
 
         timePicker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
             @Override

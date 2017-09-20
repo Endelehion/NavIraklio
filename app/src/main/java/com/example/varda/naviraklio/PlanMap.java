@@ -2,6 +2,8 @@ package com.example.varda.naviraklio;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
@@ -58,6 +60,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static com.google.android.gms.location.LocationServices.*;
 
@@ -100,6 +104,9 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
     private boolean isSecondAppointBeforeValid;
     private boolean isSecondAppointAfterValid;
     int receivedDurationInSec;
+    private boolean appointmentValidated;
+    private String receivedCinema;
+    private int validCounter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,8 +140,9 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
         receivedDateString = receivedIntent.getStringExtra("dateKey");
         receivedAppointList = receivedIntent.getParcelableArrayListExtra("listKey");
         receivedIntent.getIntExtra("durationMinsKey", receivedDuration);
-        receivedDurationInSec =receivedDuration*60;
+        receivedDurationInSec = receivedDuration * 60;
         selectedTypeString = receivedIntent.getStringExtra("typeKey");
+        receivedCinema = receivedIntent.getStringExtra("cinemaKey");
 
         createCoordinates();
 
@@ -142,6 +150,12 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
 
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        setResult(Activity.RESULT_CANCELED, intent);
+        super.onBackPressed();
+    }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -155,10 +169,13 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
         mapConfirmBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (destination != null) {
+                if (appointmentValidated) {
                     Intent resultIntent = new Intent();
-                    resultIntent.putExtra("destinationKey",destination);
+                    resultIntent.putExtra("destinationKey", destination);
                     setResult(Activity.RESULT_OK, resultIntent);
+                    finish();
+                } else {
+                    setResult(Activity.RESULT_CANCELED);
                     finish();
                 }
 
@@ -201,10 +218,11 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
             Log.i("Location Info", "Location achieved!");
             addCurrentLocationMarker();
             origin = new LatLng(location.getLatitude(), location.getLongitude());
+
             if (selectedTypeString != null) {
 
                 try {
-                    findPlace(selectedTypeString);
+                    appointmentValidated = findPlace(selectedTypeString);
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
@@ -217,15 +235,13 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
             checkSettings();
             Log.i("Location Info", "Location not Available");
         }
-
-
     }
 
 
-    protected void findPlace(String place) throws ParseException {
+    protected boolean findPlace(String place) throws ParseException {
 
         checkRushHour();
-        boolean nullFlag = false, appointValid;
+        boolean typeNullFlag = false, appointValid = false;
 
         ArrayList<Place> placeList = new ArrayList<>();
 
@@ -243,17 +259,32 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
             default:
                 Toast.makeText(PlanMap.this, "No Place selected", Toast.LENGTH_SHORT).show();
                 destination = null;
-                nullFlag = true;
+                typeNullFlag = true;
                 break;
+        }
+        if (place.equals("Cinema")) {
+            if (receivedCinema.contains("Odeon")) {
+                destination = cinemas.get(0);
+            } else if (receivedCinema.contains("Texnopolis")) {
+                destination = cinemas.get(3);
+            } else if (receivedCinema.contains("Kornaros")) {
+                destination = cinemas.get(1);
+            } else {
+                destination = null;
+            }
+        } else {
+            destination = findNearestOpenPlace(placeList, origin);
         }
 
 
-        if (!nullFlag) {
+        if (!typeNullFlag && destination != null) {
+
             Date appointTime, appointTimeFrame[], nowArriveTime;
             Calendar cal = Calendar.getInstance();
-            int validCounter = 0, originToMainTravelTime;
+            boolean askUser = false;
+            int originToMainTravelTime;
+            validCounter = 0;
 
-            destination = findNearestPlace(placeList, origin);
             originToMainTravelTime = calculateTravelTime(origin, destination.getCoord(), avgDivergence, isRushHour);
             appointTime = dateFormat.parse(receivedDateString);                         //appointTime: Tested Appointment Date
             appointTimeFrame = appointWindow(appointTime, receivedDurationInSec, -300, 300);               //appointTimeFrame[1]: Tested Appointment start, appointTimeFrame[0]: Tested Appointment end, all with added 5min window
@@ -263,7 +294,8 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
             nowArriveTime = cal.getTime();
             if (appointTimeFrame[0].after(nowArriveTime)) {                 //check if he can make it in time,  appointment valid only if now+travelTime < appointmentStart
                 for (int i = 0; i < receivedAppointList.size(); i++) {      //check other appointments
-                    if(dateFormat.parse(receivedAppointList.get(i).getDateString()).before(nowTime)){
+
+                    if (dateFormat.parse(receivedAppointList.get(i).getDateString()).before(nowTime)) {
                         validCounter++;
                         continue;
                     }
@@ -271,46 +303,58 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
                     if (appSame || appInside || appInclusive || appAfterWithoutTravelTime && appBeforeWithoutTravelTime) {  //Check if main appointment overlaps with another at the selected time
                         //TODO appoint invalid
                         appointValid = false;
-                        Toast.makeText(PlanMap.this, "Main Appointment overlaps with secondary", Toast.LENGTH_SHORT).show();
                         Log.i("AppointmentControl", "Main Appointment overlaps with secondary, Main start time:" + appointTimeFrame[0] + " end time:" + appointTimeFrame[1]);
                         Log.i("AppointmentControl", "Main Appointment overlaps with secondary, Main Coordinates:" + origin);
                         Log.i("AppointmentControl", "Main Appointment overlaps with secondary, Secondary start time:" + appointTimeFrame[0] + " end time:" + appointTimeFrame[1]);
                         Log.i("AppointmentControl", "Main Appointment overlaps with secondary, Secondary Coordinates:" + receivedAppointList.get(i).getPlace().getCoord());
+                        exitMap("invalid");
                         break;
                     } else {
                         if (appAfterWithTravelTime || appBeforeWithTravelTime) {                //check if they overlap with travel time
                             if (appAfterWithoutTravelTime || appBeforeWithoutTravelTime) {      //check if they overlap without travel time
                                 //TODO appointment invalid
+
                                 appointValid = false;
                                 Toast.makeText(PlanMap.this, "Main Appointment overlaps with secondary", Toast.LENGTH_SHORT).show();
                                 Log.i("AppointmentControl", "Main Appointment overlaps with secondary, Main start time:" + appointTimeFrame[0] + " end time:" + appointTimeFrame[1]);
                                 Log.i("AppointmentControl", "Main Appointment overlaps with secondary, Main Coordinates:" + origin);
                                 Log.i("AppointmentControl", "Main Appointment overlaps with secondary, Secondary start time:" + appointTimeFrame[0] + " end time:" + appointTimeFrame[1]);
                                 Log.i("AppointmentControl", "Main Appointment overlaps with secondary, Secondary Coordinates:" + receivedAppointList.get(i).getPlace().getCoord());
+                                exitMap("invalid");
                                 break;
                             } else {
                                 //TODO findPlace nearest to tested and within SameDirection return new appointPlace and times change variables accordingly
                                 ArrayList<Place> samePointsList;
                                 samePointsList = findSameDirectionPoints(placeList, origin, destination.getCoord());
                                 if (samePointsList.isEmpty()) {
-                                    destination = findNearestPlace(placeList, receivedAppointList.get(i).getPlace().getCoord()); //found samedirection
+                                    destination = findNearestOpenPlace(placeList, receivedAppointList.get(i).getPlace().getCoord()); //found samedirection
                                 } else {
-                                    destination = findNearestPlace(samePointsList, receivedAppointList.get(i).getPlace().getCoord());
+                                    destination = findNearestOpenPlace(samePointsList, receivedAppointList.get(i).getPlace().getCoord());
                                 }
-                                testAppointment(i, appointTime);
+                                if (destination != null) {
+                                    testAppointment(i, appointTime);
+                                } else {
+
+                                    Intent intent = new Intent();
+                                    setResult(Activity.RESULT_CANCELED, intent);
+                                    exitMap("closed");
+                                    //TODO invalid appointment all closed
+                                }
+
                                 if (appSame || appInside || appInclusive || appAfterWithTravelTime || appBeforeWithTravelTime) {
                                     appointValid = false;
                                     Toast.makeText(PlanMap.this, "Main Appointment overlaps with secondary", Toast.LENGTH_SHORT).show();
                                     Log.i("AppointmentControl", "Main Appointment overlaps with secondary, Main start time:" + appointTimeFrame[0] + " end time:" + appointTimeFrame[1]);
                                     Log.i("AppointmentControl", "Main Appointment overlaps with secondary, Main Coordinates:" + origin);
-                                    Log.i("AppointmentControl", "Main Appointment overlaps with secondary, Secondary start time:" + receivedAppointList.get(i).getDateString() );
+                                    Log.i("AppointmentControl", "Main Appointment overlaps with secondary, Secondary start time:" + receivedAppointList.get(i).getDateString());
                                     Log.i("AppointmentControl", "Main Appointment overlaps with secondary, Secondary Coordinates:" + receivedAppointList.get(i).getPlace().getCoord());
+                                    exitMap("invalid");
                                     break;
 
                                     //TODO appointment invalid
                                 } else {
                                     if (samePointsList.isEmpty()) {
-                                        validCounter++;
+                                        askUser = true;
                                         //TODO Dialog asking user if its ok to go out of his way if yes navigate according to after/before flag if no cancel appointment
                                     } else {
                                         validCounter++;
@@ -327,9 +371,9 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
             } else {
                 appointValid = false;
                 //TODO cancel appointment cant make it in time
-                Toast.makeText(PlanMap.this, "Cant Make it in Time", Toast.LENGTH_SHORT).show();
                 Log.i("AppointmentControl", "Cant make it in time, Main start time:" + appointTimeFrame[0] + " end time:" + appointTimeFrame[1]);
                 Log.i("AppointmentControl", "Cant make it in time, Main Coordinates:" + origin);
+                exitMap("noTime");
             }
 
             if (validCounter == receivedAppointList.size()) {
@@ -403,7 +447,7 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
 
 
             // Getting URL to the Google Directions API
-            if (appointValid) {
+            if (appointValid && !askUser) {
 
 
                 String url = getDirectionsUrl(origin, destination.getCoord());
@@ -412,23 +456,102 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
 
                 // Start downloading json data from Google Directions API
                 downloadTask.execute(url);
+            } else if (appointValid && askUser) {
+                showWarnDialog();
             }
-
         }
+
+        if (destination == null) {
+            Toast.makeText(PlanMap.this, "All " + place + "s" + " are closed at the selected time", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent();
+            setResult(Activity.RESULT_CANCELED, intent);
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    finish();
+                }
+            }, 2000);
+        }
+        return appointValid;
+    }
+
+    public boolean checkIfopen(Place testedPlace, Date arriveTime) {
+        Calendar calendar = Calendar.getInstance();
+        Date openTime, closeTime;
+        calendar.setTime(arriveTime);
+        calendar.set(Calendar.HOUR_OF_DAY, testedPlace.getOpenHour());
+        openTime = calendar.getTime();
+        calendar.setTime(arriveTime);
+        calendar.set(Calendar.HOUR_OF_DAY, testedPlace.getCloseHour());
+        closeTime = calendar.getTime();
+        if (closeTime.before(openTime)) {
+            calendar.add(Calendar.DATE, 1);
+            closeTime = calendar.getTime();
+        }
+        boolean isOpen = arriveTime.after(openTime) && arriveTime.before(closeTime) || closeTime.equals(openTime);
+        return isOpen;
+    }
+
+    public void showWarnDialog() {
+        AlertDialog.Builder warnDialog = new AlertDialog.Builder(PlanMap.this);
+        warnDialog.setTitle("Warning: Different Direction");
+        warnDialog
+                .setMessage("The closest route to your selected appointment is out of your way for your other appointments, Do you want to proceed?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        String url = getDirectionsUrl(origin, destination.getCoord());
+
+                        DownloadTask downloadTask = new DownloadTask();
+
+                        // Start downloading json data from Google Directions API
+                        downloadTask.execute(url);
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        exitMap("user");
+                        dialog.cancel();
+                    }
+                });
+
+        warnDialog.show();
+    }
+
+    public void exitMap(final String reason) {
+        if (reason.equals("user")) {
+            Toast.makeText(PlanMap.this, "Appointment canceled by user", Toast.LENGTH_SHORT).show();
+            finish();
+        } else if (reason.equals("invalid")) {
+            Toast.makeText(PlanMap.this, "Appointment invalid: time overlaps with another", Toast.LENGTH_SHORT).show();
+        } else if (reason.equals("noTime")) {
+            Toast.makeText(PlanMap.this, "Appointment invalid: Can't make it in time", Toast.LENGTH_SHORT).show();
+        } else if (reason.equals("closed")) {
+            Toast.makeText(PlanMap.this, "They are all closed at the selected time", Toast.LENGTH_SHORT).show();
+        }
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                finish();
+            }
+        }, 2000);
     }
 
     public void checkRushHour() {
         Calendar cal = Calendar.getInstance();
         Date mornRushHourStart, mornRushHourEnd, noonRushHourStart, noonRushHourEnd;
         cal.setTime(nowTime);
-        cal.set(Calendar.HOUR, 8);
+        cal.set(Calendar.HOUR_OF_DAY, 8);
         cal.set(Calendar.MINUTE, 0);
         mornRushHourStart = cal.getTime();
-        cal.add(Calendar.HOUR, 1);
+        cal.add(Calendar.HOUR_OF_DAY, 1);
         mornRushHourEnd = cal.getTime();
-        cal.set(Calendar.HOUR, 13);
+        cal.set(Calendar.HOUR_OF_DAY, 13);
         noonRushHourStart = cal.getTime();
-        cal.add(Calendar.HOUR, 2);
+        cal.add(Calendar.HOUR_OF_DAY, 2);
         noonRushHourEnd = cal.getTime();
 
 
@@ -444,19 +567,24 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
 
         ArrayList<Place> sameDirList = new ArrayList<>();
         for (int i = 0; i < placeList.size(); i++) {
-            double xA = start.latitude, yA = start.longitude;
-            double xC = placeList.get(i).getCoord().latitude, yC = placeList.get(i).getCoord().longitude;
-            double xB = end.latitude, yB = end.longitude;        // Origin(xA,yA)  MainAppointment(xB,yB)  SecondAppointment(xC,yC), Conditions for secondary Appointment to be in the same Direction as main.
-            boolean xyPosB = xB > xA && yB > yA && xC >= xA && xC <= xB && yC >= yA && xC <= yB;       // if(xA<xB) and yA<yB then for secondary to be in the same direction: xA<=xC<=xB  and yA<=yC<=yB  must be true
-            boolean xyNegB = xB < xA && yB < yA && xC <= xA && xC >= xB && yC <= yA && yC >= yB;       // if(xA>xB) and yA>yB then for secondary to be in the same direction: xB<=xC<=xA  and yB<=yC<=yA  must be true
-            boolean xPosyNegB = xB > xA && yB < yA && xC >= xA && xC <= xB && yC <= yA && yC >= yB;    // if(xA<xB) and yA>yB then for secondary to be in the same direction: xA<=xC<=xB  and yB<=yC<=yA  must be true
-            boolean xNegyPosB = xB < xA && yB > yA && xC <= xA && xC >= xB && yC >= yA && yC <= yB;    // if(xA>xB) and yA<yB then for secondary to be in the same direction: xB<=xC<=xA  and yA<=yC<=yB  must be true
-            boolean isInSameDirection = xyPosB || xyNegB || xPosyNegB || xNegyPosB;
+            boolean isInSameDirection = testIfSameDirection(start, end, placeList.get(i).getCoord());
             if (isInSameDirection) {
                 sameDirList.add(placeList.get(i));
             }
         }
         return sameDirList;
+    }
+
+    public boolean testIfSameDirection(LatLng start, LatLng end, LatLng tested) {
+        double xA = start.latitude, yA = start.longitude;
+        double xC = tested.latitude, yC = tested.longitude;
+        double xB = end.latitude, yB = end.longitude;        // Origin(xA,yA)  MainAppointment(xB,yB)  SecondAppointment(xC,yC), Conditions for secondary Appointment to be in the same Direction as main.
+        boolean xyPosB = xB > xA && yB > yA && xC >= xA && xC <= xB && yC >= yA && xC <= yB;       // if(xA<xB) and yA<yB then for secondary to be in the same direction: xA<=xC<=xB  and yA<=yC<=yB  must be true
+        boolean xyNegB = xB < xA && yB < yA && xC <= xA && xC >= xB && yC <= yA && yC >= yB;       // if(xA>xB) and yA>yB then for secondary to be in the same direction: xB<=xC<=xA  and yB<=yC<=yA  must be true
+        boolean xPosyNegB = xB > xA && yB < yA && xC >= xA && xC <= xB && yC <= yA && yC >= yB;    // if(xA<xB) and yA>yB then for secondary to be in the same direction: xA<=xC<=xB  and yB<=yC<=yA  must be true
+        boolean xNegyPosB = xB < xA && yB > yA && xC <= xA && xC >= xB && yC >= yA && yC <= yB;    // if(xA>xB) and yA<yB then for secondary to be in the same direction: xB<=xC<=xA  and yA<=yC<=yB  must be true
+        boolean isInSameDirection = xyPosB || xyNegB || xPosyNegB || xNegyPosB;
+        return isInSameDirection;
     }
 
     public void testAppointment(int index, Date appointTime) throws ParseException {
@@ -466,7 +594,7 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
         appointTimeFrame = appointWindow(appointTime, receivedDurationInSec, -300, 300);
         int listDuration, originToSecondTravelTime, mainToSecondTravelTime;
         listTime = dateFormat.parse(receivedAppointList.get(index).getDateString());            //listTime: appointment(s) Date on List
-        listDuration = receivedAppointList.get(index).getDuration()*60;                            //listDuration: appointment(s) int duration on list
+        listDuration = receivedAppointList.get(index).getDuration() * 60;                            //listDuration: appointment(s) int duration on list
         mainToSecondTravelTime = calculateTravelTime(destination.getCoord(), receivedAppointList.get(index).getPlace().getCoord(), avgDivergence, isRushHour);
         originToSecondTravelTime = calculateTravelTime(origin, receivedAppointList.get(index).getPlace().getCoord(), avgDivergence, isRushHour);
         cal.setTime(nowTime);
@@ -474,7 +602,7 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
         arrivalSecondBefore = cal.getTime();               //listDateTimeFrameBefore[0]: Tested appointment Start time, listDateTimeFrameAfter[1]: Tested appointment EndTime plus the travelTime from main to tested locations, all with added 5min window
         listDateTimeFrame = appointWindow(listTime, listDuration, -300, 300);                                                                         //listDateTimeFrameAfter[0]: Tested appointment Start time, listDateTimeFrameAfter[1]: Tested appointment EndTime, all with added 5min window
         cal.setTime(appointTimeFrame[1]);
-        cal.add(Calendar.SECOND,mainToSecondTravelTime);
+        cal.add(Calendar.SECOND, mainToSecondTravelTime);
         arrivalSecondAfter = cal.getTime();                                                                                                   //listDateTimeFrameAfter[0]: Tested appointment Start time minus the travelTime from main to tested locations, listDateTimeFrameAfter[1]: Tested appointment EndTime, all with added 5min window
         appBeforeWithTravelTime = listDateTimeFrame[1].before(appointTimeFrame[1]) && appointTimeFrame[0].before(listDateTimeFrame[1]) || arrivalSecondBefore.after(listDateTimeFrame[0]) && listDateTimeFrame[1].before(appointTimeFrame[0]) && listDateTimeFrame[0].after(nowTime);   //Case main appointment start is within ending time of tested appointment, ending time is the actual time plus the travel time from tested to main appointment locations, appointStart < listEnd < appointEnd
         appAfterWithTravelTime = listDateTimeFrame[0].after(appointTimeFrame[0]) && listDateTimeFrame[0].before(appointTimeFrame[1]) || arrivalSecondAfter.after(listDateTimeFrame[0]) && listDateTimeFrame[0].after(appointTimeFrame[1]) && listDateTimeFrame[0].after(nowTime);       //Case main appointment is within the starting time of tested appointment, starting time of tested appointment is the actual time minus the travelTime from main to tested appointment locations,  locationAppointStart < listStart < appointEnd
@@ -541,18 +669,46 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
         return travelTime;
     }
 
-    public Place findNearestPlace(ArrayList<Place> placeList, LatLng startPoint) {
-        double dist, tempDist;
-        Place nearestPlace;
-        dist = distFrom(startPoint, placeList.get(0).getCoord());
-        nearestPlace = placeList.get(0);
-        for (Place tempCoor : placeList) {
-            tempDist = distFrom(startPoint, tempCoor.getCoord());
-            if (tempDist < dist) {
-                dist = tempDist;
-                nearestPlace = tempCoor;
+    @Nullable
+    protected Place findNearestOpenPlace(ArrayList<Place> placeList, LatLng startPoint) throws ParseException {
+        double dist = 0, tempDist;
+        Place nearestPlace = null;
+        boolean nullFlag = false;
+        int originToDestTravelTime;
+        Date arriveTime, appointTime;
+        Calendar calendar = Calendar.getInstance();
+        appointTime = dateFormat.parse(receivedDateString);
+        for (int i = 0; i < placeList.size(); i++) {
+            originToDestTravelTime = calculateTravelTime(startPoint, placeList.get(i).getCoord(), avgDivergence, isRushHour);
+            calendar.setTime(appointTime);
+            calendar.add(Calendar.SECOND, originToDestTravelTime);
+            arriveTime = calendar.getTime();
+            if (checkIfopen(placeList.get(i), arriveTime)) {
+                dist = distFrom(startPoint, placeList.get(i).getCoord());
+                nearestPlace = placeList.get(i);
+                nullFlag = false;
+                break;
+            } else {
+                nearestPlace = null;
+                nullFlag = true;
             }
         }
+        if (!nullFlag) {
+            for (int i = 0; i < placeList.size(); i++) {
+                originToDestTravelTime = calculateTravelTime(startPoint, placeList.get(i).getCoord(), avgDivergence, isRushHour);
+                calendar.setTime(appointTime);
+                calendar.add(Calendar.SECOND, originToDestTravelTime);
+                arriveTime = calendar.getTime();
+                if (checkIfopen(placeList.get(i), arriveTime)) {
+                    tempDist = distFrom(startPoint, placeList.get(i).getCoord());
+                    if (tempDist < dist) {
+                        dist = tempDist;
+                        nearestPlace = placeList.get(i);
+                    }
+                }
+            }
+        }
+
         return nearestPlace;
     }
 
@@ -675,7 +831,7 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
 
 
         //zografou
-      //  superMarkets.add(new Place(new LatLng(37.977817, 23.769849), "Daily Lewf. Papagou 114", "Supermarket", 9, 21));
+        //  superMarkets.add(new Place(new LatLng(37.977817, 23.769849), "Daily Lewf. Papagou 114", "Supermarket", 0,1));
         superMarkets.add(new Place(new LatLng(37.988544, 23.747392), "main", "Supermarket", 9, 21));
 
 
@@ -709,7 +865,7 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
         gasStations.add(new Place(new LatLng(35.338016, 25.160950), "EKO", "Gas Station", 7, 22));
 
         //zografou
-       // gasStations.add(new Place(new LatLng(37.974122, 23.774079), "Revoil", "Gas Station", 7, 22));
+        // gasStations.add(new Place(new LatLng(37.974122, 23.774079), "Revoil", "Gas Station", 7, 22));
         gasStations.add(new Place(new LatLng(37.967245, 23.774535), "kontino alla de prolavainei", "Gas Station", 9, 21));
         gasStations.add(new Place(new LatLng(37.989516, 23.744785), "eksw apo to dromo", "Gas Station", 9, 21));
         gasStations.add(new Place(new LatLng(37.986878, 23.752681), "sto dromo", "Gas Station", 9, 21));
@@ -726,7 +882,6 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
         cinemas.add(new Place(new LatLng(35.338573, 25.129685), "Dedalos Club", "Cinema", 16, 2));
         //zografou
         cinemas.add(new Place(new LatLng(37.977369, 23.770716), "Aleka", "Cinema", 16, 2));
-        Collections.sort(cinemas, new ComparatorCoord());
 
 
     }

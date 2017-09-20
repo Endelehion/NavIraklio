@@ -204,7 +204,7 @@ public class MoviePicker extends AppCompatActivity {
                             cal.add(Calendar.DATE, 1);
                             currDate = cal.getTime();
                         }
-                        cal.set(Calendar.HOUR, movieHour);
+                        cal.set(Calendar.HOUR_OF_DAY, movieHour);
                         cal.set(Calendar.MINUTE, movieMin);
                         movieDates = new ArrayList<>();
                         SimpleDateFormat fullDate = new SimpleDateFormat("EEE dd MMM yyyy HH:mm",Locale.getDefault());
@@ -212,10 +212,9 @@ public class MoviePicker extends AppCompatActivity {
                         timeZone = TimeZone.getTimeZone("Europe/Athens");
                         fullDate.setTimeZone(timeZone);  //TODO check timezone @ 11:30pm
                         for (int i = 0; i < 10; i++) {
-                            cal.add(Calendar.WEEK_OF_YEAR, 1);
-
                             temp = cal.getTime();
                             movieDates.add(fullDate.format(temp));    //init 10 next daysOfWeek
+                            cal.add(Calendar.WEEK_OF_YEAR, 1);
                         }
                         mode = "DatePick";
                         setUpListViews(mode);
