@@ -9,13 +9,13 @@
 
     <Button
         android:id="@+id/findButton"
-        android:layout_width="88dp"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/destinationText"
         android:text="FIND"
         tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="81dp"
-        android:layout_below="@+id/destinationText"
-        android:layout_alignParentEnd="true" />
+        tools:layout_editor_absoluteY="81dp" />
 
     <fragment
         android:id="@+id/map"
@@ -42,8 +42,8 @@
 
     <Button
         android:id="@+id/mapConfirmBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:text="Confirm" />

@@ -9,23 +9,24 @@
 
     <Button
         android:id="@+id/okButtonDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="90dp"
+        android:layout_height="48dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginRight="6dp"
         android:text="OK"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginRight="6dp"
-        android:layout_marginBottom="5dp" />
+        app:layout_constraintRight_toRightOf="parent" />
 
     <Button
         android:id="@+id/cancelButtonDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="88dp"
+        android:layout_height="47dp"
         android:layout_marginBottom="5dp"
+        android:layout_marginLeft="0dp"
         android:text="Cancel"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="@+id/guideline15"
-        android:layout_marginLeft="0dp" />
+        tools:layout_editor_absoluteY="235dp" />
 
     <android.support.constraint.Guideline
         android:layout_width="wrap_content"

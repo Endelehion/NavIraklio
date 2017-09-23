@@ -9,13 +9,13 @@
 
     <Button
         android:id="@+id/findButton"
-        android:layout_width="88dp"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
         android:text="FIND"
         tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="81dp"
-        android:layout_above="@+id/map"
-        android:layout_alignParentEnd="true" />
+        tools:layout_editor_absoluteY="81dp" />
 
     <fragment
         android:id="@+id/map"
@@ -28,22 +28,24 @@
         tools:layout_editor_absoluteX="8dp"
         tools:layout_editor_absoluteY="8dp"
         android:layout_alignParentBottom="true"
-        android:layout_below="@+id/destinationText" />
+        android:layout_below="@+id/findButton" />
 
     <TextView
         android:id="@+id/destinationText"
         android:layout_width="320dp"
         android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/findButton"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_toStartOf="@+id/findButton"
         android:text="Destination:"
         android:textAlignment="center"
-        android:textSize="25sp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
+        android:textSize="30sp" />
 
     <Button
         android:id="@+id/mapConfirmBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:text="Confirm" />

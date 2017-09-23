@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/heraklion_small"
     tools:context="com.example.varda.naviraklio.NewAppointment">
 
     <Spinner
@@ -13,25 +14,25 @@
         android:layout_above="@+id/map"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
+        android:layout_marginLeft="91dp"
         android:layout_marginTop="18dp"
         android:layout_toStartOf="@+id/findButton"
         android:animateLayoutChanges="false"
         android:clipChildren="false"
         android:entries="@+strings/place_type"
         android:prompt="@+strings/prompt_spinner"
-        app:layout_constraintTop_toTopOf="@+id/guideline13"
-        android:layout_marginLeft="91dp"
-        app:layout_constraintLeft_toLeftOf="@+id/guideline12" />
+        app:layout_constraintLeft_toLeftOf="@+id/guideline12"
+        app:layout_constraintTop_toTopOf="@+id/guideline13" />
 
     <TextView
         android:id="@+id/textView7"
         android:layout_width="260dp"
         android:layout_height="43dp"
+        android:layout_marginBottom="-9dp"
+        android:layout_marginLeft="44dp"
         android:text="New Appointment"
         android:textSize="30dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline13"
-        android:layout_marginBottom="-9dp"
-        android:layout_marginLeft="44dp"
         app:layout_constraintLeft_toLeftOf="@+id/guideline12" />
 
     <TextView
@@ -81,58 +82,58 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <android.support.constraint.Guideline
+        android:id="@+id/guideline12"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/guideline12"
-        app:layout_constraintGuide_begin="16dp"
         android:orientation="vertical"
-        tools:layout_editor_absoluteY="0dp"
-        tools:layout_editor_absoluteX="16dp" />
+        app:layout_constraintGuide_begin="16dp"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="0dp" />
 
     <android.support.constraint.Guideline
+        android:id="@+id/guideline13"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/guideline13"
-        app:layout_constraintGuide_begin="50dp"
         android:orientation="horizontal"
-        tools:layout_editor_absoluteY="50dp"
-        tools:layout_editor_absoluteX="0dp" />
+        app:layout_constraintGuide_begin="50dp"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="50dp" />
 
     <Button
         android:id="@+id/setDateTimeBtn"
-        android:layout_width="92dp"
-        android:layout_height="79dp"
+        android:layout_width="100dp"
+        android:layout_height="80dp"
+        android:layout_marginLeft="114dp"
+        android:layout_marginTop="365dp"
         android:text="set Date &amp; Time"
-        app:layout_constraintTop_toTopOf="@+id/guideline13"
-        android:layout_marginTop="351dp"
-        android:layout_marginLeft="118dp"
-        app:layout_constraintLeft_toLeftOf="@+id/guideline12" />
+        app:layout_constraintLeft_toLeftOf="@+id/guideline12"
+        app:layout_constraintTop_toTopOf="@+id/guideline13" />
 
     <Button
         android:id="@+id/confirmAppointmentBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="249dp"
-        android:layout_marginTop="382dp"
+        android:layout_width="110dp"
+        android:layout_height="60dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="385dp"
         android:text="Confirm"
-        app:layout_constraintLeft_toLeftOf="@+id/guideline12"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline13" />
 
     <Button
         android:id="@+id/cancelNewAppointBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="-3dp"
-        android:layout_marginTop="382dp"
+        android:layout_width="110dp"
+        android:layout_height="60dp"
+        android:layout_marginLeft="-2dp"
+        android:layout_marginTop="385dp"
         android:text="Cancel"
-        app:layout_constraintLeft_toLeftOf="@+id/guideline12"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline13" />
 
     <Button
         android:id="@+id/movieBtn"
-        android:layout_width="92dp"
-        android:layout_height="79dp"
-        android:layout_marginBottom="31dp"
+        android:layout_width="100dp"
+        android:layout_height="80dp"
+        android:layout_marginBottom="16dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:text="Choose Movie"
@@ -142,9 +143,9 @@
 
     <TextView
         android:id="@+id/cinemaLabel"
-        android:layout_width="344dp"
-        android:layout_height="47dp"
-        android:layout_marginBottom="195dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="207dp"
         android:layout_marginLeft="0dp"
         android:text="Cinema: "
         android:textSize="25sp"
@@ -153,10 +154,10 @@
 
     <TextView
         android:id="@+id/movieTitleLabel"
-        android:layout_width="344dp"
-        android:layout_height="40dp"
-        android:layout_marginBottom="121dp"
-        android:layout_marginLeft="-8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="128dp"
+        android:layout_marginLeft="0dp"
         android:text="Movie: "
         android:textSize="25sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -164,10 +165,10 @@
 
     <Button
         android:id="@+id/setLocationBtn"
-        android:layout_width="96dp"
-        android:layout_height="59dp"
-        android:layout_marginRight="-1dp"
-        android:layout_marginTop="195dp"
+        android:layout_width="110dp"
+        android:layout_height="60dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="435dp"
         android:text="Set Location"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

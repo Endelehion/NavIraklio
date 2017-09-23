@@ -281,6 +281,7 @@ public class NewAppointment extends AppCompatActivity {
         cinemaLabel.setText("Cinema: " + cinemaStringLabel);
         movieTitleLabel.setText("Movie: " + movieStringLabel);
         dateText.setText(dateString);
+        confirmAppointmentBtn.setVisibility(View.INVISIBLE);
     }
 
     public void setUpGasStation() {
@@ -289,6 +290,7 @@ public class NewAppointment extends AppCompatActivity {
         movieTitleLabel.setVisibility(View.INVISIBLE);
         cinemaLabel.setVisibility(View.INVISIBLE);
         durationText.setText("Duration: 0:05");
+        confirmAppointmentBtn.setVisibility(View.INVISIBLE);
     }
 
     public void setUpSupermarket() {
@@ -297,6 +299,7 @@ public class NewAppointment extends AppCompatActivity {
         movieTitleLabel.setVisibility(View.INVISIBLE);
         cinemaLabel.setVisibility(View.INVISIBLE);
         durationText.setText("Duration: 0:40");
+        confirmAppointmentBtn.setVisibility(View.INVISIBLE);
     }
     public void invokeRagnarok(){
         movieBtn.setVisibility(View.INVISIBLE);
@@ -304,6 +307,7 @@ public class NewAppointment extends AppCompatActivity {
         setDateTimeBtn.setVisibility(View.INVISIBLE);
         spinner.setVisibility(View.INVISIBLE);
         typeLabel.setVisibility(View.INVISIBLE);
+        confirmAppointmentBtn.setVisibility(View.VISIBLE);
     }
 
 }

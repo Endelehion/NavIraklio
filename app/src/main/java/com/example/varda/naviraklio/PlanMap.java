@@ -191,6 +191,9 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
         });
 
 
+
+
+
         /*
         // Place Picker
         Intent intent = null;
@@ -209,6 +212,7 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
         */
 
     }
+
 
     public void startNavigation() {
         mMap.clear();
@@ -356,10 +360,8 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
                                     if (samePointsList.isEmpty()) {
                                         askUser = true;
                                         //TODO Dialog asking user if its ok to go out of his way if yes navigate according to after/before flag if no cancel appointment
-                                    } else {
-                                        validCounter++;
-                                        //TODO appointment valid
                                     }
+                                    validCounter++;
                                 }
                             }
                         } else {
@@ -382,61 +384,6 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
                 appointValid = false;
             }
 
-
-
-         /*
-          appointValid = false;  //TODO cancel appointment and send him back to newAppointment
-                        Toast.makeText(PlanMap.this, "Main Appointment overlaps with secondary", Toast.LENGTH_SHORT).show();
-                        Log.i("AppointmentControl", "Main Appointment overlaps with secondary, Main start time:" + appointTimeFrame[0] + " end time:" + appointTimeFrame[1]);
-                        Log.i("AppointmentControl", "Main Appointment overlaps with secondary, Main Coordinates:" + origin);
-                        Log.i("AppointmentControl", "Main Appointment overlaps with secondary, Secondary start time:" + appointTimeFrame[0] + " end time:" + appointTimeFrame[1]);
-                        Log.i("AppointmentControl", "Main Appointment overlaps with secondary, Secondary Coordinates:" + receivedAppointList.get(i).getPlace().getCoord());
-                        break;
-            if (appointValid) {
-                    //TODO navigate 1 and break;
-                    Toast.makeText(PlanMap.this, "Appointment Valid", Toast.LENGTH_SHORT).show();
-                    Log.i("AppointmentControl", "Appointment Valid, Main start time:" + appointTimeFrame[0] + " end time:" + appointTimeFrame[1]);
-                    Log.i("AppointmentControl", "Appointment Valid, Main Coordinates:" + origin);
-                    Log.i("AppointmentControl", "Appointment Valid, Destination Coordinates:" + destination.getCoord());
-
-                } else if (isSecondAppointBeforeValid) {    //check if secondary appointment ends before main appointment
-                    if (isInSameDirection) {//check if secondary appointment is in the same direction with main
-                        //TODO break and navigate 2,1
-                        Toast.makeText(PlanMap.this, "Secondary Appointment on the way valid before main", Toast.LENGTH_SHORT).show();
-                        Log.i("AppointmentControl", "Secondary Appointment on the way valid before main, Main start time:" + appointTimeFrame[0] + " end time:" + appointTimeFrame[1]);
-                        Log.i("AppointmentControl", "Secondary Appointment on the way valid before main, Main Coordinates:" + origin);
-                        Log.i("AppointmentControl", "Secondary Appointment on the way valid before main, Secondary start time:" + appointTimeFrame[0] + " end time:" + appointTimeFrame[1]);
-                        //  Log.i("AppointmentControl", "Secondary Appointment on the way valid before main, Secondary Coordinates:" + receivedAppointList.get(i).getPlace().getCoord());
-
-                    } else {
-                        //TODO dialog asking user if he wants to go out of his way for secondary appointmennt, break, if yes navigate 2,1 if no navigate 1
-                        Toast.makeText(PlanMap.this, "Secondary Appointment out of the way valid before main", Toast.LENGTH_SHORT).show();
-                        Log.i("AppointmentControl", "Secondary Appointment  out of the way valid before main, Main start time:" + appointTimeFrame[0] + " end time:" + appointTimeFrame[1]);
-                        Log.i("AppointmentControl", "Secondary Appointment  out of the way valid before main, Main Coordinates:" + origin);
-                        Log.i("AppointmentControl", "Secondary Appointment  out of the way valid before main, Secondary start time:" + appointTimeFrame[0] + " end time:" + appointTimeFrame[1]);
-                        //  Log.i("AppointmentControl", "Secondary Appointment  out of the way valid before main, Secondary Coordinates:" + receivedAppointList.get(i).getPlace().getCoord());
-
-                    }
-                } else if (isSecondAppointAfterValid) {    //check if secondary appointment starts after main appointment
-                    Toast.makeText(PlanMap.this, "Secondary Appointment on the way valid after main", Toast.LENGTH_SHORT).show();
-                    Log.i("AppointmentControl", "Secondary Appointment on the way valid after main, Main start time:" + appointTimeFrame[0] + " end time:" + appointTimeFrame[1]);
-                    Log.i("AppointmentControl", "Secondary Appointment on the way valid after main, Main Coordinates:" + origin);
-                    Log.i("AppointmentControl", "Secondary Appointment on the way valid after main, Secondary start time:" + appointTimeFrame[0] + " end time:" + appointTimeFrame[1]);
-                    //       Log.i("AppointmentControl", "Secondary Appointment on the way valid after main, Secondary Coordinates:" + receivedAppointList.get(i).getPlace().getCoord());
-
-                    //TODO break and navigate 1,2
-                }
-                cal.setTime(nowTime);
-
-                if (appointValid) {
-                }
-            } else {
-                //TODO cancel appointment
-                Toast.makeText(PlanMap.this, "Cant Make it in Time", Toast.LENGTH_SHORT).show();
-                Log.i("AppointmentControl", "Cant make it in time, Main start time:" + appointTimeFrame[0] + " end time:" + appointTimeFrame[1]);
-                Log.i("AppointmentControl", "Cant make it in time, Main Coordinates:" + origin);
-            }
-*/
 
             if (appointValid) {
                 Toast.makeText(PlanMap.this, "appoint valid", Toast.LENGTH_SHORT).show();

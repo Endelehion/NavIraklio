@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/heraklion_small_land"
     tools:context="com.example.varda.naviraklio.NewAppointment">
 
     <Button
@@ -11,7 +12,7 @@
         android:layout_width="110dp"
         android:layout_height="55dp"
         android:layout_marginBottom="16dp"
-        android:layout_marginRight="316dp"
+        android:layout_marginRight="16dp"
         android:text="Set Location"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
@@ -47,27 +48,27 @@
         android:layout_above="@+id/map"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
+        android:layout_marginLeft="91dp"
+        android:layout_marginStart="91dp"
         android:layout_marginTop="18dp"
         android:layout_toStartOf="@+id/findButton"
         android:animateLayoutChanges="false"
         android:clipChildren="false"
         android:entries="@+strings/place_type"
         android:prompt="@+strings/prompt_spinner"
-        app:layout_constraintTop_toTopOf="@+id/guideline13"
-        android:layout_marginLeft="91dp"
         app:layout_constraintLeft_toLeftOf="@+id/guideline12"
-        android:layout_marginStart="91dp" />
+        app:layout_constraintTop_toTopOf="@+id/guideline13" />
 
     <TextView
         android:id="@+id/textView7"
         android:layout_width="260dp"
         android:layout_height="43dp"
+        android:layout_marginBottom="-9dp"
+        android:layout_marginLeft="150dp"
         android:text="New Appointment"
         android:textSize="30dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline13"
-        app:layout_constraintLeft_toLeftOf="@+id/guideline12"
-        android:layout_marginLeft="150dp"
-        android:layout_marginBottom="-9dp" />
+        app:layout_constraintLeft_toLeftOf="@+id/guideline12" />
 
     <TextView
         android:id="@+id/typeLabel"
@@ -115,22 +116,22 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <android.support.constraint.Guideline
+        android:id="@+id/guideline12"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/guideline12"
-        app:layout_constraintGuide_begin="16dp"
         android:orientation="vertical"
-        tools:layout_editor_absoluteY="0dp"
-        tools:layout_editor_absoluteX="16dp" />
+        app:layout_constraintGuide_begin="16dp"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="0dp" />
 
     <android.support.constraint.Guideline
+        android:id="@+id/guideline13"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/guideline13"
-        app:layout_constraintGuide_begin="50dp"
         android:orientation="horizontal"
-        tools:layout_editor_absoluteY="50dp"
-        tools:layout_editor_absoluteX="0dp" />
+        app:layout_constraintGuide_begin="50dp"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="50dp" />
 
     <Button
         android:id="@+id/setDateTimeBtn"
@@ -164,9 +165,9 @@
         app:layout_constraintTop_toTopOf="@+id/guideline13" />
 
     <android.support.constraint.Guideline
+        android:id="@+id/guideline14"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/guideline14"
         android:orientation="vertical"
         app:layout_constraintGuide_end="17dp" />
 

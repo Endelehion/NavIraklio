@@ -66,14 +66,15 @@
 
     <Button
         android:id="@+id/BackHome"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="148dp"
+        android:layout_height="60dp"
         android:onClick="goBackHome"
         android:text="back Home"
         app:layout_constraintLeft_toLeftOf="@+id/guideline2"
         app:layout_constraintTop_toTopOf="@+id/guideline7"
         android:layout_marginLeft="0dp"
-        android:layout_marginTop="2dp" />
+        android:layout_marginTop="2dp"
+        tools:layout_editor_absoluteX="189dp" />
 
     <android.support.constraint.Guideline
         android:layout_width="wrap_content"

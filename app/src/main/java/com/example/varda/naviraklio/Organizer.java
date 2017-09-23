@@ -22,7 +22,6 @@ import java.util.List;
 
 public class Organizer extends AppCompatActivity {
     private static final int REQUEST_NEW_APPOINTMENT = 22, REQUEST_LOCATION_MAP = 34;
-    private DatePicker datePicker;
     private SimpleDateFormat sdateFormat;
     private final Calendar calendar = Calendar.getInstance();
     private int year, month, day;
@@ -42,12 +41,10 @@ public class Organizer extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_organizer);
-        datePicker = (DatePicker) findViewById(R.id.datePicker);
 
         year = calendar.get(Calendar.YEAR);
         month = calendar.get(Calendar.MONTH);
         day = calendar.get(Calendar.DAY_OF_MONTH);
-        datePicker.updateDate(year, month, day);
         sdateFormat = new SimpleDateFormat("EEE dd MMM yyyy HH:mm");
 
         appointArrayList = new ArrayList<>();

@@ -4,64 +4,56 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/heraklion_small_land"
     tools:context="com.example.varda.naviraklio.Organizer">
 
     <Button
         android:id="@+id/navigateBtn"
-        android:layout_width="87dp"
-        android:layout_height="71dp"
-        android:layout_marginBottom="88dp"
-        android:layout_marginRight="0dp"
+        android:layout_width="120dp"
+        android:layout_height="65dp"
+        android:layout_marginBottom="28dp"
+        android:layout_marginLeft="8dp"
         android:text="Navigate"
-        android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
-
-    <ListView
-        android:id="@+id/listAp"
-        android:layout_width="207dp"
-        android:layout_height="281dp"
-        android:layout_marginLeft="0dp"
-        android:scrollbars="horizontal"
-        app:layout_constraintLeft_toLeftOf="@+id/guideline8"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="0dp" />
+        app:layout_constraintLeft_toRightOf="@+id/listAp" />
 
     <Button
         android:id="@+id/newAp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="60dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="16dp"
         android:text="New"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="0dp"
-        android:layout_marginLeft="207dp"
-        app:layout_constraintLeft_toLeftOf="@+id/guideline8" />
+        app:layout_constraintLeft_toRightOf="@+id/listAp"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/delAp"
-        android:layout_width="85dp"
-        android:layout_height="47dp"
+        android:layout_width="100dp"
+        android:layout_height="60dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="100dp"
         android:text="Delete"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="59dp"
-        android:layout_marginLeft="207dp"
-        app:layout_constraintLeft_toLeftOf="@+id/guideline8" />
-
-    <DatePicker
-        android:id="@+id/datePicker"
-        android:layout_width="320dp"
-        android:layout_height="301dp"
-        android:scaleX="0.88"
-        app:layout_constraintRight_toLeftOf="@+id/guideline8"
-        android:layout_marginRight="-87dp"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="0dp" />
+        app:layout_constraintLeft_toRightOf="@+id/listAp"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_end="296dp" />
+        app:layout_constraintGuide_end="576dp" />
+
+    <ListView
+        android:id="@+id/listAp"
+        android:layout_width="273dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="3dp"
+        android:scrollbars="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline8"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

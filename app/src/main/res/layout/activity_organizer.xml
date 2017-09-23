@@ -4,76 +4,70 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/heraklion_small"
     tools:context="com.example.varda.naviraklio.Organizer">
-
-    <DatePicker
-        android:id="@+id/datePicker"
-        android:layout_width="330dp"
-        android:layout_height="386dp"
-        android:scaleX="0.8"
-        android:scaleY="0.8"
-        app:layout_constraintRight_toLeftOf="@+id/guideline10"
-        android:layout_marginRight="-243dp"
-        android:layout_marginBottom="-451dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline11" />
 
     <Button
         android:id="@+id/newAp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New"
-        app:layout_constraintRight_toLeftOf="@+id/guideline10"
-        app:layout_constraintLeft_toRightOf="@+id/listAp"
+        android:layout_width="100dp"
+        android:layout_height="45dp"
         android:layout_marginLeft="8dp"
-        app:layout_constraintHorizontal_bias="0.0"
         android:layout_marginStart="8dp"
-        app:layout_constraintTop_toTopOf="@+id/guideline11"
-        android:layout_marginTop="8dp" />
+        android:layout_marginTop="8dp"
+        android:text="New"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toRightOf="@+id/listAp"
+        app:layout_constraintRight_toLeftOf="@+id/guideline10"
+        app:layout_constraintTop_toTopOf="@+id/guideline11" />
 
     <Button
         android:id="@+id/delAp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Delete"
-        app:layout_constraintRight_toLeftOf="@+id/guideline10"
-        app:layout_constraintLeft_toRightOf="@+id/listAp"
+        android:layout_width="100dp"
+        android:layout_height="45dp"
         android:layout_marginLeft="8dp"
-        app:layout_constraintHorizontal_bias="0.0"
         android:layout_marginStart="8dp"
-        app:layout_constraintTop_toTopOf="@+id/guideline11"
-        android:layout_marginTop="56dp" />
+        android:layout_marginTop="117dp"
+        android:text="Delete"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toRightOf="@+id/listAp"
+        app:layout_constraintRight_toLeftOf="@+id/guideline10"
+        app:layout_constraintTop_toTopOf="@+id/guideline11" />
 
     <android.support.constraint.Guideline
+        android:id="@+id/guideline10"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/guideline10"
         android:orientation="vertical"
         app:layout_constraintGuide_end="61dp" />
 
     <ListView
         android:id="@+id/listAp"
-        android:layout_width="217dp"
-        android:layout_height="273dp"
+        android:layout_width="186dp"
+        android:layout_height="478dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/cast_expanded_controller_progress_text_color"
+        android:backgroundTint="@color/cast_libraries_material_featurehighlight_text_header_color"
         android:scrollbars="horizontal"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline11"
-        android:layout_marginTop="8dp" />
+        tools:layout_editor_absoluteY="57dp" />
 
     <android.support.constraint.Guideline
+        android:id="@+id/guideline11"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/guideline11"
-        app:layout_constraintGuide_begin="349dp"
-        android:orientation="horizontal" />
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="16dp" />
 
     <Button
         android:id="@+id/navigateBtn"
         android:layout_width="130dp"
         android:layout_height="52dp"
-        android:layout_marginBottom="6dp"
-        android:layout_marginRight="5dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="250dp"
         android:text="Navigate"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline11" />
 
 </android.support.constraint.ConstraintLayout>

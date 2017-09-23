@@ -34,7 +34,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:text="Where Am I" />
+        android:text="Where Am I"
+        android:layout_toEndOf="@+id/findButton" />
 
     <Spinner
         android:id="@+id/spinner"
