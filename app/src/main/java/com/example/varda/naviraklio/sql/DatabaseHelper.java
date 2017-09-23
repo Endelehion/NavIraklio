@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.varda.naviraklio.model.User;
+import com.example.varda.naviraklio.model.AppointmentModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,13 +32,13 @@ public class DatabaseHelper extends SQLiteOpenHelper{
     private static final String COLUMN_USER_TEL = "user_tel";
     private static final String COLUMN_USER_CREDIT_CARD = "user_credit_card";
 
-    // create table sql query
+    // create table sql query for user
     private String CREATE_USER_TABLE = "CREATE TABLE " + TABLE_USER + "("
             + COLUMN_USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_USER_NAME + " TEXT,"
             + COLUMN_USER_USERNAME + " TEXT," + COLUMN_USER_PASSWORD + " TEXT," + COLUMN_USER_ADDRESS
             + " TEXT," + COLUMN_USER_TEL + " TEXT," + COLUMN_USER_CREDIT_CARD + " TEXT " + ")";
 
-    // drop table sql query
+    // drop table sql query for user
     private String DROP_USER_TABLE = "DROP TABLE IF EXISTS " + TABLE_USER;
 
     /**
@@ -48,6 +49,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
+
 
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -96,8 +98,8 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         // array of columns to fetch
         String[] columns = {
                 COLUMN_USER_ID,
-                COLUMN_USER_USERNAME,
                 COLUMN_USER_NAME,
+                COLUMN_USER_USERNAME,
                 COLUMN_USER_PASSWORD,
                 COLUMN_USER_ADDRESS,
                 COLUMN_USER_TEL,

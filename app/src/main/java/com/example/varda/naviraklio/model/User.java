@@ -10,6 +10,18 @@ public class User {
     private String tel;
     private String creditCard;
 
+    public User() {
+    }
+
+    public User(int id, String name, String username, String password, String address, String tel, String creditCard) {
+        this.id = id;
+        this.name = name;
+        this.username = username;
+        this.password = password;
+        this.address = address;
+        this.tel = tel;
+        this.creditCard = creditCard;
+    }
 
     public int getId() {
         return id;
