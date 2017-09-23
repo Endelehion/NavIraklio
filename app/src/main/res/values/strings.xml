@@ -1,28 +1,55 @@
 <resources>
     <string name="app_name">NavIraklion</string>
-    <string name="title_activity_signup">Signup Page</string>
+    <string name="error_invalid_username">This username is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_empty_username">Please fill in your username</string>
+    <string name="error_empty_password">Please fill in your password</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">Contacts permissions are needed for providing username completions.</string>
+    <string name="action_settings">Settings</string>
+    <string name="text_hello">Hello,</string>
+    <string name="text_accounts">All Accounts</string>
 
     <!-- Strings related to login -->
+    <string name="title_activity_login">Login Page</string>
     <string name="prompt_username">Username</string>
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in</string>
     <string name="action_sign_in_short">Sign in</string>
-    <string name="action_sign_up">Sign up</string>
     <string name="action_sign_up_link">No account yet? Create one</string>
-    <string name="action_sign_in_link">Back to Login Page</string>
-    <string name="error_invalid_username">This username is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="error_field_required">This field is required</string>
-    <string name="permission_rationale">Contacts permissions are needed for providing username completions.</string>
-    <string name="title_activity_map">Map</string>
 
     <!-- Strings related to signup -->
+    <string name="title_activity_signup">Signup Page</string>
+    <string name="prompt_name">Name</string>
+    <string name="prompt_confirm_password">Password Confirmation</string>
+    <string name="prompt_address">Address</string>
+    <string name="prompt_tel">Phone Number</string>
+    <string name="prompt_credit_card">Credit Card Number</string>
+    <string name="action_sign_up">Sign up</string>
+    <string name="action_sign_in_link">Already a member? Back to Login Page</string>
+    <string name="error_empty_name">Please fill in your name</string>
+    <string name="error_empty_confirm_password">Password Confirmation is required</string>
+    <string name="error_empty_address">Please fill in your address</string>
+    <string name="error_empty_tel">Please fill in your phone number</string>
+    <string name="error_empty_credit_card">Please fill in your credit card number</string>
+    <string name="error_password_match">Password does not matches</string>
+    <string name="success_message">Successful Registration</string>
+    <string name="error_username_exists">Username Already Exists</string>
 
+    <!-- Strings related to home -->
+    <string name="title_activity_home">Home</string>
 
-    <!-- Strings related to Google Places -->
+    <!-- Strings related to profile -->
+    <string name="title_activity_profile">My Profile</string>
 
-    <string name="prompt_spinner">choose</string>
+    <!-- Strings related to calendar -->
+    <string name="title_activity_calendar">My Calendar</string>
 
+    <!-- Strings related to map -->
+    <string name="title_activity_map">Map</string>
+
+    <!-- Strings related to map -->
+    <string name="title_activity_usersList">Users List</string>
 
 </resources>

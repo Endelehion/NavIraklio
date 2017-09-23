@@ -378,11 +378,7 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
                 exitMap("noTime");
             }
 
-            if (validCounter == receivedAppointList.size()) {
-                appointValid = true;
-            } else {
-                appointValid = false;
-            }
+            appointValid = validCounter == receivedAppointList.size();
 
 
             if (appointValid) {
@@ -502,12 +498,9 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
         noonRushHourEnd = cal.getTime();
 
 
-        if (nowTime.after(mornRushHourStart) && nowTime.before(mornRushHourEnd) || nowTime.after(noonRushHourStart) && nowTime.before(noonRushHourEnd)) {//if rushHour
-            //max euclidDistance 8km min rush hour avg speed 14km/h max time 34min,
-            isRushHour = true;
-        } else {
-            isRushHour = false;
-        }
+        //if rushHour
+//max euclidDistance 8km min rush hour avg speed 14km/h max time 34min,
+        isRushHour = nowTime.after(mornRushHourStart) && nowTime.before(mornRushHourEnd) || nowTime.after(noonRushHourStart) && nowTime.before(noonRushHourEnd);
     }
 
     public ArrayList<Place> findSameDirectionPoints(ArrayList<Place> placeList, LatLng start, LatLng end) {

@@ -72,6 +72,7 @@
         <activity android:name=".DateTimePick" />
         <activity android:name=".PlanMap" />
         <activity android:name=".MoviePicker"></activity>
+        <activity android:name=".UsersListActivity" android:label="@string/title_activity_usersList"/>
     </application>
 
 </manifest>

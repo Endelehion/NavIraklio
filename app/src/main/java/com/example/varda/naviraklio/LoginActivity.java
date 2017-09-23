@@ -17,34 +17,43 @@ import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
+//import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
+//import android.support.v7.widget.AppCompatButton;
+//import android.support.v7.widget.AppCompatTextView;
 import android.text.TextUtils;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
+
+import com.example.varda.naviraklio.helpers.InputValidation;
+import com.example.varda.naviraklio.sql.DatabaseHelper;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
 import static android.Manifest.permission.READ_CONTACTS;
-
+import static com.example.varda.naviraklio.R.id.login_form;
+import static com.example.varda.naviraklio.R.id.textInputEditTextPassword;
 
 
 /**
  * A login screen that offers login via username/password.
  */
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
+
+    private final AppCompatActivity mActivity = LoginActivity.this;
 
     /**
      * Id to identity READ_CONTACTS permission request.
@@ -55,34 +64,143 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * A dummy authentication store containing known user names and passwords.
      * TODO: remove after connecting to a real authentication system.
      */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
+    /*private static final String[] DUMMY_CREDENTIALS = new String[]{
             "foo@example.com:hello", "bar@example.com:world", "johnis89:55555"
-    };
+    };*/
+
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
-    private UserLoginTask mAuthTask = null;
+//    private UserLoginTask mAuthTask = null;
 
     // UI references.
+    private ScrollView mLoginFormView;
+    private ProgressBar mProgressView;
+    private TextInputLayout mTextInputLayoutUsername;
+    private TextInputLayout mTextInputLayoutPassword;
+
     private AutoCompleteTextView mUsernameView;
     private TextInputEditText mPasswordView;
-    private View mProgressView;
-    private View mLoginFormView;
+    private Button mSignInButton;
+    private TextView mSignUpLink;
+
+    // Class references.
+    private InputValidation mInputValidation;
+    private DatabaseHelper mDatabaseHelper;
+
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
-    private GoogleApiClient client;
+    //private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        getSupportActionBar().hide();
         // Set up the login form.
-        mUsernameView = (AutoCompleteTextView) findViewById(R.id.username);
+        initViews();
+        initListeners();
+        initObjects();
+    }
+
+    /**
+     * This method is to initialize views
+     */
+    private void initViews() {
+
+        mLoginFormView = (ScrollView) findViewById(R.id.login_form);
+        mProgressView = (ProgressBar) findViewById(R.id.login_progress);
+
+        mTextInputLayoutUsername = (TextInputLayout) findViewById(R.id.textInputLayoutUsername);
+        mTextInputLayoutPassword = (TextInputLayout) findViewById(R.id.textInputLayoutPassword);
+
+        mUsernameView = (AutoCompleteTextView) findViewById(R.id.textInputEditTextUsername);
+        populateAutoComplete();
+        mPasswordView = (TextInputEditText) findViewById(R.id.textInputEditTextPassword);
+
+        mSignInButton = (Button) findViewById(R.id.sign_in_button);
+
+        mSignUpLink = (TextView) findViewById(R.id.sign_up_link);
+
+    }
+
+    /**
+     * This method is to initialize listeners
+     */
+    private void initListeners() {
+        mSignInButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                        verifyFromSQLite();
+
+            }
+        });
+        mSignUpLink.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentSignup = new Intent(getApplicationContext(), SignupActivity.class);
+                startActivity(intentSignup);
+            }
+        });
+    }
+
+    /**
+     * This method is to initialize objects to be used
+     */
+    private void initObjects() {
+        mDatabaseHelper = new DatabaseHelper(mActivity);
+        mInputValidation = new InputValidation(mActivity);
+
+    }
+    /**
+     * This implemented method is to listen the click on view
+     *
+     * @param v
+     */
+
+
+    /**
+     * This method is to validate the input text fields and verify login credentials from SQLite
+     */
+    private void verifyFromSQLite() {
+        if (!mInputValidation.isAutoCompleteTextViewFilled(mUsernameView, mTextInputLayoutUsername, getString(R.string.error_empty_username)))
+            return;
+        if (!mInputValidation.isInputEditTextValidUsername(mUsernameView, mTextInputLayoutUsername, getString(R.string.error_invalid_username)))
+            return;
+        if (!mInputValidation.isInputEditTextFilled(mPasswordView, mTextInputLayoutPassword, getString(R.string.error_empty_password)))
+            return;
+        if (!mInputValidation.isInputEditTextValidPassword(mPasswordView, mTextInputLayoutPassword, getString(R.string.error_invalid_password)))
+            return;
+        if (mDatabaseHelper.checkUser(mUsernameView.getText().toString().trim()
+                , mPasswordView.getText().toString().trim())) {
+            showProgress(true);
+            Intent accountsIntent = new Intent(mActivity, UsersListActivity.class);
+            accountsIntent.putExtra("USERNAME", mUsernameView.getText().toString().trim());
+            emptyInputEditText();
+            showProgress(false);
+            startActivity(accountsIntent);
+        } else {
+            // Snack Bar to show success message that record is wrong
+            Snackbar.make(mLoginFormView, getString(R.string.error_incorrect_password), Snackbar.LENGTH_LONG).show();
+        }
+    }
+
+    /**
+     * This method is to empty all input edit text
+     */
+    private void emptyInputEditText() {
+        mUsernameView.setText(null);
+        mPasswordView.setText(null);
+    }
+
+        /**   mUsernameView = (AutoCompleteTextView) findViewById(R.id.textInputEditTextUsername);
         populateAutoComplete();
 
-        mPasswordView = (TextInputEditText) findViewById(R.id.password);
+        mPasswordView = (TextInputEditText) findViewById(R.id.textInputEditTextPassword);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -94,7 +212,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
 
-        Button mSignInButton = (Button) findViewById(R.id.username_sign_in_button);
+        Button mSignInButton = (Button) findViewById(R.id.sign_in_button);
         mSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -110,15 +228,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
 
-        mLoginFormView = findViewById(R.id.login_form);
-        mProgressView = findViewById(R.id.login_progress);
+        mLoginFormView = (ScrollView) findViewById(R.id.login_form);
+        mProgressView = (ProgressBar) findViewById(R.id.login_progress);
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
-
-
-
-    }
+    }*/
 
     protected void goCheatHome(View view) {
         Intent homeIntent = new Intent(LoginActivity.this, Home.class);
@@ -174,7 +289,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * If there are form errors (invalid email, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
      */
-    private void attemptLogin() {
+    /*private void attemptLogin() {
         if (mAuthTask != null) {
             return;
         }
@@ -235,7 +350,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
         return password.length() > 4;
-    }
+    }*/
 
     /**
      * Shows the progress UI and hides the login form.
@@ -270,57 +385,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // and hide the relevant UI components.
             mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
             mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-        }
-    }
-
-    private void registration() {
-        if (mAuthTask != null) {
-            return;
-        }
-
-        // Reset errors.
-        mUsernameView.setError(null);
-        mPasswordView.setError(null);
-
-        // Store values at the time of the login attempt.
-        String username = mUsernameView.getText().toString();
-        String password = mPasswordView.getText().toString();
-
-        boolean cancel = false;
-        View focusView = null;
-
-        // Check for a valid password, if the user entered one.
-        if (TextUtils.isEmpty(password)) {
-            mPasswordView.setError(getString(R.string.error_field_required));
-            focusView = mPasswordView;
-            cancel = true;
-        } else if (!isPasswordValid(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
-            focusView = mPasswordView;
-            cancel = true;
-        }
-
-        // Check for a valid username.
-        if (TextUtils.isEmpty(username)) {
-            mUsernameView.setError(getString(R.string.error_field_required));
-            focusView = mUsernameView;
-            cancel = true;
-        } else if (!isUsernameValid(username)) {
-            mUsernameView.setError(getString(R.string.error_invalid_username));
-            focusView = mUsernameView;
-            cancel = true;
-        }
-
-        if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
-            focusView.requestFocus();
-        } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
-            showProgress(true);
-            mAuthTask = new UserLoginTask(username, password);
-            mAuthTask.execute((Void) null);
         }
     }
 
@@ -370,7 +434,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
+     *//*
     public Action getIndexApiAction() {
         Thing object = new Thing.Builder()
                 .setName("Login Page") // TODO: Define a title for the content shown.
@@ -401,7 +465,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         AppIndex.AppIndexApi.end(client, getIndexApiAction());
         client.disconnect();
-    }
+    }*/
 
 
     private interface ProfileQuery {
@@ -418,7 +482,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+    /*public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
         private final String mUsername;
         private final String mPassword;
@@ -474,6 +538,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     public void signup() {
         Intent intent = new Intent(this, SignupActivity.class);
         startActivity(intent);
-    }
+    }*/
 }
 
