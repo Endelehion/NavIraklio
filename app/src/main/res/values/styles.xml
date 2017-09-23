@@ -8,8 +8,8 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:buttonStyle">@style/button_custom_style</item>
         <item name="android:listViewStyle">@style/white_transparent_backround</item>
-        <item name="android:textViewStyle">@style/white_transparent_backround</item>
     </style>
+
 
     <style name="button_custom_style" parent="Widget.AppCompat.Button">
         <item name="android:textColor">#FFFFFF</item>
@@ -24,6 +24,8 @@
         <item name="android:background">@color/cast_expanded_controller_progress_text_color</item>
         <item name="android:backgroundTint">@color/cast_libraries_material_featurehighlight_text_header_color</item>
     </style>
+
+
 
 
     <!-- Application theme. -->

@@ -66,6 +66,7 @@
         android:layout_marginBottom="-9dp"
         android:layout_marginLeft="150dp"
         android:text="New Appointment"
+        android:textColor="@color/common_google_signin_btn_text_dark_default"
         android:textSize="30dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline13"
         app:layout_constraintLeft_toLeftOf="@+id/guideline12" />
