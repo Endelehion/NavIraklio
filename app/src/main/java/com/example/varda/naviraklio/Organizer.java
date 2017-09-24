@@ -6,10 +6,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.varda.naviraklio.model.AppointmentModel;
+import com.example.varda.naviraklio.sql.DatabaseAppointmentHelper;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.text.SimpleDateFormat;
@@ -36,12 +37,17 @@ public class Organizer extends AppCompatActivity {
     private ArrayList<Movie> movieList;
     private List<Place> superMarkets, cinemas, gasStations;
     private int receivedDuration;
+    private DatabaseAppointmentHelper appDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_organizer);
+        if (savedInstanceState != null) {
+        } else {
 
+        }
+        appDB = new DatabaseAppointmentHelper(this);
         year = calendar.get(Calendar.YEAR);
         month = calendar.get(Calendar.MONTH);
         day = calendar.get(Calendar.DAY_OF_MONTH);
@@ -49,16 +55,17 @@ public class Organizer extends AppCompatActivity {
 
         appointArrayList = new ArrayList<>();
         createCoordinates();
-        dateString = sdateFormat.format(createDate(17, 8, 2017, 7, 00));
+        appointArrayList = readFromDB();
+  /*      dateString = sdateFormat.format(createDate(17, 8, 2017, 7, 00));
         appointArrayList.add(new Appointment(appointArrayList.size(), dateString, 114, new Place(new LatLng(37.977817, 23.769849), "kapou 2", "Cinema", 16, 2)));
 
         dateString = sdateFormat.format(createDate(18, 8, 2017, 13, 30));
-      //  appointArrayList.add(new Appointment(appointArrayList.size(), dateString, 5, new Place(gasStations.get(2).getCoord(), "ekei 8", "Gas Station", 16, 2)));
-       // dateString = sdateFormat.format(createDate(18, 8, 2017, 20, 00));
+        //  appointArrayList.add(new Appointment(appointArrayList.size(), dateString, 5, new Place(gasStations.get(2).getCoord(), "ekei 8", "Gas Station", 16, 2)));
+        // dateString = sdateFormat.format(createDate(18, 8, 2017, 20, 00));
         appointArrayList.add(new Appointment(appointArrayList.size(), dateString, 5, new Place(new LatLng(37.974960, 23.763609), "ekei 8", "Gas Station", 16, 2)));
         dateString = sdateFormat.format(createDate(18, 8, 2017, 20, 00));
         appointArrayList.add(new Appointment(appointArrayList.size(), dateString, 114, new Place(new LatLng(37.977817, 23.769849), "kapou 2", "Cinema", 12, 2)));
-
+*/
         stringList = new ArrayList<>();
         for (int i = 0; i < appointArrayList.size(); i++) {
             int id = appointArrayList.get(i).getId();
@@ -117,7 +124,7 @@ public class Organizer extends AppCompatActivity {
                     locationIntent.putExtra("listIndexKey", adapterIndex);
                     locationIntent.putParcelableArrayListExtra("listKey", appointArrayList);
                     locationIntent.putExtra("dateKey", appointArrayList.get(adapterIndex).dateString);
-                    locationIntent.putExtra("durationMinsKey",appointArrayList.get(adapterIndex).getDuration());
+                    locationIntent.putExtra("durationMinsKey", appointArrayList.get(adapterIndex).getDuration());
                     startActivityForResult(locationIntent, REQUEST_LOCATION_MAP);
 
                 } else {
@@ -127,167 +134,50 @@ public class Organizer extends AppCompatActivity {
             }
         });
 
-
-
-
-
-                /*
-               - American Made - [new]
-
-- Odeon @ Talos Plaza 1 (Dolby Digital)
-Σοφοκλή Βενιζέλου, Μίνωος & Πελασγών - Περιοχή Τάλ - Tηλ. 14560
-20:15 - 23:00
-
-- Odeon @ Talos Plaza 5 (Dolby Digital)
-Σοφοκλή Βενιζέλου, Μίνωος & Πελασγών - Περιοχή Τάλ - Tηλ. 14560
-21:40
-
-- Odeon @ Talos Plaza 8 (Dolby Digital)
-Σοφοκλή Βενιζέλου, Μίνωος & Πελασγών - Περιοχή Τάλ - Tηλ. 14560
-Πεμ. έως Κυρ. 17:20
-
-- Βιτσέντζος Κορνάρος 1 (Dolby Digital)
-Μαλικούτη 18&#8211;20 - Tηλ. 2810 821400
-20:15 - 22:30
-
-- Τεχνόπολις 1 (Dolby Digital - THX)
-Λ. Α. Παπανδρέου 116, Αμμουδάρα - Tηλ. 2810 821400
-20:15 - 22:30
-
-- Cars 3 - Αυτοκίνητα 3
-
-- Τεχνόπολις 4 (Dolby Digital)
-Λ. Α. Παπανδρέου 116, Αμμουδάρα - Tηλ. 2810 821400
-18:00 μεταγλ. - Σαβ. Κυρ. και 16:00 μεταγλ.
-
-- Despicable Me 3 - Εγώ, ο Απαισιότατος 3
-
-- Odeon @ Talos Plaza 1 (Dolby Digital)
-Σοφοκλή Βενιζέλου, Μίνωος & Πελασγών - Περιοχή Τάλ - Tηλ. 14560
-(3D) 18:00 μεταγλ.
-
-- Odeon @ Talos Plaza 4 (Dolby Digital)
-Σοφοκλή Βενιζέλου, Μίνωος & Πελασγών - Περιοχή Τάλ - Tηλ. 14560
-18:30 μεταγλ. - Σαβ. Κυρ. και 16:30 μεταγλ.
-
-- Odeon @ Talos Plaza 5 (Dolby Digital)
-Σοφοκλή Βενιζέλου, Μίνωος & Πελασγών - Περιοχή Τάλ - Tηλ. 14560
-19:30 μεταγλ. - Πεμ. έως Κυρ. και 17:30 μεταγλ.
-
-- Odeon @ Talos Plaza 7 (Dolby Digital)
-Σοφοκλή Βενιζέλου, Μίνωος & Πελασγών - Περιοχή Τάλ - Tηλ. 14560
-19:00 μεταγλ. - Πεμ. έως. Κυρ. και 17:00 μεταγλ.
-
-- Βιτσέντζος Κορνάρος 1 (Dolby Digital)
-Μαλικούτη 18&#8211;20 - Tηλ. 2810 821400
-18:30 μεταγλ.
-
-- Τεχνόπολις 1 (Dolby Digital - THX)
-Λ. Α. Παπανδρέου 116, Αμμουδάρα - Tηλ. 2810 821400
-18:30 μεταγλ. - Σαβ. Κυρ. και 16:30 μεταγλ.
-
-- Τεχνόπολις 2 (Dolby Digital)
-Λ. Α. Παπανδρέου 116, Αμμουδάρα - Tηλ. 2810 821400
-(3D) 18:00 μεταγλ. - Σαβ. Κυρ. και (3D) 16:00 μεταγλ.
-
-- Τεχνόπολις 5 (Dolby Digital - THX)
-Λ. Α. Παπανδρέου 116, Αμμουδάρα - Tηλ. 2810 821400
-17:30 - 19:30 μεταγλ.
-
-- Detroit - Detroit: Μια Οργισμένη Πόλη - [new]
-
-- Odeon @ Talos Plaza 2 (Dolby Digital)
-Σοφοκλή Βενιζέλου, Μίνωος & Πελασγών - Περιοχή Τάλ - Tηλ. 14560
-19:40 - 22:30
-
-- Τεχνόπολις 4 (Dolby Digital)
-Λ. Α. Παπανδρέου 116, Αμμουδάρα - Tηλ. 2810 821400
-20:00
-
-- Τεχνόπολις 5 (Dolby Digital - THX)
-Λ. Α. Παπανδρέου 116, Αμμουδάρα - Tηλ. 2810 821400
-23:00
-
-- Dunkirk - Δουνκέρκη
-
-- Cine Creta Maris (Dolby Digital)
-Λιμένας Χερσονήσου 700 14 - Tηλ. 28970 27000
-Πεμ. έως Κυρ. 21:00
-
-- Odeon @ Talos Plaza 4 (Dolby Digital)
-Σοφοκλή Βενιζέλου, Μίνωος & Πελασγών - Περιοχή Τάλ - Tηλ. 14560
-20:30 - 22:50
-
-- Βιτσέντζος Κορνάρος 2 (Dolby Digital)
-Μαλικούτη 18&#8211;20 - Tηλ. 2810 821400
-18:30 - 20:30 - 22:30
-
-- Τεχνόπολις 2 (Dolby Digital)
-Λ. Α. Παπανδρέου 116, Αμμουδάρα - Tηλ. 2810 821400
-20:30 - 22:30
-
-- Τεχνόπολις 5 (Dolby Digital - THX)
-Λ. Α. Παπανδρέου 116, Αμμουδάρα - Tηλ. 2810 821400
-21:15
-
-- Logan Lucky
-
-- Odeon @ Talos Plaza 8 (Dolby Digital)
-Σοφοκλή Βενιζέλου, Μίνωος & Πελασγών - Περιοχή Τάλ - Tηλ. 14560
-22:50
-
-- Τεχνόπολις 4 (Dolby Digital)
-Λ. Α. Παπανδρέου 116, Αμμουδάρα - Tηλ. 2810 821400
-22:30
-
-- Smurfs: The Lost Village - Τα Στρουμφάκια: Το Χαμένο Χωριό
-
-- Τεχνόπολις 3 (Dolby Digital)
-Λ. Α. Παπανδρέου 116, Αμμουδάρα - Tηλ. 2810 821400
-18:30 μεταγλ. - Σαβ. Κυρ. και 16:30 μεταγλ.
-
-- The Hitman`s Bodyguard - Ο Σωματοφύλακας του Εκτελεστή
-
-- Odeon @ Talos Plaza 7 (Dolby Digital)
-Σοφοκλή Βενιζέλου, Μίνωος & Πελασγών - Περιοχή Τάλ - Tηλ. 14560
-21:00
-
-- The Son of Bigfoot - Ο Γιος του Μεγαλοπατούσα
-
-- Odeon @ Talos Plaza 2 (Dolby Digital)
-Σοφοκλή Βενιζέλου, Μίνωος & Πελασγών - Περιοχή Τάλ - Tηλ. 14560
-Πεμ. έως Κυρ. 17:10 μεταγλ.
-
-- Valerian and the City of a Thousand Planets - Ο Βαλέριαν και η Πόλη με τους Χίλιους Πλανήτες
-
-- Cine Creta Maris (Dolby Digital)
-Λιμένας Χερσονήσου 700 14 - Tηλ. 28970 27000
-Δευτ. έως Τετ. 21:00
-
-- Odeon @ Talos Plaza 6 (Dolby Digital)
-Σοφοκλή Βενιζέλου, Μίνωος & Πελασγών - Περιοχή Τάλ - Tηλ. 14560
-19:10 - 22:00
-
-- Odeon @ Talos Plaza 8 (Dolby Digital)
-Σοφοκλή Βενιζέλου, Μίνωος & Πελασγών - Περιοχή Τάλ - Tηλ. 14560
-20:00
-
-- Τεχνόπολις 3 (Dolby Digital)
-Λ. Α. Παπανδρέου 116, Αμμουδάρα - Tηλ. 2810 821400
-22:30
-
-
-
-
-
-
-
-
-                */
-
-
     }
 
+
+    public ArrayList<Appointment> readFromDB() {
+        AppointmentModel apModel;
+        ArrayList<AppointmentModel> strList;
+        ArrayList<Appointment> appList = new ArrayList<>();
+
+        strList = (ArrayList<AppointmentModel>) appDB.getAllAppointments();
+        int id, openHour, closeHour, duration;
+        String date, address, type;
+        double lat, lon;
+        for (int i = 0; i < strList.size(); i++) {
+            id = strList.get(i).getId();
+            openHour = Integer.parseInt(strList.get(i).getOpenHour());
+            closeHour = Integer.parseInt(strList.get(i).getCloseHour());
+            duration = Integer.parseInt(strList.get(i).getDuration());
+            date = strList.get(i).getDate();
+            address = strList.get(i).getAddress();
+            type = strList.get(i).getType();
+            lat = Double.parseDouble(strList.get(i).getLatitude());
+            lon = Double.parseDouble(strList.get(i).getLongitude());
+            appList.add(new Appointment(id, date, duration, new Place(new LatLng(lat, lon), address, type, openHour, closeHour)));
+        }
+        return appList;
+    }
+
+    public void writeToDB(ArrayList<Appointment> appList){
+        appDB.clearAppointmentTable(appDB.getWritableDatabase());
+        String openHour, closeHour, duration,date, address, type,lat, lon;
+        int id;
+        for (int i = 0; i < appList.size(); i++) {
+            id = appList.get(i).getId();
+            openHour =""+appList.get(i).getPlace().getOpenHour();
+            closeHour = ""+appList.get(i).getPlace().getCloseHour();
+            duration = ""+appList.get(i).getDuration();
+            date = appList.get(i).getDateString();
+            address = appList.get(i).getPlace().getAddress();
+            type = appList.get(i).getPlace().getCoordType();
+            lat = ""+appList.get(i).getPlace().getCoord().latitude;
+            lon = ""+appList.get(i).getPlace().getCoord().longitude;
+            appDB.addAppointmentModel(new AppointmentModel(id,date,duration,lat,lon,address,type,openHour,closeHour));
+        }
+    }
 
     void createCoordinates() {
         superMarkets = new ArrayList<>();
@@ -377,6 +267,13 @@ public class Organizer extends AppCompatActivity {
     }
 
     @Override
+    protected void onDestroy() {
+        writeToDB(appointArrayList);
+        super.onDestroy();
+
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Check which request we're responding to
         if (requestCode == REQUEST_NEW_APPOINTMENT
@@ -387,7 +284,7 @@ public class Organizer extends AppCompatActivity {
             receivedType = data.getStringExtra("typeKey");
             receivedDestination = data.getParcelableExtra("destinationKey");
             data.getIntExtra("durationKey", receivedDuration);
-            Appointment receivedAppointment=new Appointment(appointArrayList.size()-1,receivedDate,receivedDuration,receivedDestination);
+            Appointment receivedAppointment = new Appointment(appointArrayList.size() - 1, receivedDate, receivedDuration, receivedDestination);
             appointArrayList.add(receivedAppointment);
             int id = appointArrayList.get(appointArrayList.size() - 1).getId();
             String type = appointArrayList.get(appointArrayList.size() - 1).getPlace().getCoordType();

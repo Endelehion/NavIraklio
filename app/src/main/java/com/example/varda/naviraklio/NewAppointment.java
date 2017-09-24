@@ -90,7 +90,7 @@ public class NewAppointment extends AppCompatActivity {
             public void onClick(View v) {
 
 
-                if (receivedAppointArrayList != null && !receivedAppointArrayList.isEmpty() && !dateString.equals("") && !durationText.getText().equals("Duration: ")) {
+                if (receivedAppointArrayList != null  && !dateString.equals("") && !durationText.getText().equals("Duration: ")) {
                     int index = receivedAppointArrayList.size() - 1;
                     int minDuration, hours, mins;
 

@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.example.varda.naviraklio.Appointment;
 import com.example.varda.naviraklio.model.AppointmentModel;
 
 import java.util.ArrayList;
@@ -38,7 +37,7 @@ public class DatabaseAppointmentHelper extends SQLiteOpenHelper {
     private static final String COLUMN_APPOINTMENT_CLOSE_HOUR = "appointment_closeHour";
 
     // create table sql query for appointment
-    private String CREATE_APPOINTMENT_TABLE = "CREATE TABLE " + TABLE_APPOINTMENT + "("
+    private String CREATE_APPOINTMENT_TABLE_IF_NOT_EXISTS = "CREATE TABLE IF NOT EXISTS " + TABLE_APPOINTMENT + "("
             + COLUMN_APPOINTMENT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_APPOINTMENT_DATE + " TEXT,"
             + COLUMN_APPOINTMENT_DURATION + " TEXT," + COLUMN_APPOINTMENT_LATITUDE + " TEXT," + COLUMN_APPOINTMENT_LONGITUDE
             + " TEXT," + COLUMN_APPOINTMENT_ADDRESS + " TEXT," + COLUMN_APPOINTMENT_TYPE + " TEXT," + COLUMN_APPOINTMENT_OPEN_HOUR + " TEXT," + COLUMN_APPOINTMENT_CLOSE_HOUR + " TEXT " + ")";
@@ -59,7 +58,7 @@ public class DatabaseAppointmentHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(CREATE_APPOINTMENT_TABLE);
+        db.execSQL(CREATE_APPOINTMENT_TABLE_IF_NOT_EXISTS);
     }
 
 
@@ -128,6 +127,7 @@ public class DatabaseAppointmentHelper extends SQLiteOpenHelper {
          * SQL query equivalent to this query function is
          * SELECT appointment_id,appointment_date,appointment_duration,appointment_latitude,appointment_longitude,appointment_address,appointment_type,appointment_openHour,appointment_closeHour FROM appointment ORDER BY appointment_id;
          */
+        db.execSQL(CREATE_APPOINTMENT_TABLE_IF_NOT_EXISTS);
         Cursor cursor = db.query(TABLE_APPOINTMENT, //Table to query
                 columns,    //columns to return
                 null,        //columns for the WHERE clause
@@ -199,9 +199,11 @@ public class DatabaseAppointmentHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void dropAppointmentTable(SQLiteDatabase db){
+    public void clearAppointmentTable(SQLiteDatabase db){
         //Drop Appointment Table if exist
         db.execSQL(DROP_APPOINTMENT_TABLE);
+        db.execSQL(CREATE_APPOINTMENT_TABLE_IF_NOT_EXISTS);
+        db.close();
     }
 
 

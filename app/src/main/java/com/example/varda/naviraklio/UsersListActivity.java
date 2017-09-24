@@ -19,17 +19,20 @@ import java.util.List;
 
 public class UsersListActivity extends AppCompatActivity {
 
-    private AppCompatActivity activity = UsersListActivity.this;
+
     private AppCompatTextView textViewName;
     private RecyclerView recyclerViewUsers;
     private List<User> listUsers;
     private UsersRecyclerAdapter usersRecyclerAdapter;
     private DatabaseHelper databaseHelper;
+    private AppCompatActivity activity = UsersListActivity.this;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_users_list);
+
+        databaseHelper = new DatabaseHelper(activity);
         getSupportActionBar().setTitle("");
         initViews();
         initObjects();
