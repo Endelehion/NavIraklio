@@ -178,11 +178,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         if (mDatabaseHelper.checkUser(mUsernameView.getText().toString().trim()
                 , mPasswordView.getText().toString().trim())) {
             showProgress(true);
-            Intent accountsIntent = new Intent(mActivity, UsersListActivity.class);
-            accountsIntent.putExtra("USERNAME", mUsernameView.getText().toString().trim());
+            Intent goHome = new Intent(LoginActivity.this, Home.class);
             emptyInputEditText();
-            showProgress(false);
-            startActivity(accountsIntent);
+
+
+            startActivity(goHome);
         } else {
             // Snack Bar to show success message that record is wrong
             Snackbar.make(mLoginFormView, getString(R.string.error_incorrect_password), Snackbar.LENGTH_LONG).show();
@@ -437,7 +437,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      *//*
     public Action getIndexApiAction() {
         Thing object = new Thing.Builder()
-                .setName("Login Page") // TODO: Define a title for the content shown.
+                .setFirstName("Login Page") // TODO: Define a title for the content shown.
                 // TODO: Make sure this auto-generated URL is correct.
                 .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
                 .build();

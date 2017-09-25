@@ -529,7 +529,7 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
 
     public void testAppointment(int index, Date appointTime) throws ParseException {
 
-        Date tenMinBeforeSecondAppoint, tenMinBeforeAppoint,arrivalMainBefore,arrivalMainAfter,appointArriveTimeAfterSecond, appointArriveTimeBeforeSecond, appointTimeFrame[], listDateTimeFrame[], arrivalSecondBefore, arrivalSecondAfter, nowArriveTime, listTime, mornRushHourStart, mornRushHourEnd, noonRushHourStart, noonRushHourEnd;
+        Date tenMinBeforeSecondAppoint, tenMinBeforeAppoint,arrivalMainBefore,appointArriveTimeAfterSecond, appointArriveTimeBeforeSecond, appointTimeFrame[], listDateTimeFrame[], arrivalSecondBefore, arrivalSecondAfter, nowArriveTime, listTime, mornRushHourStart, mornRushHourEnd, noonRushHourStart, noonRushHourEnd;
         Calendar cal = Calendar.getInstance();
         appointTimeFrame = appointWindow(appointTime, receivedDurationInSec, -300, 300);
         int listDuration, originToSecondTravelTime, mainToSecondTravelTime;

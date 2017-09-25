@@ -1,9 +1,13 @@
 package com.example.varda.naviraklio.model;
 
-public class User {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class User implements Parcelable{
 
     private int id;
-    private String name;
+    private String firstName;
+    private String lastName;
     private String username;
     private String password;
     private String address;
@@ -13,15 +17,38 @@ public class User {
     public User() {
     }
 
-    public User(int id, String name, String username, String password, String address, String tel, String creditCard) {
-        this.id = id;
-        this.name = name;
+    public User(String firstName, String lastName, String username, String password, String address, String tel, String creditCard) {
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.username = username;
         this.password = password;
         this.address = address;
         this.tel = tel;
         this.creditCard = creditCard;
     }
+
+    protected User(Parcel in) {
+        id = in.readInt();
+        firstName = in.readString();
+        lastName = in.readString();
+        username = in.readString();
+        password = in.readString();
+        address = in.readString();
+        tel = in.readString();
+        creditCard = in.readString();
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 
     public int getId() {
         return id;
@@ -31,12 +58,20 @@ public class User {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getUsername() {
@@ -80,4 +115,20 @@ public class User {
     }
 
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(firstName);
+        dest.writeString(lastName);
+        dest.writeString(username);
+        dest.writeString(password);
+        dest.writeString(address);
+        dest.writeString(tel);
+        dest.writeString(creditCard);
+    }
 }

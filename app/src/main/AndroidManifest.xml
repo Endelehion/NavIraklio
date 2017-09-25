@@ -49,10 +49,10 @@
 
         <activity
             android:name=".SignupActivity"
-            android:label="@string/title_activity_signup" />
-        <activity android:name=".Home" />
-        <activity android:name=".Organizer" />
-        <activity android:name=".Profile" />
+            android:label="@string/title_activity_signup" android:noHistory="true" />
+        <activity android:name=".Home" android:label="@string/title_activity_home"/>
+        <activity android:name=".Organizer" android:label="@string/title_activity_calendar"/>
+        <activity android:name=".Profile" android:label="@string/title_activity_profile"/>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -68,10 +68,10 @@
         <activity
             android:name=".InstantMap"
             android:label="@string/title_activity_map" />
-        <activity android:name=".NewAppointment" />
-        <activity android:name=".DateTimePick" />
-        <activity android:name=".PlanMap" />
-        <activity android:name=".MoviePicker"></activity>
+        <activity android:name=".NewAppointment" android:label="New Appointment"/>
+        <activity android:name=".DateTimePick" android:label="Set Date and Time"/>
+        <activity android:name=".PlanMap" android:label="Plan Map"/>
+        <activity android:name=".MoviePicker" android:label="Movie Picker" />
         <activity android:name=".UsersListActivity" android:label="@string/title_activity_usersList"/>
     </application>
 

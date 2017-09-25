@@ -21,7 +21,8 @@
 
     <!-- Strings related to signup -->
     <string name="title_activity_signup">Signup Page</string>
-    <string name="prompt_name">Name</string>
+    <string name="prompt_first_name">First Name</string>
+    <string name="prompt_last_name">Last Name</string>
     <string name="prompt_confirm_password">Password Confirmation</string>
     <string name="prompt_address">Address</string>
     <string name="prompt_tel">Phone Number</string>
@@ -33,7 +34,7 @@
     <string name="error_empty_address">Please fill in your address</string>
     <string name="error_empty_tel">Please fill in your phone number</string>
     <string name="error_empty_credit_card">Please fill in your credit card number</string>
-    <string name="error_password_match">Password does not matches</string>
+    <string name="error_password_match">Password does not match</string>
     <string name="success_message">Successful Registration</string>
     <string name="error_username_exists">Username Already Exists</string>
 

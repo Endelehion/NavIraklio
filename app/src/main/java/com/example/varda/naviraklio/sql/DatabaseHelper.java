@@ -7,12 +7,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.varda.naviraklio.model.User;
-import com.example.varda.naviraklio.model.AppointmentModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DatabaseHelper extends SQLiteOpenHelper{
+public class DatabaseHelper extends SQLiteOpenHelper {
 
     // Database Version
     private static final int DATABASE_VERSION = 1;
@@ -22,10 +21,13 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
     // User table name
     private static final String TABLE_USER = "user";
+    private static final String TABLE_CURRENT_USER = "current_user";
+
 
     // User Table Columns names
     private static final String COLUMN_USER_ID = "user_id";
-    private static final String COLUMN_USER_NAME = "user_name";
+    private static final String COLUMN_USER_FIRST_NAME = "user_first_name";
+    private static final String COLUMN_USER_LAST_NAME = "user_last_name";
     private static final String COLUMN_USER_USERNAME = "user_username";
     private static final String COLUMN_USER_PASSWORD = "user_password";
     private static final String COLUMN_USER_ADDRESS = "user_address";
@@ -33,13 +35,23 @@ public class DatabaseHelper extends SQLiteOpenHelper{
     private static final String COLUMN_USER_CREDIT_CARD = "user_credit_card";
 
     // create table sql query for user
-    private String CREATE_USER_TABLE = "CREATE TABLE " + TABLE_USER + "("
-            + COLUMN_USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_USER_NAME + " TEXT,"
-            + COLUMN_USER_USERNAME + " TEXT," + COLUMN_USER_PASSWORD + " TEXT," + COLUMN_USER_ADDRESS
+    private String CREATE_USER_TABLE_IF_NOT_EXISTS = "CREATE TABLE IF NOT EXISTS " + TABLE_USER + "("
+            + COLUMN_USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_USER_FIRST_NAME + " TEXT,"
+            + COLUMN_USER_LAST_NAME + " TEXT," + COLUMN_USER_USERNAME + " TEXT," + COLUMN_USER_PASSWORD + " TEXT," + COLUMN_USER_ADDRESS
             + " TEXT," + COLUMN_USER_TEL + " TEXT," + COLUMN_USER_CREDIT_CARD + " TEXT " + ")";
 
     // drop table sql query for user
     private String DROP_USER_TABLE = "DROP TABLE IF EXISTS " + TABLE_USER;
+
+    // create table sql query for user
+    private String CREATE_CURRENT_USER_TABLE_IF_NOT_EXISTS = "CREATE TABLE IF NOT EXISTS " + TABLE_CURRENT_USER + "("
+            + COLUMN_USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_USER_FIRST_NAME + " TEXT,"
+            + COLUMN_USER_LAST_NAME + " TEXT," + COLUMN_USER_USERNAME + " TEXT," + COLUMN_USER_PASSWORD + " TEXT," + COLUMN_USER_ADDRESS
+            + " TEXT," + COLUMN_USER_TEL + " TEXT," + COLUMN_USER_CREDIT_CARD + " TEXT " + ")";
+
+
+    // drop table sql query for user
+    private String DROP_CURRENT_USER_TABLE = "DROP TABLE IF EXISTS " + TABLE_CURRENT_USER;
 
     /**
      * Constructor
@@ -53,7 +65,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(CREATE_USER_TABLE);
+        db.execSQL(CREATE_USER_TABLE_IF_NOT_EXISTS);
     }
 
 
@@ -77,7 +89,8 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(COLUMN_USER_NAME, user.getName());
+        values.put(COLUMN_USER_FIRST_NAME, user.getFirstName());
+        values.put(COLUMN_USER_LAST_NAME, user.getLastName());
         values.put(COLUMN_USER_USERNAME, user.getUsername());
         values.put(COLUMN_USER_PASSWORD, user.getPassword());
         values.put(COLUMN_USER_ADDRESS, user.getAddress());
@@ -86,6 +99,22 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
         // Inserting Row
         db.insert(TABLE_USER, null, values);
+        db.close();
+    }
+
+    public void addCurrentUser(User user) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_USER_FIRST_NAME, user.getFirstName());
+        values.put(COLUMN_USER_LAST_NAME, user.getLastName());
+        values.put(COLUMN_USER_USERNAME, user.getUsername());
+        values.put(COLUMN_USER_PASSWORD, user.getPassword());
+        values.put(COLUMN_USER_ADDRESS, user.getAddress());
+        values.put(COLUMN_USER_TEL, user.getTel());
+        values.put(COLUMN_USER_CREDIT_CARD, user.getCreditCard());
+
+        // Inserting Row
+        db.insert(TABLE_CURRENT_USER, null, values);
         db.close();
     }
 
@@ -98,7 +127,8 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         // array of columns to fetch
         String[] columns = {
                 COLUMN_USER_ID,
-                COLUMN_USER_NAME,
+                COLUMN_USER_FIRST_NAME,
+                COLUMN_USER_LAST_NAME,
                 COLUMN_USER_USERNAME,
                 COLUMN_USER_PASSWORD,
                 COLUMN_USER_ADDRESS,
@@ -107,7 +137,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         };
         // sorting orders
         String sortOrder =
-                COLUMN_USER_NAME + " ASC";
+                COLUMN_USER_LAST_NAME + " ASC";
         List<User> userList = new ArrayList<User>();
 
         SQLiteDatabase db = this.getReadableDatabase();
@@ -118,6 +148,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
          * SQL query equivalent to this query function is
          * SELECT user_id,user_name,user_username,user_password,user_address,user_tel,user_credit_card FROM user ORDER BY user_name;
          */
+        db.execSQL(CREATE_USER_TABLE_IF_NOT_EXISTS);
         Cursor cursor = db.query(TABLE_USER, //Table to query
                 columns,    //columns to return
                 null,        //columns for the WHERE clause
@@ -132,7 +163,8 @@ public class DatabaseHelper extends SQLiteOpenHelper{
             do {
                 User user = new User();
                 user.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_USER_ID))));
-                user.setName(cursor.getString(cursor.getColumnIndex(COLUMN_USER_NAME)));
+                user.setFirstName(cursor.getString(cursor.getColumnIndex(COLUMN_USER_FIRST_NAME)));
+                user.setLastName(cursor.getString(cursor.getColumnIndex(COLUMN_USER_LAST_NAME)));
                 user.setUsername(cursor.getString(cursor.getColumnIndex(COLUMN_USER_USERNAME)));
                 user.setPassword(cursor.getString(cursor.getColumnIndex(COLUMN_USER_PASSWORD)));
                 user.setAddress(cursor.getString(cursor.getColumnIndex(COLUMN_USER_ADDRESS)));
@@ -149,6 +181,61 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         return userList;
     }
 
+    public User getCurrentUser() {
+        // array of columns to fetch
+        String[] columns = {
+                COLUMN_USER_ID,
+                COLUMN_USER_FIRST_NAME,
+                COLUMN_USER_LAST_NAME,
+                COLUMN_USER_USERNAME,
+                COLUMN_USER_PASSWORD,
+                COLUMN_USER_ADDRESS,
+                COLUMN_USER_TEL,
+                COLUMN_USER_CREDIT_CARD
+        };
+        // sorting orders
+        String sortOrder =
+                COLUMN_USER_LAST_NAME + " ASC";
+
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // query the user table
+        /**
+         * Here query function is used to fetch records from user table this function works like we use sql query.
+         * SQL query equivalent to this query function is
+         * SELECT user_id,user_name,user_username,user_password,user_address,user_tel,user_credit_card FROM user ORDER BY user_name;
+         */
+        db.execSQL(CREATE_USER_TABLE_IF_NOT_EXISTS);
+        Cursor cursor = db.query(TABLE_CURRENT_USER, //Table to query
+                columns,    //columns to return
+                null,        //columns for the WHERE clause
+                null,        //The values for the WHERE clause
+                null,       //group the rows
+                null,       //filter by row groups
+                sortOrder); //The sort order
+
+        User user = new User();
+        if (cursor.moveToFirst()) {
+            do {
+                user.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_USER_ID))));
+                user.setFirstName(cursor.getString(cursor.getColumnIndex(COLUMN_USER_FIRST_NAME)));
+                user.setLastName(cursor.getString(cursor.getColumnIndex(COLUMN_USER_LAST_NAME)));
+                user.setUsername(cursor.getString(cursor.getColumnIndex(COLUMN_USER_USERNAME)));
+                user.setPassword(cursor.getString(cursor.getColumnIndex(COLUMN_USER_PASSWORD)));
+                user.setAddress(cursor.getString(cursor.getColumnIndex(COLUMN_USER_ADDRESS)));
+                user.setTel(cursor.getString(cursor.getColumnIndex(COLUMN_USER_TEL)));
+                user.setCreditCard(cursor.getString(cursor.getColumnIndex(COLUMN_USER_CREDIT_CARD)));
+                // Adding user record to list
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+
+        // return user list
+        return user;
+    }
+
     /**
      * This method to update user record
      *
@@ -158,7 +245,8 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(COLUMN_USER_NAME, user.getName());
+        values.put(COLUMN_USER_FIRST_NAME, user.getFirstName());
+        values.put(COLUMN_USER_LAST_NAME, user.getLastName());
         values.put(COLUMN_USER_USERNAME, user.getUsername());
         values.put(COLUMN_USER_PASSWORD, user.getPassword());
         values.put(COLUMN_USER_ADDRESS, user.getAddress());
@@ -170,6 +258,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
                 new String[]{String.valueOf(user.getId())});
         db.close();
     }
+
 
     /**
      * This method is to delete user record
@@ -236,7 +325,14 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
         // array of columns to fetch
         String[] columns = {
-                COLUMN_USER_ID
+                COLUMN_USER_ID,
+                COLUMN_USER_FIRST_NAME,
+                COLUMN_USER_LAST_NAME,
+                COLUMN_USER_USERNAME,
+                COLUMN_USER_PASSWORD,
+                COLUMN_USER_ADDRESS,
+                COLUMN_USER_TEL,
+                COLUMN_USER_CREDIT_CARD
         };
         SQLiteDatabase db = this.getReadableDatabase();
         // selection criteria
@@ -260,10 +356,49 @@ public class DatabaseHelper extends SQLiteOpenHelper{
                 null);                      //The sort order
 
         int cursorCount = cursor.getCount();
+        if (cursorCount > 0) {
+            if (cursor.moveToFirst()) {
+                do {
+                    this.clearCurrentUserTable(this.getWritableDatabase());
+                    String firstNameResult =  cursor.getString(cursor.getColumnIndex(COLUMN_USER_FIRST_NAME));
+                    String lastNameResult = cursor.getString(cursor.getColumnIndex(COLUMN_USER_LAST_NAME));
+
+                    String usernameResult = cursor.getString(cursor.getColumnIndex(COLUMN_USER_USERNAME));
+
+                    String passwordResult = cursor.getString(cursor.getColumnIndex(COLUMN_USER_PASSWORD));
+
+                    String addressResult = cursor.getString(cursor.getColumnIndex(COLUMN_USER_ADDRESS));
+
+                    String telResult = cursor.getString(cursor.getColumnIndex(COLUMN_USER_TEL));
+
+                    String creditCardResult = cursor.getString(cursor.getColumnIndex(COLUMN_USER_CREDIT_CARD));
+
+                    this.addCurrentUser(new User(firstNameResult, lastNameResult, usernameResult, passwordResult, addressResult, telResult, creditCardResult));
+
+                } while (cursor.moveToNext());
+            }
+
+        }
+
 
         cursor.close();
         db.close();
         return cursorCount > 0;
 
     }
+
+    public void clearUserTable(SQLiteDatabase db) {
+        //Drop Appointment Table if exist
+        db.execSQL(DROP_USER_TABLE);
+        db.execSQL(CREATE_USER_TABLE_IF_NOT_EXISTS);
+        db.close();
+    }
+
+    public void clearCurrentUserTable(SQLiteDatabase db) {
+        //Drop Appointment Table if exist
+        db.execSQL(DROP_CURRENT_USER_TABLE);
+        db.execSQL(CREATE_CURRENT_USER_TABLE_IF_NOT_EXISTS);
+        db.close();
+    }
+
 }

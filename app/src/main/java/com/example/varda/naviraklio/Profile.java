@@ -4,16 +4,86 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+
+import com.example.varda.naviraklio.model.User;
+import com.example.varda.naviraklio.sql.DatabaseHelper;
+
+import java.util.ArrayList;
+
 
 public class Profile extends AppCompatActivity {
+
+    private TextView usernameField, passwordField, firstNameField, lastNameField, addressField, telephoneField, creditCardField;
+    private Button editProfileBtn;
+    private DatabaseHelper usersDB;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+        usersDB = new DatabaseHelper(this);
+     /*   if (savedInstanceState != null) {
+            user = savedInstanceState.getParcelable("userKey");
+        } else {
+            user=usersDB.getCurrentUser();
+        }*/
+        user=usersDB.getCurrentUser();
+        usernameField = (TextView) findViewById(R.id.usernameField);
+        passwordField = (TextView) findViewById(R.id.passwordField);
+        firstNameField = (TextView) findViewById(R.id.firstNameField);
+        lastNameField = (TextView) findViewById(R.id.lastNameField);
+        addressField = (TextView) findViewById(R.id.addressField);
+        telephoneField = (TextView) findViewById(R.id.telephoneField);
+        creditCardField = (TextView) findViewById(R.id.creditCardField);
+        usernameField.setText(""+user.getUsername());
+        passwordField.setText(""+user.getPassword());
+        firstNameField.setText(""+user.getFirstName());
+        lastNameField.setText(""+user.getLastName());
+        addressField.setText(""+user.getAddress());
+        telephoneField.setText(""+user.getTel());
+        creditCardField.setText(""+user.getCreditCard());
+
     }
-    protected void goBackHome(View view){
-        Intent backHomeIntent= new Intent(Profile.this, Home.class);
+
+    protected void goBackHome(View view) {
+        Intent backHomeIntent = new Intent(Profile.this, Home.class);
         startActivity(backHomeIntent);
+    }
+
+    public User getCurrentUserFromDB() {
+
+        ArrayList<User> strList;
+        User currUser = usersDB.getCurrentUser();
+        strList = (ArrayList<User>) usersDB.getAllUser();
+        String username, password, firstName, lastName, telephone, address, creditCard;
+        double lat, lon;
+        for (int i = 0; i < strList.size(); i++) {
+            if (strList.get(i).getUsername().equals(currUser.getUsername())) {
+                username = strList.get(i).getUsername();
+                password = strList.get(i).getPassword();
+                firstName = strList.get(i).getFirstName();
+                lastName = strList.get(i).getLastName();
+                address = strList.get(i).getAddress();
+                telephone = strList.get(i).getTel();
+                creditCard = strList.get(i).getCreditCard();
+                user = new User(username, password, firstName, lastName, address, telephone, creditCard);
+            }
+        }
+        return user;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putParcelable("userKey", user);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        user = savedInstanceState.getParcelable("userKey");
     }
 }

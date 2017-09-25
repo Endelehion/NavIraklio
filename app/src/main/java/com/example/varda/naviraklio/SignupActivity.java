@@ -10,7 +10,6 @@ import android.content.Loader;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -20,9 +19,6 @@ import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 //import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatButton;
-import android.support.v7.widget.AppCompatTextView;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
@@ -31,23 +27,18 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.example.varda.naviraklio.R;
 import com.example.varda.naviraklio.helpers.InputValidation;
 import com.example.varda.naviraklio.model.User;
 import com.example.varda.naviraklio.sql.DatabaseHelper;
-
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.appindexing.Thing;
-import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
-public class SignupActivity extends AppCompatActivity implements LoaderCallbacks<Cursor>, OnClickListener {
+public class SignupActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
     private final AppCompatActivity mActivity = SignupActivity.this;
 
@@ -59,7 +50,8 @@ public class SignupActivity extends AppCompatActivity implements LoaderCallbacks
     // UI references.
     private ScrollView mSignupFormView;
     private ProgressBar mProgressView;
-    private TextInputLayout mTextInputLayoutName;
+    private TextInputLayout mTextInputLayoutFirstName;
+    private TextInputLayout mTextInputLayoutLastName;
     private TextInputLayout mTextInputLayoutUsername;
     private TextInputLayout mTextInputLayoutPassword;
     private TextInputLayout mTextInputLayoutConfirmPassword;
@@ -67,7 +59,8 @@ public class SignupActivity extends AppCompatActivity implements LoaderCallbacks
     private TextInputLayout mTextInputLayoutTel;
     private TextInputLayout mTextInputLayoutCreditCard;
 
-    private TextInputEditText mNameView;
+    private TextInputEditText mFirstNameView;
+    private TextInputEditText mLastNameView;
     private AutoCompleteTextView mUsernameView;
     private TextInputEditText mPasswordView;
     private TextInputEditText mConfirmPasswordView;
@@ -102,7 +95,8 @@ public class SignupActivity extends AppCompatActivity implements LoaderCallbacks
         mSignupFormView = (ScrollView) findViewById(R.id.signup_form);
         mProgressView = (ProgressBar) findViewById(R.id.signup_progress);
 
-        mTextInputLayoutName = (TextInputLayout) findViewById(R.id.textInputLayoutName);
+        mTextInputLayoutFirstName = (TextInputLayout) findViewById(R.id.textInputLayoutFirstName);
+        mTextInputLayoutLastName = (TextInputLayout) findViewById(R.id.textInputLayoutLastName);
         mTextInputLayoutUsername = (TextInputLayout) findViewById(R.id.textInputLayoutUsername);
         mTextInputLayoutPassword = (TextInputLayout) findViewById(R.id.textInputLayoutPassword);
         mTextInputLayoutConfirmPassword = (TextInputLayout) findViewById(R.id.textInputLayoutConfirmPassword);
@@ -110,7 +104,8 @@ public class SignupActivity extends AppCompatActivity implements LoaderCallbacks
         mTextInputLayoutTel = (TextInputLayout) findViewById(R.id.textInputLayoutTel);
         mTextInputLayoutCreditCard = (TextInputLayout) findViewById(R.id.textInputLayoutCreditCard);
 
-        mNameView = (TextInputEditText) findViewById(R.id.textInputEditTextName);
+        mFirstNameView = (TextInputEditText) findViewById(R.id.textInputEditTextFirstName);
+        mLastNameView = (TextInputEditText) findViewById(R.id.textInputEditTextLastName);
         mUsernameView = (AutoCompleteTextView) findViewById(R.id.textInputEditTextUsername);
         populateAutoComplete();
         mPasswordView = (TextInputEditText) findViewById(R.id.textInputEditTextPassword);
@@ -129,8 +124,25 @@ public class SignupActivity extends AppCompatActivity implements LoaderCallbacks
      * This method is to initialize listeners
      */
     private void initListeners() {
-        mSignUpButton.setOnClickListener(this);
-        mSignInLink.setOnClickListener(this);
+        mSignUpButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(postDataToSQLite()){
+                    Intent intent=new Intent(SignupActivity.this,Profile.class);
+                    startActivity(intent);
+                }
+                else{
+                    Toast.makeText(SignupActivity.this,"Invalid input",Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+        mSignInLink.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
     }
 
@@ -150,48 +162,40 @@ public class SignupActivity extends AppCompatActivity implements LoaderCallbacks
      *
      * @param v
      */
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
 
-            case R.id.sign_up_button:
-                postDataToSQLite();
-                break;
-
-            case R.id.sign_in_link:
-                finish();
-                break;
-        }
-    }
 
     /**
      * This method is to validate the input text fields and post data to SQLite
      */
-    private void postDataToSQLite() {
-        if (!mInputValidation.isInputEditTextFilled(mNameView, mTextInputLayoutName, getString(R.string.error_empty_name)))
-            return;
+    private boolean postDataToSQLite() {
+        boolean successful;
+        if (!mInputValidation.isInputEditTextFilled(mFirstNameView, mTextInputLayoutFirstName, getString(R.string.error_empty_name)))
+            return false;
+        if (!mInputValidation.isInputEditTextFilled(mLastNameView, mTextInputLayoutLastName, getString(R.string.error_empty_name)))
+            return false;
         if (!mInputValidation.isAutoCompleteTextViewFilled(mUsernameView, mTextInputLayoutUsername, getString(R.string.error_empty_username)))
-            return;
+            return false;
         if (!mInputValidation.isInputEditTextValidUsername(mUsernameView, mTextInputLayoutUsername, getString(R.string.error_invalid_username)))
-            return;
+            return false;
         if (!mInputValidation.isInputEditTextFilled(mPasswordView, mTextInputLayoutPassword, getString(R.string.error_empty_password)))
-            return;
+            return false;
         if (!mInputValidation.isInputEditTextValidPassword(mPasswordView, mTextInputLayoutPassword, getString(R.string.error_invalid_password)))
-            return;
+            return false;
         if (!mInputValidation.isInputEditTextFilled(mConfirmPasswordView, mTextInputLayoutConfirmPassword, getString(R.string.error_empty_confirm_password)))
-            return;
+            return false;
         if (!mInputValidation.isInputEditTextMatches(mPasswordView, mConfirmPasswordView,
                 mTextInputLayoutConfirmPassword, getString(R.string.error_password_match)))
-            return;
+            return false;
         if (!mInputValidation.isInputEditTextFilled(mAddressView, mTextInputLayoutAddress, getString(R.string.error_empty_address)))
-            return;
+            return false;
         if (!mInputValidation.isInputEditTextFilled(mTelView, mTextInputLayoutTel, getString(R.string.error_empty_tel)))
-            return;
+            return false;
         if (!mInputValidation.isInputEditTextFilled(mCreditCardView, mTextInputLayoutCreditCard, getString(R.string.error_empty_credit_card)))
-            return;
+            return false;
         if (!mDatabaseHelper.checkUser(mUsernameView.getText().toString().trim())) {
 
-            user.setName(mNameView.getText().toString().trim());
+            user.setFirstName(mFirstNameView.getText().toString().trim());
+            user.setLastName(mLastNameView.getText().toString().trim());
             user.setUsername(mUsernameView.getText().toString().trim());
             user.setPassword(mPasswordView.getText().toString().trim());
             user.setAddress(mAddressView.getText().toString().trim());
@@ -199,16 +203,20 @@ public class SignupActivity extends AppCompatActivity implements LoaderCallbacks
             user.setCreditCard(mCreditCardView.getText().toString().trim());
 
             mDatabaseHelper.addUser(user);
-
+            mDatabaseHelper.clearCurrentUserTable(mDatabaseHelper.getWritableDatabase());
+            mDatabaseHelper.addCurrentUser(user);
             // Snack Bar to show success message that record saved successfully
             Snackbar.make(mSignupFormView, getString(R.string.success_message), Snackbar.LENGTH_LONG).show();
             emptyInputEditText();
+            successful=true;
 
 
         } else {
             // Snack Bar to show error message that record already exists
             Snackbar.make(mSignupFormView, getString(R.string.error_username_exists), Snackbar.LENGTH_LONG).show();
+            successful = false;
         }
+        return successful;
 
 
     }
@@ -217,7 +225,7 @@ public class SignupActivity extends AppCompatActivity implements LoaderCallbacks
      * This method is to empty all input edit text
      */
     private void emptyInputEditText() {
-        mNameView.setText(null);
+        mFirstNameView.setText(null);
         mUsernameView.setText(null);
         mPasswordView.setText(null);
         mConfirmPasswordView.setText(null);
