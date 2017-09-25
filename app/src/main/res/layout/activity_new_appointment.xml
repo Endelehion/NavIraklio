@@ -6,6 +6,21 @@
     android:layout_height="match_parent"
     tools:context="com.example.varda.naviraklio.NewAppointment">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="0dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="0dp"
+        android:alpha="0.4"
+        android:background="@drawable/heraklion_small"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"></LinearLayout>
+
     <Spinner
         android:id="@+id/spinner"
         android:layout_width="237dp"
@@ -169,12 +184,5 @@
         android:text="Set Location"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <LinearLayout
-        android:layout_width="364dp"
-        android:layout_height="515dp"
-        android:orientation="vertical"
-        tools:layout_editor_absoluteX="1dp"
-        tools:layout_editor_absoluteY="0dp"></LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

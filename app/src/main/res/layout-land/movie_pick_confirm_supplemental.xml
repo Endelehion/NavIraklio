@@ -3,15 +3,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/cinema_frame_small_land">
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:alpha="0.3"
+        android:background="@drawable/cinema_frame_small_land"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"></LinearLayout>
 
     <Button
         android:id="@+id/movieBackBtn"
         android:layout_width="90dp"
         android:layout_height="50dp"
         android:layout_marginBottom="9dp"
-        android:layout_marginLeft="0dp"
         android:text="Back"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent" />
@@ -21,7 +30,6 @@
         android:layout_width="90dp"
         android:layout_height="50dp"
         android:layout_marginBottom="9dp"
-        android:layout_marginRight="-10dp"
         android:text="Set Date"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
@@ -31,16 +39,14 @@
         android:layout_width="90dp"
         android:layout_height="50dp"
         android:layout_marginBottom="9dp"
-        android:layout_marginLeft="0dp"
         android:text="Cancel"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent" />
 
     <Button
         android:id="@+id/moviePickedConfirmBtn"
-        android:layout_width="90dp"
-        android:layout_height="50dp"
-        android:layout_marginBottom="9dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:text="Confirm"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -51,12 +57,12 @@
         android:layout_width="235dp"
         android:layout_height="43dp"
         android:layout_marginRight="235dp"
-        android:layout_marginTop="-14dp"
         android:gravity="center"
         android:text="TextView"
         android:textAlignment="center"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginEnd="235dp" />
 
     <TextView
         android:id="@+id/moviePickedInfo"
@@ -66,58 +72,56 @@
         android:layout_marginTop="43dp"
         android:text="TextView"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginEnd="235dp" />
 
     <ImageView
         android:id="@+id/moviePickedImage"
         android:layout_width="123dp"
         android:layout_height="163dp"
         android:layout_marginLeft="2dp"
-        android:layout_marginTop="0dp"
         android:scaleType="centerCrop"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/american_made_poster" />
+        app:srcCompat="@drawable/american_made_poster"
+        android:layout_marginStart="2dp" />
 
     <TextView
         android:id="@+id/moviePickedDescription"
         android:layout_width="241dp"
         android:layout_height="165dp"
         android:layout_marginLeft="357dp"
-        android:layout_marginTop="-14dp"
         android:scrollbars="vertical"
         android:text="TextView"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="357dp" />
 
     <ListView
         android:id="@+id/daysRadioList"
         android:layout_width="178dp"
         android:layout_height="124dp"
-        android:layout_marginBottom="0dp"
         android:layout_marginLeft="88dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        tools:layout_editor_absoluteY="163dp" />
+        android:layout_marginStart="88dp" />
 
     <ListView
         android:id="@+id/hoursRadioList"
         android:layout_width="236dp"
         android:layout_height="124dp"
-        android:layout_marginBottom="0dp"
         android:layout_marginRight="88dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        tools:layout_editor_absoluteX="268dp"
-        tools:layout_editor_absoluteY="163dp" />
+        android:layout_marginEnd="88dp" />
 
     <ListView
         android:id="@+id/dateListView"
         android:layout_width="295dp"
         android:layout_height="120dp"
-        android:layout_marginBottom="-8dp"
         android:layout_marginLeft="149dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginStart="149dp" />
 
 </android.support.constraint.ConstraintLayout>

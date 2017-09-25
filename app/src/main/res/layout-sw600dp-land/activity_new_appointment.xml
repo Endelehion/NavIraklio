@@ -4,8 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/heraklion_large_land"
     tools:context="com.example.varda.naviraklio.NewAppointment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="0dp"
+        android:layout_marginRight="0dp"
+        android:alpha="0.4"
+        android:background="@drawable/heraklion_large_land"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"></LinearLayout>
 
     <Button
         android:id="@+id/setLocationBtn"
@@ -16,7 +28,8 @@
         android:text="Set Location"
         android:textSize="25sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginEnd="16dp" />
 
     <Spinner
         android:id="@+id/spinner"
@@ -40,12 +53,12 @@
         android:id="@+id/textView7"
         android:layout_width="483dp"
         android:layout_height="98dp"
-        android:layout_marginBottom="-7dp"
         android:layout_marginRight="221dp"
         android:text="New Appointment"
         android:textSize="50dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline13"
-        app:layout_constraintRight_toLeftOf="@+id/guideline18" />
+        app:layout_constraintRight_toLeftOf="@+id/guideline18"
+        android:layout_marginEnd="221dp" />
 
     <TextView
         android:id="@+id/typeLabel"
@@ -62,7 +75,6 @@
         android:id="@+id/textView9"
         android:layout_width="141dp"
         android:layout_height="63dp"
-        android:layout_marginLeft="0dp"
         android:layout_marginTop="240dp"
         android:text="Starts"
         android:textAlignment="center"
@@ -94,7 +106,8 @@
         android:text="Duration"
         android:textSize="35dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginStart="16dp" />
 
     <TextView
         android:id="@+id/cinemaLabel"
@@ -105,7 +118,8 @@
         android:text="Cinema: "
         android:textSize="35sp"
         app:layout_constraintLeft_toLeftOf="@+id/guideline12"
-        app:layout_constraintTop_toTopOf="@+id/guideline13" />
+        app:layout_constraintTop_toTopOf="@+id/guideline13"
+        android:layout_marginStart="563dp" />
 
     <TextView
         android:id="@+id/movieTitleLabel"
@@ -116,7 +130,8 @@
         android:text="Movie: "
         android:textSize="35sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="@+id/guideline12" />
+        app:layout_constraintLeft_toLeftOf="@+id/guideline12"
+        android:layout_marginStart="563dp" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline12"
@@ -140,7 +155,6 @@
         android:id="@+id/setDateTimeBtn"
         android:layout_width="152dp"
         android:layout_height="77dp"
-        android:layout_marginLeft="0dp"
         android:layout_marginTop="250dp"
         android:text="set Date &amp; Time"
         android:textSize="25dp"
@@ -159,20 +173,19 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.01"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp" />
 
     <Button
         android:id="@+id/confirmAppointmentBtn"
         android:layout_width="152dp"
         android:layout_height="77dp"
         android:layout_marginBottom="16dp"
-        android:layout_marginRight="0dp"
         android:text="Confirm"
         android:textSize="25dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/guideline18"
-        tools:layout_editor_absoluteX="787dp"
-        tools:layout_editor_absoluteY="379dp" />
+        app:layout_constraintRight_toLeftOf="@+id/guideline18" />
 
     <Button
         android:id="@+id/cancelNewAppointBtn"
@@ -183,7 +196,8 @@
         android:text="Cancel"
         android:textSize="25dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginEnd="229dp" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline18"

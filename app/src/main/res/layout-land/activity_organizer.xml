@@ -52,6 +52,7 @@
         android:layout_marginLeft="0dp"
         android:layout_marginTop="3dp"
         android:scrollbars="horizontal"
+        android:theme="@style/white_transparent_backround"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="@+id/guideline8"
         app:layout_constraintTop_toTopOf="parent" />

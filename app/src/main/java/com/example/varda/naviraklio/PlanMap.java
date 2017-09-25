@@ -136,10 +136,10 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
         destinationText = (TextView) findViewById(R.id.destinationText);
         dateFormat = new SimpleDateFormat("EEE dd MMM yyyy HH:mm");
         receivedIntent = getIntent();
-        receivedIntent.getIntExtra("listIndexKey", receivedListIndex);
+        receivedListIndex = receivedIntent.getIntExtra("listIndexKey", 0);
         receivedDateString = receivedIntent.getStringExtra("dateKey");
         receivedAppointList = receivedIntent.getParcelableArrayListExtra("listKey");
-        receivedIntent.getIntExtra("durationMinsKey", receivedDuration);
+        receivedDuration = receivedIntent.getIntExtra("durationMinsKey", 0);
         receivedDurationInSec = receivedDuration * 60;
         selectedTypeString = receivedIntent.getStringExtra("typeKey");
         receivedCinema = receivedIntent.getStringExtra("cinemaKey");
@@ -418,20 +418,20 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
         return appointValid;
     }
 
-    public boolean checkIfopen(Place testedPlace, Date arriveTime) {
+    public boolean checkIfopen(Place testedPlace, Date appointTime) {
         Calendar calendar = Calendar.getInstance();
         Date openTime, closeTime;
-        calendar.setTime(arriveTime);
+        calendar.setTime(appointTime);
         calendar.set(Calendar.HOUR_OF_DAY, testedPlace.getOpenHour());
         openTime = calendar.getTime();
-        calendar.setTime(arriveTime);
+        calendar.setTime(appointTime);
         calendar.set(Calendar.HOUR_OF_DAY, testedPlace.getCloseHour());
         closeTime = calendar.getTime();
         if (closeTime.before(openTime)) {
             calendar.add(Calendar.DATE, 1);
             closeTime = calendar.getTime();
         }
-        boolean isOpen = arriveTime.after(openTime) && arriveTime.before(closeTime) || closeTime.equals(openTime);
+        boolean isOpen = appointTime.after(openTime) && appointTime.before(closeTime) || closeTime.equals(openTime);
         return isOpen;
     }
 
@@ -475,12 +475,12 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
         } else if (reason.equals("closed")) {
             Toast.makeText(PlanMap.this, "They are all closed at the selected time", Toast.LENGTH_SHORT).show();
         }
-        new Timer().schedule(new TimerTask() {
+       /* new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
                 finish();
             }
-        }, 2000);
+        }, 2000);*/
     }
 
     public void checkRushHour() {
@@ -529,7 +529,7 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
 
     public void testAppointment(int index, Date appointTime) throws ParseException {
 
-        Date tenMinBeforeSecondAppoint, tenMinBeforeAppoint, appointArriveTimeAfterSecond, appointArriveTimeBeforeSecond, appointTimeFrame[], listDateTimeFrame[], arrivalSecondBefore, arrivalSecondAfter, nowArriveTime, listTime, mornRushHourStart, mornRushHourEnd, noonRushHourStart, noonRushHourEnd;
+        Date tenMinBeforeSecondAppoint, tenMinBeforeAppoint,arrivalMainBefore,arrivalMainAfter,appointArriveTimeAfterSecond, appointArriveTimeBeforeSecond, appointTimeFrame[], listDateTimeFrame[], arrivalSecondBefore, arrivalSecondAfter, nowArriveTime, listTime, mornRushHourStart, mornRushHourEnd, noonRushHourStart, noonRushHourEnd;
         Calendar cal = Calendar.getInstance();
         appointTimeFrame = appointWindow(appointTime, receivedDurationInSec, -300, 300);
         int listDuration, originToSecondTravelTime, mainToSecondTravelTime;
@@ -544,7 +544,11 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
         cal.setTime(appointTimeFrame[1]);
         cal.add(Calendar.SECOND, mainToSecondTravelTime);
         arrivalSecondAfter = cal.getTime();                                                                                                   //listDateTimeFrameAfter[0]: Tested appointment Start time minus the travelTime from main to tested locations, listDateTimeFrameAfter[1]: Tested appointment EndTime, all with added 5min window
-        appBeforeWithTravelTime = listDateTimeFrame[1].before(appointTimeFrame[1]) && appointTimeFrame[0].before(listDateTimeFrame[1]) || arrivalSecondBefore.after(listDateTimeFrame[0]) && listDateTimeFrame[1].before(appointTimeFrame[0]) && listDateTimeFrame[0].after(nowTime);   //Case main appointment start is within ending time of tested appointment, ending time is the actual time plus the travel time from tested to main appointment locations, appointStart < listEnd < appointEnd
+        cal.setTime(listDateTimeFrame[1]);
+        cal.add(Calendar.SECOND, mainToSecondTravelTime);
+        arrivalMainBefore=cal.getTime();
+
+        appBeforeWithTravelTime = listDateTimeFrame[1].before(appointTimeFrame[1]) && appointTimeFrame[0].before(listDateTimeFrame[1]) || arrivalMainBefore.after(appointTimeFrame[0]) && listDateTimeFrame[0].before(appointTimeFrame[0]) && listDateTimeFrame[0].after(nowTime) && arrivalSecondBefore.before(listDateTimeFrame[0]);   //Case main appointment start is within ending time of tested appointment, ending time is the actual time plus the travel time from tested to main appointment locations, appointStart < listEnd < appointEnd
         appAfterWithTravelTime = listDateTimeFrame[0].after(appointTimeFrame[0]) && listDateTimeFrame[0].before(appointTimeFrame[1]) || arrivalSecondAfter.after(listDateTimeFrame[0]) && listDateTimeFrame[0].after(appointTimeFrame[1]) && listDateTimeFrame[0].after(nowTime);       //Case main appointment is within the starting time of tested appointment, starting time of tested appointment is the actual time minus the travelTime from main to tested appointment locations,  locationAppointStart < listStart < appointEnd
         appSame = appointTimeFrame[0] == listDateTimeFrame[0] && appointTimeFrame[1] == listDateTimeFrame[1];                           //Case main appointment is at the same time with tested appointment, appointStart == listStart && appointEnd == listEnd
         appAfterWithoutTravelTime = listDateTimeFrame[0].after(appointTimeFrame[0]) && listDateTimeFrame[0].before(appointTimeFrame[1]);       //Case main appointment is within the starting time of tested appointment,  locationAppointStart < listStart < appointEnd
@@ -614,16 +618,10 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
         double dist = 0, tempDist;
         Place nearestPlace = null;
         boolean nullFlag = false;
-        int originToDestTravelTime;
-        Date arriveTime, appointTime;
-        Calendar calendar = Calendar.getInstance();
+        Date appointTime;
         appointTime = dateFormat.parse(receivedDateString);
         for (int i = 0; i < placeList.size(); i++) {
-            originToDestTravelTime = calculateTravelTime(startPoint, placeList.get(i).getCoord(), avgDivergence, isRushHour);
-            calendar.setTime(appointTime);
-            calendar.add(Calendar.SECOND, originToDestTravelTime);
-            arriveTime = calendar.getTime();
-            if (checkIfopen(placeList.get(i), arriveTime)) {
+            if (checkIfopen(placeList.get(i), appointTime)) {
                 dist = distFrom(startPoint, placeList.get(i).getCoord());
                 nearestPlace = placeList.get(i);
                 nullFlag = false;
@@ -635,11 +633,7 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
         }
         if (!nullFlag) {
             for (int i = 0; i < placeList.size(); i++) {
-                originToDestTravelTime = calculateTravelTime(startPoint, placeList.get(i).getCoord(), avgDivergence, isRushHour);
-                calendar.setTime(appointTime);
-                calendar.add(Calendar.SECOND, originToDestTravelTime);
-                arriveTime = calendar.getTime();
-                if (checkIfopen(placeList.get(i), arriveTime)) {
+                if (checkIfopen(placeList.get(i), appointTime)) {
                     tempDist = distFrom(startPoint, placeList.get(i).getCoord());
                     if (tempDist < dist) {
                         dist = tempDist;

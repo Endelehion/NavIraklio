@@ -6,6 +6,17 @@
     android:layout_height="match_parent"
     tools:context="com.example.varda.naviraklio.MoviePicker">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.3"
+        android:background="@drawable/cinema_frame_small_land"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"></LinearLayout>
+
     <TextView
         android:id="@+id/moviePickLabel"
         android:layout_width="wrap_content"
@@ -17,7 +28,8 @@
         android:textAlignment="center"
         android:textSize="30sp"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginEnd="211dp" />
 
     <ScrollView
         android:id="@+id/scrollView"
@@ -26,7 +38,8 @@
         android:layout_marginLeft="16dp"
         android:layout_marginTop="42dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="16dp">
 
         <TableLayout
             android:layout_width="match_parent"
