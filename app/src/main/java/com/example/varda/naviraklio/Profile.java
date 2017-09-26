@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.varda.naviraklio.model.User;
 import com.example.varda.naviraklio.sql.DatabaseHelper;
@@ -19,18 +20,19 @@ public class Profile extends AppCompatActivity {
     private Button editProfileBtn;
     private DatabaseHelper usersDB;
     private User user;
+    private static final int REQUEST_PROFILE_EDIT=943;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         usersDB = new DatabaseHelper(this);
-     /*   if (savedInstanceState != null) {
+        if (savedInstanceState != null) {
             user = savedInstanceState.getParcelable("userKey");
         } else {
             user=usersDB.getCurrentUser();
-        }*/
-        user=usersDB.getCurrentUser();
+        }
+        editProfileBtn=(Button) findViewById(R.id.editProfileBtn);
         usernameField = (TextView) findViewById(R.id.usernameField);
         passwordField = (TextView) findViewById(R.id.passwordField);
         firstNameField = (TextView) findViewById(R.id.firstNameField);
@@ -46,11 +48,27 @@ public class Profile extends AppCompatActivity {
         telephoneField.setText(""+user.getTel());
         creditCardField.setText(""+user.getCreditCard());
 
+
+        editProfileBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(user!=null){
+                    Intent editIntent=new Intent(Profile.this,SignupActivity.class);
+                    editIntent.putExtra("editUserKey",user);
+                    startActivity(editIntent);
+                }else{
+                    Toast.makeText(Profile.this,"user is null",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
     }
 
     protected void goBackHome(View view) {
         Intent backHomeIntent = new Intent(Profile.this, Home.class);
+       // backHomeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);//TODO revise lifecycle
         startActivity(backHomeIntent);
+        finish();
     }
 
     public User getCurrentUserFromDB() {
@@ -73,6 +91,20 @@ public class Profile extends AppCompatActivity {
             }
         }
         return user;
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        user=usersDB.getCurrentUser();
+        usernameField.setText(""+user.getUsername());
+        passwordField.setText(""+user.getPassword());
+        firstNameField.setText(""+user.getFirstName());
+        lastNameField.setText(""+user.getLastName());
+        addressField.setText(""+user.getAddress());
+        telephoneField.setText(""+user.getTel());
+        creditCardField.setText(""+user.getCreditCard());
+
     }
 
     @Override

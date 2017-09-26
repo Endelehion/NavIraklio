@@ -14,6 +14,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
@@ -21,11 +23,14 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -70,6 +75,7 @@ public class SignupActivity extends AppCompatActivity implements LoaderCallbacks
 
     private Button mSignUpButton;
     private TextView mSignInLink;
+    private String mode;
 
     // Class references.
     private InputValidation mInputValidation;
@@ -82,6 +88,16 @@ public class SignupActivity extends AppCompatActivity implements LoaderCallbacks
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
         getSupportActionBar().hide();
+
+
+        Intent receivedEditIntent = getIntent();
+        if (receivedEditIntent.getParcelableExtra("editUserKey") != null) {
+            user = receivedEditIntent.getParcelableExtra("editUserKey");
+            mode = "edit";
+        } else {
+            mode = "new";
+        }
+
         // Set up the signup form.
         initViews();
         initListeners();
@@ -114,9 +130,26 @@ public class SignupActivity extends AppCompatActivity implements LoaderCallbacks
         mTelView = (TextInputEditText) findViewById(R.id.textInputEditTextTel);
         mCreditCardView = (TextInputEditText) findViewById(R.id.textInputEditTextCreditCard);
 
+
+
         mSignUpButton = (Button) findViewById(R.id.sign_up_button);
 
         mSignInLink = (TextView) findViewById(R.id.sign_in_link);
+        if (mode.equals("edit")) {
+            mSignUpButton.setText("Confirm");
+            mSignInLink.setText("Back to Profile");
+            mFirstNameView.setText(user.getFirstName());
+            mLastNameView.setText(user.getLastName());
+            mUsernameView.setText(user.getUsername());
+           mUsernameView.setFocusable(false);
+
+            mPasswordView.setText(user.getPassword());
+            mConfirmPasswordView.setText(user.getPassword());
+            mAddressView.setText(user.getAddress());
+            mTelView.setText(user.getTel());
+            mCreditCardView.setText(user.getCreditCard());
+            this.setTitle("Profile Edit");
+        }
 
     }
 
@@ -127,12 +160,15 @@ public class SignupActivity extends AppCompatActivity implements LoaderCallbacks
         mSignUpButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(postDataToSQLite()){
-                    Intent intent=new Intent(SignupActivity.this,Profile.class);
-                    startActivity(intent);
-                }
-                else{
-                    Toast.makeText(SignupActivity.this,"Invalid input",Toast.LENGTH_SHORT).show();
+                if (postDataToSQLite()) {
+                    if (mode.equals("new")) {
+                        Intent intent = new Intent(SignupActivity.this, Profile.class);
+                        startActivity(intent);
+                    }
+                    finish();
+
+                } else {
+                    Toast.makeText(SignupActivity.this, "Invalid input", Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -192,7 +228,7 @@ public class SignupActivity extends AppCompatActivity implements LoaderCallbacks
             return false;
         if (!mInputValidation.isInputEditTextFilled(mCreditCardView, mTextInputLayoutCreditCard, getString(R.string.error_empty_credit_card)))
             return false;
-        if (!mDatabaseHelper.checkUser(mUsernameView.getText().toString().trim())) {
+        if (!mDatabaseHelper.checkUser(mUsernameView.getText().toString().trim()) || mode.equals("edit")) {
 
             user.setFirstName(mFirstNameView.getText().toString().trim());
             user.setLastName(mLastNameView.getText().toString().trim());
@@ -201,14 +237,17 @@ public class SignupActivity extends AppCompatActivity implements LoaderCallbacks
             user.setAddress(mAddressView.getText().toString().trim());
             user.setTel(mTelView.getText().toString().trim());
             user.setCreditCard(mCreditCardView.getText().toString().trim());
-
-            mDatabaseHelper.addUser(user);
+            if (mode.equals("new")) {
+                mDatabaseHelper.addUser(user);
+            } else if (mode.equals("edit")) {
+                mDatabaseHelper.updateUser(user);
+            }
             mDatabaseHelper.clearCurrentUserTable(mDatabaseHelper.getWritableDatabase());
             mDatabaseHelper.addCurrentUser(user);
             // Snack Bar to show success message that record saved successfully
             Snackbar.make(mSignupFormView, getString(R.string.success_message), Snackbar.LENGTH_LONG).show();
             emptyInputEditText();
-            successful=true;
+            successful = true;
 
 
         } else {

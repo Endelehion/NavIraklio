@@ -36,8 +36,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // create table sql query for user
     private String CREATE_USER_TABLE_IF_NOT_EXISTS = "CREATE TABLE IF NOT EXISTS " + TABLE_USER + "("
-            + COLUMN_USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_USER_FIRST_NAME + " TEXT,"
-            + COLUMN_USER_LAST_NAME + " TEXT," + COLUMN_USER_USERNAME + " TEXT," + COLUMN_USER_PASSWORD + " TEXT," + COLUMN_USER_ADDRESS
+             + COLUMN_USER_FIRST_NAME + " TEXT,"
+            + COLUMN_USER_LAST_NAME + " TEXT," + COLUMN_USER_USERNAME + " TEXT PRIMARY KEY," + COLUMN_USER_PASSWORD + " TEXT," + COLUMN_USER_ADDRESS
             + " TEXT," + COLUMN_USER_TEL + " TEXT," + COLUMN_USER_CREDIT_CARD + " TEXT " + ")";
 
     // drop table sql query for user
@@ -45,8 +45,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // create table sql query for user
     private String CREATE_CURRENT_USER_TABLE_IF_NOT_EXISTS = "CREATE TABLE IF NOT EXISTS " + TABLE_CURRENT_USER + "("
-            + COLUMN_USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_USER_FIRST_NAME + " TEXT,"
-            + COLUMN_USER_LAST_NAME + " TEXT," + COLUMN_USER_USERNAME + " TEXT," + COLUMN_USER_PASSWORD + " TEXT," + COLUMN_USER_ADDRESS
+            + COLUMN_USER_FIRST_NAME + " TEXT,"
+            + COLUMN_USER_LAST_NAME + " TEXT," + COLUMN_USER_USERNAME + " TEXT PRIMARY KEY," + COLUMN_USER_PASSWORD + " TEXT," + COLUMN_USER_ADDRESS
             + " TEXT," + COLUMN_USER_TEL + " TEXT," + COLUMN_USER_CREDIT_CARD + " TEXT " + ")";
 
 
@@ -126,7 +126,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public List<User> getAllUser() {
         // array of columns to fetch
         String[] columns = {
-                COLUMN_USER_ID,
                 COLUMN_USER_FIRST_NAME,
                 COLUMN_USER_LAST_NAME,
                 COLUMN_USER_USERNAME,
@@ -162,7 +161,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 User user = new User();
-                user.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_USER_ID))));
                 user.setFirstName(cursor.getString(cursor.getColumnIndex(COLUMN_USER_FIRST_NAME)));
                 user.setLastName(cursor.getString(cursor.getColumnIndex(COLUMN_USER_LAST_NAME)));
                 user.setUsername(cursor.getString(cursor.getColumnIndex(COLUMN_USER_USERNAME)));
@@ -184,7 +182,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public User getCurrentUser() {
         // array of columns to fetch
         String[] columns = {
-                COLUMN_USER_ID,
                 COLUMN_USER_FIRST_NAME,
                 COLUMN_USER_LAST_NAME,
                 COLUMN_USER_USERNAME,
@@ -218,7 +215,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         User user = new User();
         if (cursor.moveToFirst()) {
             do {
-                user.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_USER_ID))));
                 user.setFirstName(cursor.getString(cursor.getColumnIndex(COLUMN_USER_FIRST_NAME)));
                 user.setLastName(cursor.getString(cursor.getColumnIndex(COLUMN_USER_LAST_NAME)));
                 user.setUsername(cursor.getString(cursor.getColumnIndex(COLUMN_USER_USERNAME)));
@@ -254,8 +250,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_USER_CREDIT_CARD, user.getCreditCard());
 
         // updating row
-        db.update(TABLE_USER, values, COLUMN_USER_ID + " = ?",
-                new String[]{String.valueOf(user.getId())});
+        db.update(TABLE_USER, values, COLUMN_USER_USERNAME + " = ?",
+                new String[]{String.valueOf(user.getUsername())});
         db.close();
     }
 
@@ -268,7 +264,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void deleteUser(User user) {
         SQLiteDatabase db = this.getWritableDatabase();
         // delete user record by id
-        db.delete(TABLE_USER, COLUMN_USER_ID + " = ?",
+        db.delete(TABLE_USER, COLUMN_USER_USERNAME + " = ?",
                 new String[]{String.valueOf(user.getId())});
         db.close();
     }
@@ -283,7 +279,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         // array of columns to fetch
         String[] columns = {
-                COLUMN_USER_ID
+                COLUMN_USER_USERNAME
         };
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -325,7 +321,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         // array of columns to fetch
         String[] columns = {
-                COLUMN_USER_ID,
                 COLUMN_USER_FIRST_NAME,
                 COLUMN_USER_LAST_NAME,
                 COLUMN_USER_USERNAME,

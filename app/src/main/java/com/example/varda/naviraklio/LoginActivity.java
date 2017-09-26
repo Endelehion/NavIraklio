@@ -45,6 +45,7 @@ import java.util.List;
 
 import static android.Manifest.permission.READ_CONTACTS;
 import static com.example.varda.naviraklio.R.id.login_form;
+import static com.example.varda.naviraklio.R.id.progressBar;
 import static com.example.varda.naviraklio.R.id.textInputEditTextPassword;
 
 
@@ -467,7 +468,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         client.disconnect();
     }*/
 
-
+@Override
+protected void onResume(){
+    super.onResume();
+    showProgress(false);
+}
     private interface ProfileQuery {
         String[] PROJECTION = {
                 ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME,
