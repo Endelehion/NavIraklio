@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">NavIraklion</string>
-    <string name="error_invalid_username">Username is invalid</string>
+    <string name="error_invalid_username">Username is too short</string>
     <string name="error_invalid_password">Password is too short</string>
     <string name="error_empty_username">Please fill in your username</string>
     <string name="error_empty_password">Please fill in your password</string>
@@ -29,12 +29,13 @@
     <string name="prompt_credit_card">Credit Card Number</string>
     <string name="action_sign_up">Sign up</string>
     <string name="action_sign_in_link">Back</string>
-    <string name="error_empty_name">Please fill in your name</string>
+    <string name="error_empty_first_name">Please fill in your first name</string>
+    <string name="error_empty_last_name">Please fill in your last name</string>
     <string name="error_empty_confirm_password">Password Confirmation is required</string>
     <string name="error_empty_address">Please fill in your address</string>
     <string name="error_empty_tel">Please fill in your phone number</string>
     <string name="error_empty_credit_card">Please fill in your credit card number</string>
-    <string name="error_password_match">Password does not match</string>
+    <string name="error_password_match">Passwords do not match</string>
     <string name="success_message">Successful Registration</string>
     <string name="error_username_exists">Username Already Exists</string>
 

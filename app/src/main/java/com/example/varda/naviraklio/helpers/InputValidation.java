@@ -65,6 +65,37 @@ public class InputValidation {
         return true;
     }
 
+    public boolean isCreditCardValid(TextInputEditText creditField, TextInputLayout textInputLayout) {
+        String creditString = creditField.getText().toString().trim();
+        boolean creditValid = creditString.length() == 16 && isNumeric(creditString);
+        if (!creditValid) {
+            textInputLayout.setError("Invalid Credit Card Number");
+        } else {
+            textInputLayout.setErrorEnabled(false);
+        }
+        return creditValid;
+    }
+
+
+    public static boolean isNumeric(String str) {
+        try {
+            long d = Long.parseLong(str);
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+        return true;
+    }
+
+    public boolean isTelNumberValid(TextInputEditText telNumberField, TextInputLayout textInputLayout) {
+        String telString = telNumberField.getText().toString().trim();
+        boolean telValid = telNumberField.length() <= 15 && telNumberField.length() >= 10 && isNumeric(telString);
+        if (!telValid) {
+            textInputLayout.setError("Invalid Phone Number");
+        } else {
+            textInputLayout.setErrorEnabled(false);
+        }
+        return telValid;
+    }
 
     /**
      * method to check InputEditText has valid username .

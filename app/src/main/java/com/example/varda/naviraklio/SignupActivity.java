@@ -132,7 +132,6 @@ public class SignupActivity extends AppCompatActivity implements LoaderCallbacks
         mCreditCardView = (TextInputEditText) findViewById(R.id.textInputEditTextCreditCard);
 
 
-
         mSignUpButton = (Button) findViewById(R.id.sign_up_button);
 
         mSignInLink = (TextView) findViewById(R.id.sign_in_link);
@@ -147,7 +146,7 @@ public class SignupActivity extends AppCompatActivity implements LoaderCallbacks
             mAddressView.setText(user.getAddress());
             mTelView.setText(user.getTel());
             mCreditCardView.setText(user.getCreditCard());
-           mUsernameView.setEnabled(false);
+            mUsernameView.setEnabled(false);
             this.setTitle("Profile Edit");
         }
 
@@ -204,59 +203,74 @@ public class SignupActivity extends AppCompatActivity implements LoaderCallbacks
      * This method is to validate the input text fields and post data to SQLite
      */
     private boolean postDataToSQLite() {
-        boolean successful;
-        if (!mInputValidation.isInputEditTextFilled(mFirstNameView, mTextInputLayoutFirstName, getString(R.string.error_empty_name)))
-            return false;
-        if (!mInputValidation.isInputEditTextFilled(mLastNameView, mTextInputLayoutLastName, getString(R.string.error_empty_name)))
-            return false;
-        if (!mInputValidation.isAutoCompleteTextViewFilled(mUsernameView, mTextInputLayoutUsername, getString(R.string.error_empty_username)))
-            return false;
-        if (!mInputValidation.isInputEditTextValidUsername(mUsernameView, mTextInputLayoutUsername, getString(R.string.error_invalid_username)))
-            return false;
-        if (!mInputValidation.isInputEditTextFilled(mPasswordView, mTextInputLayoutPassword, getString(R.string.error_empty_password)))
-            return false;
-        if (!mInputValidation.isInputEditTextValidPassword(mPasswordView, mTextInputLayoutPassword, getString(R.string.error_invalid_password)))
-            return false;
-        if (!mInputValidation.isInputEditTextFilled(mConfirmPasswordView, mTextInputLayoutConfirmPassword, getString(R.string.error_empty_confirm_password)))
-            return false;
-        if (!mInputValidation.isInputEditTextMatches(mPasswordView, mConfirmPasswordView,
-                mTextInputLayoutConfirmPassword, getString(R.string.error_password_match)))
-            return false;
-        if (!mInputValidation.isInputEditTextFilled(mAddressView, mTextInputLayoutAddress, getString(R.string.error_empty_address)))
-            return false;
-        if (!mInputValidation.isInputEditTextFilled(mTelView, mTextInputLayoutTel, getString(R.string.error_empty_tel)))
-            return false;
-        if (!mInputValidation.isInputEditTextFilled(mCreditCardView, mTextInputLayoutCreditCard, getString(R.string.error_empty_credit_card)))
-            return false;
+        boolean userChecked, firstNameChecked, lastNameChecked, userFilledChecked, usernameShortChecked, passwordFileedChecked;
+        boolean passwordShortChecked, passwordConfirmFilledChecked, passwordMatchChecked, addressFilledChecked, telFilledChecked, telValidChecked, creditFilledChecked, creditValidChecked;
+        firstNameChecked = mInputValidation.isInputEditTextFilled(mFirstNameView, mTextInputLayoutFirstName, getString(R.string.error_empty_first_name));
+
+        lastNameChecked = mInputValidation.isInputEditTextFilled(mLastNameView, mTextInputLayoutLastName, getString(R.string.error_empty_last_name));
+
+        userFilledChecked = mInputValidation.isAutoCompleteTextViewFilled(mUsernameView, mTextInputLayoutUsername, getString(R.string.error_empty_username));
+
+        usernameShortChecked = mInputValidation.isInputEditTextValidUsername(mUsernameView, mTextInputLayoutUsername, getString(R.string.error_invalid_username));
+
+        passwordFileedChecked = mInputValidation.isInputEditTextFilled(mPasswordView, mTextInputLayoutPassword, getString(R.string.error_empty_password));
+
+        passwordShortChecked = mInputValidation.isInputEditTextValidPassword(mPasswordView, mTextInputLayoutPassword, getString(R.string.error_invalid_password));
+
+        passwordConfirmFilledChecked = mInputValidation.isInputEditTextFilled(mConfirmPasswordView, mTextInputLayoutConfirmPassword, getString(R.string.error_empty_confirm_password));
+
+        passwordMatchChecked = mInputValidation.isInputEditTextMatches(mPasswordView, mConfirmPasswordView, mTextInputLayoutConfirmPassword, getString(R.string.error_password_match));
+
+        addressFilledChecked = mInputValidation.isInputEditTextFilled(mAddressView, mTextInputLayoutAddress, getString(R.string.error_empty_address));
+
+        telFilledChecked = mInputValidation.isInputEditTextFilled(mTelView, mTextInputLayoutTel, getString(R.string.error_empty_tel));
+
+        telValidChecked = mInputValidation.isTelNumberValid(mTelView, mTextInputLayoutTel);
+
+        creditFilledChecked = mInputValidation.isInputEditTextFilled(mCreditCardView, mTextInputLayoutCreditCard, getString(R.string.error_empty_credit_card));
+
+        creditValidChecked = mInputValidation.isCreditCardValid(mCreditCardView, mTextInputLayoutCreditCard);
+
         if (!mDatabaseHelper.checkUser(mUsernameView.getText().toString().trim()) || mode.equals("edit")) {
 
-            user.setFirstName(mFirstNameView.getText().toString().trim());
-            user.setLastName(mLastNameView.getText().toString().trim());
-            user.setUsername(mUsernameView.getText().toString().trim());
-            user.setPassword(mPasswordView.getText().toString().trim());
-            user.setAddress(mAddressView.getText().toString().trim());
-            user.setTel(mTelView.getText().toString().trim());
-            user.setCreditCard(mCreditCardView.getText().toString().trim());
-            if (mode.equals("new")) {
-                mDatabaseHelper.addUser(user);
-            } else if (mode.equals("edit")) {
-                mDatabaseHelper.updateUser(user);
+
+            if(userFilledChecked&&usernameShortChecked){
+                mTextInputLayoutUsername.setErrorEnabled(false);
             }
-            mDatabaseHelper.clearCurrentUserTable(mDatabaseHelper.getWritableDatabase());
-            mDatabaseHelper.addCurrentUser(user);
-            // Snack Bar to show success message that record saved successfully
-            Snackbar.make(mSignupFormView, getString(R.string.success_message), Snackbar.LENGTH_LONG).show();
-            emptyInputEditText();
-            successful = true;
+            userChecked = true;
 
 
         } else {
             // Snack Bar to show error message that record already exists
-            Snackbar.make(mSignupFormView, getString(R.string.error_username_exists), Snackbar.LENGTH_LONG).show();
-            successful = false;
+            mTextInputLayoutUsername.setErrorEnabled(true);
+            mTextInputLayoutUsername.setError(getString(R.string.error_username_exists));
+            userChecked = false;
         }
-        return successful;
 
+        boolean allValid = userChecked && firstNameChecked && lastNameChecked && userFilledChecked && usernameShortChecked && passwordFileedChecked &&
+                passwordShortChecked && passwordConfirmFilledChecked && passwordMatchChecked && addressFilledChecked && telFilledChecked && telValidChecked &&
+                creditFilledChecked && creditValidChecked;
+if(allValid){
+    user.setFirstName(mFirstNameView.getText().toString().trim());
+    user.setLastName(mLastNameView.getText().toString().trim());
+    user.setUsername(mUsernameView.getText().toString().trim());
+    user.setPassword(mPasswordView.getText().toString().trim());
+    user.setAddress(mAddressView.getText().toString().trim());
+    user.setTel(mTelView.getText().toString().trim());
+    user.setCreditCard(mCreditCardView.getText().toString().trim());
+
+    if (mode.equals("new")) {
+        mDatabaseHelper.addUser(user);
+    } else if (mode.equals("edit")) {
+        mDatabaseHelper.updateUser(user);
+    }
+    mDatabaseHelper.clearCurrentUserTable(mDatabaseHelper.getWritableDatabase());
+    mDatabaseHelper.addCurrentUser(user);
+    // Snack Bar to show success message that record saved successfully
+    Snackbar.make(mSignupFormView, getString(R.string.success_message), Snackbar.LENGTH_LONG).show();
+}
+
+        return allValid;
 
     }
 
