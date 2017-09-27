@@ -3,11 +3,13 @@ package com.example.varda.naviraklio;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.io.Serializable;
+
 /**
  * Created by Endelehion on 18/6/2017.
  */
 
-public class Appointment implements Parcelable {
+public class Appointment implements Parcelable, Serializable {
 
     String dateString;
     Place place;

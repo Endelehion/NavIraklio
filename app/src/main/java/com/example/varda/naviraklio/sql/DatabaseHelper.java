@@ -5,9 +5,16 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.example.varda.naviraklio.model.User;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +32,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
     // User Table Columns names
-    private static final String COLUMN_USER_ID = "user_id";
     private static final String COLUMN_USER_FIRST_NAME = "user_first_name";
     private static final String COLUMN_USER_LAST_NAME = "user_last_name";
     private static final String COLUMN_USER_USERNAME = "user_username";
@@ -33,12 +39,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_USER_ADDRESS = "user_address";
     private static final String COLUMN_USER_TEL = "user_tel";
     private static final String COLUMN_USER_CREDIT_CARD = "user_credit_card";
+    private static final String COLUMN_USER_APPOINTMENTS = "user_appointments";
 
     // create table sql query for user
     private String CREATE_USER_TABLE_IF_NOT_EXISTS = "CREATE TABLE IF NOT EXISTS " + TABLE_USER + "("
-             + COLUMN_USER_FIRST_NAME + " TEXT,"
+            + COLUMN_USER_FIRST_NAME + " TEXT,"
             + COLUMN_USER_LAST_NAME + " TEXT," + COLUMN_USER_USERNAME + " TEXT PRIMARY KEY," + COLUMN_USER_PASSWORD + " TEXT," + COLUMN_USER_ADDRESS
-            + " TEXT," + COLUMN_USER_TEL + " TEXT," + COLUMN_USER_CREDIT_CARD + " TEXT " + ")";
+            + " TEXT," + COLUMN_USER_TEL + " TEXT," + COLUMN_USER_CREDIT_CARD + " TEXT, " + COLUMN_USER_APPOINTMENTS + " BLOB" + ")";
 
     // drop table sql query for user
     private String DROP_USER_TABLE = "DROP TABLE IF EXISTS " + TABLE_USER;
@@ -47,7 +54,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private String CREATE_CURRENT_USER_TABLE_IF_NOT_EXISTS = "CREATE TABLE IF NOT EXISTS " + TABLE_CURRENT_USER + "("
             + COLUMN_USER_FIRST_NAME + " TEXT,"
             + COLUMN_USER_LAST_NAME + " TEXT," + COLUMN_USER_USERNAME + " TEXT PRIMARY KEY," + COLUMN_USER_PASSWORD + " TEXT," + COLUMN_USER_ADDRESS
-            + " TEXT," + COLUMN_USER_TEL + " TEXT," + COLUMN_USER_CREDIT_CARD + " TEXT " + ")";
+            + " TEXT," + COLUMN_USER_TEL + " TEXT," + COLUMN_USER_CREDIT_CARD + " TEXT, " + COLUMN_USER_APPOINTMENTS + " BLOB" + ")";
 
 
     // drop table sql query for user
@@ -265,9 +272,120 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         // delete user record by id
         db.delete(TABLE_USER, COLUMN_USER_USERNAME + " = ?",
-                new String[]{String.valueOf(user.getId())});
+                new String[]{String.valueOf(user.getUsername())});
         db.close();
     }
+
+
+
+
+    public static byte[] getSerializedObject(Serializable s) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ObjectOutputStream oos = null;
+        try {
+            oos = new ObjectOutputStream(baos);
+            oos.writeObject(s);
+        } catch (IOException e) {
+            Log.e("IO Exception", e.getMessage(), e);
+            return null;
+        } finally {
+            try {
+                oos.close();
+            } catch (IOException e) {
+            }
+        }
+        byte[] result = baos.toByteArray();
+        Log.i("getSerializedObject", "Object " + s.getClass().getSimpleName() + "written to byte[]: " + result.length);
+        return result;
+    }
+
+
+    public static Object readSerializedObject(byte[] in) {
+        Object result = null;
+        ByteArrayInputStream bais = new ByteArrayInputStream(in);
+        ObjectInputStream ois = null;
+        try {
+            ois = new ObjectInputStream(bais);
+            result = ois.readObject();
+        } catch (Exception e) {
+            result = null;
+        } finally {
+            try {
+                ois.close();
+            } catch (Throwable e) {
+            }
+        }
+        return result;
+    }
+
+
+    public long updateSerializedObjectOfUser(SQLiteDatabase db, Serializable myObject, String username) {
+        try {
+            db.beginTransaction();
+            ContentValues values = new ContentValues();
+            values.put(COLUMN_USER_APPOINTMENTS, DatabaseHelper.getSerializedObject(myObject));
+            long id = db.update(TABLE_USER, values, COLUMN_USER_USERNAME + " = ?",
+                    new String[]{String.valueOf(username)});
+            if (id >= 0) db.setTransactionSuccessful();
+            return id;
+        } catch (Exception e) {
+            Log.e("SerializedDataInput", e.getMessage(), e);
+            // ignore this and roll back the transaction
+        } finally {
+            try {
+                db.endTransaction();
+            } catch (Exception e) {
+                return -1;
+            }
+        }
+        return -1;
+    }
+
+    public Object readSerializedObjectOfUser(String username) {
+        Object returnedObject=null;
+        // array of columns to fetch
+        String[] columns = {
+                COLUMN_USER_USERNAME,
+                COLUMN_USER_APPOINTMENTS,
+        };
+        SQLiteDatabase db = this.getReadableDatabase();
+        // selection criteria
+        String selection = COLUMN_USER_USERNAME + " = ?";
+
+        // selection arguments
+        String[] selectionArgs = {username};
+
+        // query user table with conditions
+        /**
+         * Here query function is used to fetch records from user table this function works like we use sql query.
+         * SQL query equivalent to this query function is
+         * SELECT user_id FROM user WHERE user_username = 'username-example' AND user_password = 'qwerty';
+         */
+        Cursor cursor = db.query(TABLE_USER, //Table to query
+                columns,                    //columns to return
+                selection,                  //columns for the WHERE clause
+                selectionArgs,              //The values for the WHERE clause
+                null,                       //group the rows
+                null,                       //filter by row groups
+                null);                      //The sort order
+
+        int cursorCount = cursor.getCount();
+        if (cursorCount > 0) {
+            if (cursor.moveToFirst()) {
+                do {
+                    byte[] returnedBlob = cursor.getBlob(cursor.getColumnIndex(COLUMN_USER_APPOINTMENTS));
+                    if(returnedBlob!=null){
+                        returnedObject = DatabaseHelper.readSerializedObject(returnedBlob);
+                    }
+
+                } while (cursor.moveToNext());
+            }
+        }
+        cursor.close();
+        db.close();
+        return returnedObject;
+    }
+
 
     /**
      * This method to check user exist or not
@@ -355,7 +473,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             if (cursor.moveToFirst()) {
                 do {
                     this.clearCurrentUserTable(this.getWritableDatabase());
-                    String firstNameResult =  cursor.getString(cursor.getColumnIndex(COLUMN_USER_FIRST_NAME));
+                    String firstNameResult = cursor.getString(cursor.getColumnIndex(COLUMN_USER_FIRST_NAME));
                     String lastNameResult = cursor.getString(cursor.getColumnIndex(COLUMN_USER_LAST_NAME));
 
                     String usernameResult = cursor.getString(cursor.getColumnIndex(COLUMN_USER_USERNAME));

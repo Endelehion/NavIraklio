@@ -82,7 +82,6 @@
                 android:clickable="true"
                 android:gravity="center"
                 android:maxLines="1"
-                android:onClick="signup"
                 android:text="@string/action_sign_up_link"
                 android:textSize="18sp" />
 
@@ -93,6 +92,5 @@
         android:id="@+id/cheatHome"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="goCheatHome"
         android:text="goHome" />
 </LinearLayout>

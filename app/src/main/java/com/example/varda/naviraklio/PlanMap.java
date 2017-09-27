@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.AsyncTask;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -171,7 +172,7 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
             public void onClick(View v) {
                 if (appointmentValidated) {
                     Intent resultIntent = new Intent();
-                    resultIntent.putExtra("destinationKey", destination);
+                    resultIntent.putExtra("destinationKey", (Parcelable) destination);
                     setResult(Activity.RESULT_OK, resultIntent);
                     finish();
                 } else {
@@ -283,13 +284,14 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
 
         if (!typeNullFlag && destination != null) {
 
+            LatLng destinationLatLng = new LatLng(destination.getLat(), destination.getLon());
             Date appointTime, appointTimeFrame[], nowArriveTime;
             Calendar cal = Calendar.getInstance();
             boolean askUser = false;
             int originToMainTravelTime;
             validCounter = 0;
 
-            originToMainTravelTime = calculateTravelTime(origin, destination.getCoord(), avgDivergence, isRushHour);
+            originToMainTravelTime = calculateTravelTime(origin, destinationLatLng, avgDivergence, isRushHour);
             appointTime = dateFormat.parse(receivedDateString);                         //appointTime: Tested Appointment Date
             appointTimeFrame = appointWindow(appointTime, receivedDurationInSec, -300, 300);               //appointTimeFrame[1]: Tested Appointment start, appointTimeFrame[0]: Tested Appointment end, all with added 5min window
 
@@ -310,7 +312,6 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
                         Log.i("AppointmentControl", "Main Appointment overlaps with secondary, Main start time:" + appointTimeFrame[0] + " end time:" + appointTimeFrame[1]);
                         Log.i("AppointmentControl", "Main Appointment overlaps with secondary, Main Coordinates:" + origin);
                         Log.i("AppointmentControl", "Main Appointment overlaps with secondary, Secondary start time:" + appointTimeFrame[0] + " end time:" + appointTimeFrame[1]);
-                        Log.i("AppointmentControl", "Main Appointment overlaps with secondary, Secondary Coordinates:" + receivedAppointList.get(i).getPlace().getCoord());
                         exitMap("invalid");
                         break;
                     } else {
@@ -323,17 +324,16 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
                                 Log.i("AppointmentControl", "Main Appointment overlaps with secondary, Main start time:" + appointTimeFrame[0] + " end time:" + appointTimeFrame[1]);
                                 Log.i("AppointmentControl", "Main Appointment overlaps with secondary, Main Coordinates:" + origin);
                                 Log.i("AppointmentControl", "Main Appointment overlaps with secondary, Secondary start time:" + appointTimeFrame[0] + " end time:" + appointTimeFrame[1]);
-                                Log.i("AppointmentControl", "Main Appointment overlaps with secondary, Secondary Coordinates:" + receivedAppointList.get(i).getPlace().getCoord());
                                 exitMap("invalid");
                                 break;
                             } else {
                                 //TODO findPlace nearest to tested and within SameDirection return new appointPlace and times change variables accordingly
                                 ArrayList<Place> samePointsList;
-                                samePointsList = findSameDirectionPoints(placeList, origin, destination.getCoord());
+                                samePointsList = findSameDirectionPoints(placeList, origin, destinationLatLng);
                                 if (samePointsList.isEmpty()) {
-                                    destination = findNearestOpenPlace(placeList, receivedAppointList.get(i).getPlace().getCoord()); //found samedirection
+                                    destination = findNearestOpenPlace(placeList, new LatLng(receivedAppointList.get(i).getPlace().getLat(), receivedAppointList.get(i).getPlace().getLon())); //found samedirection
                                 } else {
-                                    destination = findNearestOpenPlace(samePointsList, receivedAppointList.get(i).getPlace().getCoord());
+                                    destination = findNearestOpenPlace(samePointsList, new LatLng(receivedAppointList.get(i).getPlace().getLat(), receivedAppointList.get(i).getPlace().getLon()));
                                 }
                                 if (destination != null) {
                                     testAppointment(i, appointTime);
@@ -351,7 +351,7 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
                                     Log.i("AppointmentControl", "Main Appointment overlaps with secondary, Main start time:" + appointTimeFrame[0] + " end time:" + appointTimeFrame[1]);
                                     Log.i("AppointmentControl", "Main Appointment overlaps with secondary, Main Coordinates:" + origin);
                                     Log.i("AppointmentControl", "Main Appointment overlaps with secondary, Secondary start time:" + receivedAppointList.get(i).getDateString());
-                                    Log.i("AppointmentControl", "Main Appointment overlaps with secondary, Secondary Coordinates:" + receivedAppointList.get(i).getPlace().getCoord());
+                                    Log.i("AppointmentControl", "Main Appointment overlaps with secondary, Secondary Coordinates:" + new LatLng(receivedAppointList.get(i).getPlace().getLat(), receivedAppointList.get(i).getPlace().getLon()));
                                     exitMap("invalid");
                                     break;
 
@@ -393,7 +393,7 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
             if (appointValid && !askUser) {
 
 
-                String url = getDirectionsUrl(origin, destination.getCoord());
+                String url = getDirectionsUrl(origin, destinationLatLng);
 
                 DownloadTask downloadTask = new DownloadTask();
 
@@ -445,7 +445,7 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-                        String url = getDirectionsUrl(origin, destination.getCoord());
+                        String url = getDirectionsUrl(origin, new LatLng(destination.getLat(), destination.getLon()));
 
                         DownloadTask downloadTask = new DownloadTask();
 
@@ -507,7 +507,7 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
 
         ArrayList<Place> sameDirList = new ArrayList<>();
         for (int i = 0; i < placeList.size(); i++) {
-            boolean isInSameDirection = testIfSameDirection(start, end, placeList.get(i).getCoord());
+            boolean isInSameDirection = testIfSameDirection(start, end, new LatLng(placeList.get(i).getLat(), placeList.get(i).getLon()));
             if (isInSameDirection) {
                 sameDirList.add(placeList.get(i));
             }
@@ -528,15 +528,16 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
     }
 
     public void testAppointment(int index, Date appointTime) throws ParseException {
-
-        Date tenMinBeforeSecondAppoint, tenMinBeforeAppoint,arrivalMainBefore,appointArriveTimeAfterSecond, appointArriveTimeBeforeSecond, appointTimeFrame[], listDateTimeFrame[], arrivalSecondBefore, arrivalSecondAfter, nowArriveTime, listTime, mornRushHourStart, mornRushHourEnd, noonRushHourStart, noonRushHourEnd;
+        LatLng destinationLatLng = new LatLng(destination.getLat(), destination.getLon());
+        LatLng receivedAppointListLatLng = new LatLng(receivedAppointList.get(index).getPlace().getLat(), receivedAppointList.get(index).getPlace().getLon());
+        Date tenMinBeforeSecondAppoint, tenMinBeforeAppoint, arrivalMainBefore, appointArriveTimeAfterSecond, appointArriveTimeBeforeSecond, appointTimeFrame[], listDateTimeFrame[], arrivalSecondBefore, arrivalSecondAfter, nowArriveTime, listTime, mornRushHourStart, mornRushHourEnd, noonRushHourStart, noonRushHourEnd;
         Calendar cal = Calendar.getInstance();
         appointTimeFrame = appointWindow(appointTime, receivedDurationInSec, -300, 300);
         int listDuration, originToSecondTravelTime, mainToSecondTravelTime;
         listTime = dateFormat.parse(receivedAppointList.get(index).getDateString());            //listTime: appointment(s) Date on List
         listDuration = receivedAppointList.get(index).getDuration() * 60;                            //listDuration: appointment(s) int duration on list
-        mainToSecondTravelTime = calculateTravelTime(destination.getCoord(), receivedAppointList.get(index).getPlace().getCoord(), avgDivergence, isRushHour);
-        originToSecondTravelTime = calculateTravelTime(origin, receivedAppointList.get(index).getPlace().getCoord(), avgDivergence, isRushHour);
+        mainToSecondTravelTime = calculateTravelTime(destinationLatLng, receivedAppointListLatLng, avgDivergence, isRushHour);
+        originToSecondTravelTime = calculateTravelTime(origin, receivedAppointListLatLng, avgDivergence, isRushHour);
         cal.setTime(nowTime);
         cal.add(Calendar.SECOND, originToSecondTravelTime);
         arrivalSecondBefore = cal.getTime();               //listDateTimeFrameBefore[0]: Tested appointment Start time, listDateTimeFrameAfter[1]: Tested appointment EndTime plus the travelTime from main to tested locations, all with added 5min window
@@ -546,7 +547,7 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
         arrivalSecondAfter = cal.getTime();                                                                                                   //listDateTimeFrameAfter[0]: Tested appointment Start time minus the travelTime from main to tested locations, listDateTimeFrameAfter[1]: Tested appointment EndTime, all with added 5min window
         cal.setTime(listDateTimeFrame[1]);
         cal.add(Calendar.SECOND, mainToSecondTravelTime);
-        arrivalMainBefore=cal.getTime();
+        arrivalMainBefore = cal.getTime();
 
         appBeforeWithTravelTime = listDateTimeFrame[1].before(appointTimeFrame[1]) && appointTimeFrame[0].before(listDateTimeFrame[1]) || arrivalMainBefore.after(appointTimeFrame[0]) && listDateTimeFrame[0].before(appointTimeFrame[0]) && listDateTimeFrame[0].after(nowTime) && arrivalSecondBefore.before(listDateTimeFrame[0]);   //Case main appointment start is within ending time of tested appointment, ending time is the actual time plus the travel time from tested to main appointment locations, appointStart < listEnd < appointEnd
         appAfterWithTravelTime = listDateTimeFrame[0].after(appointTimeFrame[0]) && listDateTimeFrame[0].before(appointTimeFrame[1]) || arrivalSecondAfter.after(listDateTimeFrame[0]) && listDateTimeFrame[0].after(appointTimeFrame[1]) && listDateTimeFrame[0].after(nowTime);       //Case main appointment is within the starting time of tested appointment, starting time of tested appointment is the actual time minus the travelTime from main to tested appointment locations,  locationAppointStart < listStart < appointEnd
@@ -622,7 +623,7 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
         appointTime = dateFormat.parse(receivedDateString);
         for (int i = 0; i < placeList.size(); i++) {
             if (checkIfopen(placeList.get(i), appointTime)) {
-                dist = distFrom(startPoint, placeList.get(i).getCoord());
+                dist = distFrom(startPoint, new LatLng(placeList.get(i).getLat(),placeList.get(i).getLon()));
                 nearestPlace = placeList.get(i);
                 nullFlag = false;
                 break;
@@ -634,7 +635,7 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
         if (!nullFlag) {
             for (int i = 0; i < placeList.size(); i++) {
                 if (checkIfopen(placeList.get(i), appointTime)) {
-                    tempDist = distFrom(startPoint, placeList.get(i).getCoord());
+                    tempDist = distFrom(startPoint, new LatLng(placeList.get(i).getLat(),placeList.get(i).getLon()));
                     if (tempDist < dist) {
                         dist = tempDist;
                         nearestPlace = placeList.get(i);
@@ -738,87 +739,87 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
 
     void createCoordinates() {
         superMarkets = new ArrayList<>();
-        superMarkets.add(new Place(new LatLng(35.340685, 25.133643), "Chalkiadakis", "Supermarket", 9, 21));
-        superMarkets.add(new Place(new LatLng(35.337384, 25.121930), "LIDL", "Supermarket", 9, 21));
-        superMarkets.add(new Place(new LatLng(35.338468, 25.139354), "AB", "Supermarket", 9, 21));
-        superMarkets.add(new Place(new LatLng(35.337481, 25.132863), "BAZAAR", "Supermarket", 9, 21));
-        superMarkets.add(new Place(new LatLng(35.339136, 25.155434), "Sklavenitis", "Supermarket", 9, 21));
-        superMarkets.add(new Place(new LatLng(35.341716, 25.136238), "papadaki", "Supermarket", 9, 21));
-        superMarkets.add(new Place(new LatLng(35.326724, 25.131095), "Sklavenitis", "Supermarket", 9, 21));
-        superMarkets.add(new Place(new LatLng(35.326251, 25.138878), "Sklavenitis", "Supermarket", 9, 21));
-        superMarkets.add(new Place(new LatLng(35.337651, 25.126895), "Chalkiadakis", "Supermarket", 9, 21));
-        superMarkets.add(new Place(new LatLng(35.338751, 25.119835), "Chalkiadakis", "Supermarket", 9, 21));
-        superMarkets.add(new Place(new LatLng(35.324666, 25.133577), "Ariadni", "Supermarket", 9, 21));
-        superMarkets.add(new Place(new LatLng(35.334394, 25.115245), "INKA", "Supermarket", 9, 21));
-        superMarkets.add(new Place(new LatLng(35.324695, 25.124600), "AB", "Supermarket", 9, 21));
-        superMarkets.add(new Place(new LatLng(35.323925, 25.112541), "LIDL", "Supermarket", 9, 21));
-        superMarkets.add(new Place(new LatLng(35.319163, 25.144127), "INKA", "Supermarket", 9, 21));
-        superMarkets.add(new Place(new LatLng(35.324660, 25.124514), "AB", "Supermarket", 9, 21));
-        superMarkets.add(new Place(new LatLng(35.318393, 25.148246), "Chalkiadakis", "Supermarket", 9, 21));
-        superMarkets.add(new Place(new LatLng(35.331733, 25.137689), "Chalkiadakis", "Supermarket", 9, 21));
-        superMarkets.add(new Place(new LatLng(35.330157, 25.132282), "Chalkiadakis", "Supermarket", 9, 21));
-        superMarkets.add(new Place(new LatLng(35.334359, 25.158718), "Chalkiadakis Max", "Supermarket", 9, 21));
-        superMarkets.add(new Place(new LatLng(35.329072, 25.119279), "Chalkiadakis", "Supermarket", 9, 21));
-        superMarkets.add(new Place(new LatLng(35.343307, 25.155190), "My Cretan Goods", "Supermarket", 9, 21));
-        superMarkets.add(new Place(new LatLng(35.336788, 25.133692), "Alati tis Gis", "Supermarket", 9, 21));
-        superMarkets.add(new Place(new LatLng(35.330241, 25.124522), "Kouts", "Supermarket", 9, 21));
+        superMarkets.add(new Place(35.340685, 25.133643, "Chalkiadakis", "Supermarket", 9, 21));
+        superMarkets.add(new Place(35.337384, 25.121930, "LIDL", "Supermarket", 9, 21));
+        superMarkets.add(new Place(35.338468, 25.139354, "AB", "Supermarket", 9, 21));
+        superMarkets.add(new Place(35.337481, 25.132863, "BAZAAR", "Supermarket", 9, 21));
+        superMarkets.add(new Place(35.339136, 25.155434, "Sklavenitis", "Supermarket", 9, 21));
+        superMarkets.add(new Place(35.341716, 25.136238, "papadaki", "Supermarket", 9, 21));
+        superMarkets.add(new Place(35.326724, 25.131095, "Sklavenitis", "Supermarket", 9, 21));
+        superMarkets.add(new Place(35.326251, 25.138878, "Sklavenitis", "Supermarket", 9, 21));
+        superMarkets.add(new Place(35.337651, 25.126895, "Chalkiadakis", "Supermarket", 9, 21));
+        superMarkets.add(new Place(35.338751, 25.119835, "Chalkiadakis", "Supermarket", 9, 21));
+        superMarkets.add(new Place(35.324666, 25.133577, "Ariadni", "Supermarket", 9, 21));
+        superMarkets.add(new Place(35.334394, 25.115245, "INKA", "Supermarket", 9, 21));
+        superMarkets.add(new Place(35.324695, 25.124600, "AB", "Supermarket", 9, 21));
+        superMarkets.add(new Place(35.323925, 25.112541, "LIDL", "Supermarket", 9, 21));
+        superMarkets.add(new Place(35.319163, 25.144127, "INKA", "Supermarket", 9, 21));
+        superMarkets.add(new Place(35.324660, 25.124514, "AB", "Supermarket", 9, 21));
+        superMarkets.add(new Place(35.318393, 25.148246, "Chalkiadakis", "Supermarket", 9, 21));
+        superMarkets.add(new Place(35.331733, 25.137689, "Chalkiadakis", "Supermarket", 9, 21));
+        superMarkets.add(new Place(35.330157, 25.132282, "Chalkiadakis", "Supermarket", 9, 21));
+        superMarkets.add(new Place(35.334359, 25.158718, "Chalkiadakis Max", "Supermarket", 9, 21));
+        superMarkets.add(new Place(35.329072, 25.119279, "Chalkiadakis", "Supermarket", 9, 21));
+        superMarkets.add(new Place(35.343307, 25.155190, "My Cretan Goods", "Supermarket", 9, 21));
+        superMarkets.add(new Place(35.336788, 25.133692, "Alati tis Gis", "Supermarket", 9, 21));
+        superMarkets.add(new Place(35.330241, 25.124522, "Kouts", "Supermarket", 9, 21));
 
 
         //zografou
-        //  superMarkets.add(new Place(new LatLng(37.977817, 23.769849), "Daily Lewf. Papagou 114", "Supermarket", 0,1));
-        superMarkets.add(new Place(new LatLng(37.988544, 23.747392), "main", "Supermarket", 9, 21));
-
-
+        superMarkets.add(new Place(37.977817, 23.769849, "Daily Lewf. Papagou 114", "Supermarket", 9, 21));
         Collections.sort(superMarkets, new ComparatorCoord());
 
 
         gasStations = new ArrayList<>();
-        gasStations.add(new Place(new LatLng(35.338674, 25.141106), "SHELL", "Gas Station", 24, 24));
-        gasStations.add(new Place(new LatLng(35.335309, 25.141536), "EKO", "Gas Station", 24, 24));
-        gasStations.add(new Place(new LatLng(35.333256, 25.121656), "Tsiknakis Ioannis", "Gas Station", 7, 22));
-        gasStations.add(new Place(new LatLng(35.330283, 25.108827), "ELIN", "Gas Station", 7, 22));
-        gasStations.add(new Place(new LatLng(35.329145, 25.117691), "Christodoulakis", "Gas Station", 7, 22));
-        gasStations.add(new Place(new LatLng(35.338607, 25.143821), "Giannakakis", "Gas Station", 7, 22));
-        gasStations.add(new Place(new LatLng(35.336275, 25.121359), "Hanagia", "Gas Station", 7, 22));
-        gasStations.add(new Place(new LatLng(35.333818, 25.117024), "Stamatakis", "Gas Station", 7, 22));
-        gasStations.add(new Place(new LatLng(35.326903, 25.131728), "Koumoulas", "Gas Station", 7, 22));
-        gasStations.add(new Place(new LatLng(35.338667, 25.141116), "SHELL", "Gas Station", 24, 24));
-        gasStations.add(new Place(new LatLng(35.338795, 25.141556), "SHELL", "Gas Station", 24, 24));
-        gasStations.add(new Place(new LatLng(35.338714, 25.143423), "BP", "Gas Station", 24, 24));
-        gasStations.add(new Place(new LatLng(35.337829, 25.141788), "BP", "Gas Station", 24, 24));
-        gasStations.add(new Place(new LatLng(35.336477, 25.146265), "BP", "Gas Station", 24, 24));
-        gasStations.add(new Place(new LatLng(35.334352, 25.133687), "BP", "Gas Station", 24, 24));
-        gasStations.add(new Place(new LatLng(35.324131, 25.139945), "Mavraki", "Gas Station", 24, 24));
-        gasStations.add(new Place(new LatLng(35.332375, 25.122159), "Samolis BP", "Gas Station", 24, 24));
-        gasStations.add(new Place(new LatLng(35.332414, 25.112785), "Aegean", "Gas Station", 7, 22));
-        gasStations.add(new Place(new LatLng(35.319242, 25.133003), "EKO", "Gas Station", 7, 22));
-        gasStations.add(new Place(new LatLng(35.320312, 25.125391), "Koumoulas", "Gas Station", 7, 22));
-        gasStations.add(new Place(new LatLng(35.321124, 25.143192), "Androulakis", "Gas Station", 7, 22));
-        gasStations.add(new Place(new LatLng(35.331358, 25.104039), "Xenakis", "Gas Station", 24, 24));
-        gasStations.add(new Place(new LatLng(35.341186, 25.141900), "Avis", "Gas Station", 7, 22));
-        gasStations.add(new Place(new LatLng(35.338016, 25.160950), "EKO", "Gas Station", 7, 22));
+        gasStations.add(new Place(35.338674, 25.141106, "SHELL", "Gas Station", 24, 24));
+        gasStations.add(new Place(35.335309, 25.141536, "EKO", "Gas Station", 24, 24));
+        gasStations.add(new Place(35.333256, 25.121656, "Tsiknakis Ioannis", "Gas Station", 7, 22));
+        gasStations.add(new Place(35.330283, 25.108827, "ELIN", "Gas Station", 7, 22));
+        gasStations.add(new Place(35.329145, 25.117691, "Christodoulakis", "Gas Station", 7, 22));
+        gasStations.add(new Place(35.338607, 25.143821, "Giannakakis", "Gas Station", 7, 22));
+        gasStations.add(new Place(35.336275, 25.121359, "Hanagia", "Gas Station", 7, 22));
+        gasStations.add(new Place(35.333818, 25.117024, "Stamatakis", "Gas Station", 7, 22));
+        gasStations.add(new Place(35.326903, 25.131728, "Koumoulas", "Gas Station", 7, 22));
+        gasStations.add(new Place(35.338667, 25.141116, "SHELL", "Gas Station", 24, 24));
+        gasStations.add(new Place(35.338795, 25.141556, "SHELL", "Gas Station", 24, 24));
+        gasStations.add(new Place(35.338714, 25.143423, "BP", "Gas Station", 24, 24));
+        gasStations.add(new Place(35.337829, 25.141788, "BP", "Gas Station", 24, 24));
+        gasStations.add(new Place(35.336477, 25.146265, "BP", "Gas Station", 24, 24));
+        gasStations.add(new Place(35.334352, 25.133687, "BP", "Gas Station", 24, 24));
+        gasStations.add(new Place(35.324131, 25.139945, "Mavraki", "Gas Station", 24, 24));
+        gasStations.add(new Place(35.332375, 25.122159, "Samolis BP", "Gas Station", 24, 24));
+        gasStations.add(new Place(35.332414, 25.112785, "Aegean", "Gas Station", 7, 22));
+        gasStations.add(new Place(35.319242, 25.133003, "EKO", "Gas Station", 7, 22));
+        gasStations.add(new Place(35.320312, 25.125391, "Koumoulas", "Gas Station", 7, 22));
+        gasStations.add(new Place(35.321124, 25.143192, "Androulakis", "Gas Station", 7, 22));
+        gasStations.add(new Place(35.331358, 25.104039, "Xenakis", "Gas Station", 24, 24));
+        gasStations.add(new Place(35.341186, 25.141900, "Avis", "Gas Station", 7, 22));
+        gasStations.add(new Place(35.338016, 25.160950, "EKO", "Gas Station", 7, 22));
 
         //zografou
         // gasStations.add(new Place(new LatLng(37.974122, 23.774079), "Revoil", "Gas Station", 7, 22));
-        gasStations.add(new Place(new LatLng(37.967245, 23.774535), "kontino alla de prolavainei", "Gas Station", 9, 21));
-        gasStations.add(new Place(new LatLng(37.989516, 23.744785), "eksw apo to dromo", "Gas Station", 9, 21));
-        gasStations.add(new Place(new LatLng(37.986878, 23.752681), "sto dromo", "Gas Station", 9, 21));
+        gasStations.add(new Place(37.967245, 23.774535, "kontino alla de prolavainei", "Gas Station", 9, 21));
+        gasStations.add(new Place(37.989516, 23.744785, "eksw apo to dromo", "Gas Station", 9, 21));
+        gasStations.add(new Place(37.986878, 23.752681, "sto dromo", "Gas Station", 9, 21));
+
 
         Collections.sort(gasStations, new ComparatorCoord());
 
 
         cinemas = new ArrayList<>();
-        cinemas.add(new Place(new LatLng(35.339880, 25.119728), "Odeon Talos", "Cinema", 16, 2));
-        cinemas.add(new Place(new LatLng(35.340889, 25.136980), "Vintsenzos Kornaros", "Cinema", 16, 2));
-        cinemas.add(new Place(new LatLng(35.338375, 25.136216), "Astoria", "Cinema", 16, 2));
-        cinemas.add(new Place(new LatLng(35.335669, 25.070682), "Texnopolis", "Cinema", 16, 2));
-        cinemas.add(new Place(new LatLng(35.337980, 25.158230), "Cine Studio", "Cinema", 16, 2));
-        cinemas.add(new Place(new LatLng(35.338573, 25.129685), "Dedalos Club", "Cinema", 16, 2));
+        cinemas.add(new Place(35.339880, 25.119728, "Odeon Talos", "Cinema", 16, 2));
+        cinemas.add(new Place(35.340889, 25.136980, "Vintsenzos Kornaros", "Cinema", 16, 2));
+        cinemas.add(new Place(35.338375, 25.136216, "Astoria", "Cinema", 16, 2));
+        cinemas.add(new Place(35.335669, 25.070682, "Texnopolis", "Cinema", 16, 2));
+        cinemas.add(new Place(35.337980, 25.158230, "Cine Studio", "Cinema", 16, 2));
+        cinemas.add(new Place(35.338573, 25.129685, "Dedalos Club", "Cinema", 16, 2));
         //zografou
-        cinemas.add(new Place(new LatLng(37.977369, 23.770716), "Aleka", "Cinema", 16, 2));
+        cinemas.add(new Place(37.977369, 23.770716, "Aleka", "Cinema", 16, 2));
+        Collections.sort(cinemas, new ComparatorCoord());
 
 
     }
+
 
     public static double calcDist(LatLng latlang1, LatLng latlang2) {
         double lat1 = latlang1.latitude;

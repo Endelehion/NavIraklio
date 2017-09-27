@@ -21,6 +21,7 @@ import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 //import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -141,13 +142,12 @@ public class SignupActivity extends AppCompatActivity implements LoaderCallbacks
             mFirstNameView.setText(user.getFirstName());
             mLastNameView.setText(user.getLastName());
             mUsernameView.setText(user.getUsername());
-           mUsernameView.setFocusable(false);
-
             mPasswordView.setText(user.getPassword());
             mConfirmPasswordView.setText(user.getPassword());
             mAddressView.setText(user.getAddress());
             mTelView.setText(user.getTel());
             mCreditCardView.setText(user.getCreditCard());
+           mUsernameView.setEnabled(false);
             this.setTitle("Profile Edit");
         }
 

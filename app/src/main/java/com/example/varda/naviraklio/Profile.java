@@ -17,7 +17,7 @@ import java.util.ArrayList;
 public class Profile extends AppCompatActivity {
 
     private TextView usernameField, passwordField, firstNameField, lastNameField, addressField, telephoneField, creditCardField;
-    private Button editProfileBtn;
+    private Button editProfileBtn,profileBackHomeBtn;
     private DatabaseHelper usersDB;
     private User user;
     private static final int REQUEST_PROFILE_EDIT=943;
@@ -32,6 +32,7 @@ public class Profile extends AppCompatActivity {
         } else {
             user=usersDB.getCurrentUser();
         }
+        profileBackHomeBtn=(Button) findViewById(R.id.profileBackHomeBtn);
         editProfileBtn=(Button) findViewById(R.id.editProfileBtn);
         usernameField = (TextView) findViewById(R.id.usernameField);
         passwordField = (TextView) findViewById(R.id.passwordField);
@@ -40,13 +41,13 @@ public class Profile extends AppCompatActivity {
         addressField = (TextView) findViewById(R.id.addressField);
         telephoneField = (TextView) findViewById(R.id.telephoneField);
         creditCardField = (TextView) findViewById(R.id.creditCardField);
-        usernameField.setText(""+user.getUsername());
-        passwordField.setText(""+user.getPassword());
-        firstNameField.setText(""+user.getFirstName());
-        lastNameField.setText(""+user.getLastName());
-        addressField.setText(""+user.getAddress());
-        telephoneField.setText(""+user.getTel());
-        creditCardField.setText(""+user.getCreditCard());
+        usernameField.setText(user.getUsername());
+        passwordField.setText(user.getPassword());
+        firstNameField.setText(user.getFirstName());
+        lastNameField.setText(user.getLastName());
+        addressField.setText(user.getAddress());
+        telephoneField.setText(user.getTel());
+        creditCardField.setText(user.getCreditCard());
 
 
         editProfileBtn.setOnClickListener(new View.OnClickListener() {
@@ -62,48 +63,29 @@ public class Profile extends AppCompatActivity {
             }
         });
 
-    }
-
-    protected void goBackHome(View view) {
-        Intent backHomeIntent = new Intent(Profile.this, Home.class);
-       // backHomeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);//TODO revise lifecycle
-        startActivity(backHomeIntent);
-        finish();
-    }
-
-    public User getCurrentUserFromDB() {
-
-        ArrayList<User> strList;
-        User currUser = usersDB.getCurrentUser();
-        strList = (ArrayList<User>) usersDB.getAllUser();
-        String username, password, firstName, lastName, telephone, address, creditCard;
-        double lat, lon;
-        for (int i = 0; i < strList.size(); i++) {
-            if (strList.get(i).getUsername().equals(currUser.getUsername())) {
-                username = strList.get(i).getUsername();
-                password = strList.get(i).getPassword();
-                firstName = strList.get(i).getFirstName();
-                lastName = strList.get(i).getLastName();
-                address = strList.get(i).getAddress();
-                telephone = strList.get(i).getTel();
-                creditCard = strList.get(i).getCreditCard();
-                user = new User(username, password, firstName, lastName, address, telephone, creditCard);
+        profileBackHomeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent backHomeIntent = new Intent(Profile.this, Home.class);
+                backHomeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(backHomeIntent);
+                finish();
             }
-        }
-        return user;
+        });
+
     }
 
     @Override
     protected void onResume(){
         super.onResume();
         user=usersDB.getCurrentUser();
-        usernameField.setText(""+user.getUsername());
-        passwordField.setText(""+user.getPassword());
-        firstNameField.setText(""+user.getFirstName());
-        lastNameField.setText(""+user.getLastName());
-        addressField.setText(""+user.getAddress());
-        telephoneField.setText(""+user.getTel());
-        creditCardField.setText(""+user.getCreditCard());
+        usernameField.setText(user.getUsername());
+        passwordField.setText(user.getPassword());
+        firstNameField.setText(user.getFirstName());
+        lastNameField.setText(user.getLastName());
+        addressField.setText(user.getAddress());
+        telephoneField.setText(user.getTel());
+        creditCardField.setText(user.getCreditCard());
 
     }
 

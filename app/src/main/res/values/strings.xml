@@ -28,7 +28,7 @@
     <string name="prompt_tel">Phone Number</string>
     <string name="prompt_credit_card">Credit Card Number</string>
     <string name="action_sign_up">Sign up</string>
-    <string name="action_sign_in_link">Already a member? Back to Login Page</string>
+    <string name="action_sign_in_link">Back</string>
     <string name="error_empty_name">Please fill in your name</string>
     <string name="error_empty_confirm_password">Password Confirmation is required</string>
     <string name="error_empty_address">Please fill in your address</string>

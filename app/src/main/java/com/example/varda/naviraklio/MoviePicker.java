@@ -210,7 +210,7 @@ public class MoviePicker extends AppCompatActivity {
                         SimpleDateFormat fullDate = new SimpleDateFormat("EEE dd MMM yyyy HH:mm",Locale.getDefault());
                         TimeZone timeZone;
                         timeZone = TimeZone.getTimeZone("Europe/Athens");
-                        fullDate.setTimeZone(timeZone);  //TODO check timezone @ 11:30pm
+                        fullDate.setTimeZone(timeZone);
                         for (int i = 0; i < 10; i++) {
                             temp = cal.getTime();
                             movieDates.add(fullDate.format(temp));    //init 10 next daysOfWeek

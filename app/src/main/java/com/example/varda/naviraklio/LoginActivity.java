@@ -82,7 +82,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     private AutoCompleteTextView mUsernameView;
     private TextInputEditText mPasswordView;
-    private Button mSignInButton;
+    private Button mSignInButton,cheatHome;
     private TextView mSignUpLink;
 
     // Class references.
@@ -116,7 +116,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mTextInputLayoutUsername = (TextInputLayout) findViewById(R.id.textInputLayoutUsername);
         mTextInputLayoutPassword = (TextInputLayout) findViewById(R.id.textInputLayoutPassword);
-
+        cheatHome = (Button) findViewById(R.id.cheatHome);
         mUsernameView = (AutoCompleteTextView) findViewById(R.id.textInputEditTextUsername);
         populateAutoComplete();
         mPasswordView = (TextInputEditText) findViewById(R.id.textInputEditTextPassword);
@@ -145,6 +145,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             public void onClick(View v) {
                 Intent intentSignup = new Intent(getApplicationContext(), SignupActivity.class);
                 startActivity(intentSignup);
+            }
+        });
+        cheatHome.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent homeIntent = new Intent(LoginActivity.this, Home.class);
+                startActivity(homeIntent);
             }
         });
     }
@@ -235,11 +242,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }*/
-
-    protected void goCheatHome(View view) {
-        Intent homeIntent = new Intent(LoginActivity.this, Home.class);
-        startActivity(homeIntent);
-    }
 
     private void populateAutoComplete() {
         if (!mayRequestContacts()) {

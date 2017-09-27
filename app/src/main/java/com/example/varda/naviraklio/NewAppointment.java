@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Parcelable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -165,7 +166,7 @@ public class NewAppointment extends AppCompatActivity {
             public void onClick(View v) {
                 if (!dateString.equals(null) && mode.equals("Ragnarok")) {
                     Intent resultIntent = new Intent();
-                    resultIntent.putExtra("destinationKey", receivedDestination);
+                    resultIntent.putExtra("destinationKey", (Parcelable) receivedDestination);
                     resultIntent.putExtra("dateKey", dateString);
                     if(spinner.getSelectedItemPosition()!=-1){
                         resultIntent.putExtra("typeKey", spinner.getSelectedItem().toString());
