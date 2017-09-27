@@ -21,8 +21,7 @@
         </style>
 
     <style name="white_transparent_backround" parent="android:Widget.ListView">
-        <item name="android:background">@color/cast_expanded_controller_progress_text_color</item>
-        <item name="android:backgroundTint">@color/cast_libraries_material_featurehighlight_text_header_color</item>
+        <item name="android:background">#B4FFFFFF</item>
     </style>
 
     <style name="black_text_opaque">

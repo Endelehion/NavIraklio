@@ -10,7 +10,6 @@ import android.content.Loader;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -22,7 +21,6 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 //import android.support.v7.widget.AppCompatButton;
 //import android.support.v7.widget.AppCompatTextView;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
@@ -35,18 +33,10 @@ import android.widget.TextView;
 import com.example.varda.naviraklio.helpers.InputValidation;
 import com.example.varda.naviraklio.sql.DatabaseHelper;
 
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.appindexing.Thing;
-import com.google.android.gms.common.api.GoogleApiClient;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import static android.Manifest.permission.READ_CONTACTS;
-import static com.example.varda.naviraklio.R.id.login_form;
-import static com.example.varda.naviraklio.R.id.progressBar;
-import static com.example.varda.naviraklio.R.id.textInputEditTextPassword;
 
 
 /**
@@ -82,8 +72,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     private AutoCompleteTextView mUsernameView;
     private TextInputEditText mPasswordView;
-    private Button mSignInButton,cheatHome;
-    private TextView mSignUpLink;
+    private Button mSignInButton,mSignUpBtn;
 
     // Class references.
     private InputValidation mInputValidation;
@@ -116,14 +105,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mTextInputLayoutUsername = (TextInputLayout) findViewById(R.id.textInputLayoutUsername);
         mTextInputLayoutPassword = (TextInputLayout) findViewById(R.id.textInputLayoutPassword);
-        cheatHome = (Button) findViewById(R.id.cheatHome);
         mUsernameView = (AutoCompleteTextView) findViewById(R.id.textInputEditTextUsername);
         populateAutoComplete();
         mPasswordView = (TextInputEditText) findViewById(R.id.textInputEditTextPassword);
 
         mSignInButton = (Button) findViewById(R.id.sign_in_button);
 
-        mSignUpLink = (TextView) findViewById(R.id.sign_up_link);
+        mSignUpBtn = (Button) findViewById(R.id.sign_up_btn);
 
     }
 
@@ -140,18 +128,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             }
         });
-        mSignUpLink.setOnClickListener(new OnClickListener() {
+        mSignUpBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intentSignup = new Intent(getApplicationContext(), SignupActivity.class);
                 startActivity(intentSignup);
-            }
-        });
-        cheatHome.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent homeIntent = new Intent(LoginActivity.this, Home.class);
-                startActivity(homeIntent);
             }
         });
     }
@@ -228,8 +209,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
 
-        TextView mSignUpLink = (TextView) findViewById(R.id.sign_up_link);
-        mSignUpLink.setOnClickListener(new OnClickListener() {
+        TextView mSignUpBtn = (TextView) findViewById(R.id.sign_up_link);
+        mSignUpBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 signup();
