@@ -32,7 +32,9 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".LoginActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:windowSoftInputMode="adjustPan"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -49,7 +51,8 @@
 
         <activity
             android:name=".SignupActivity"
-            android:label="@string/title_activity_signup" android:noHistory="true" />
+            android:label="@string/title_activity_signup" android:noHistory="true"
+            android:windowSoftInputMode="adjustPan"/>
         <activity android:name=".Home" android:label="@string/title_activity_home"/>
         <activity android:name=".Organizer" android:label="@string/title_activity_calendar"/>
         <activity android:name=".Profile" android:label="@string/title_activity_profile"/>

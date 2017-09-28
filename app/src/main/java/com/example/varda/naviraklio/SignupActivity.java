@@ -234,7 +234,7 @@ public class SignupActivity extends AppCompatActivity implements LoaderCallbacks
         if (!mDatabaseHelper.checkUser(mUsernameView.getText().toString().trim()) || mode.equals("edit")) {
 
 
-            if(userFilledChecked&&usernameShortChecked){
+            if (userFilledChecked && usernameShortChecked) {
                 mTextInputLayoutUsername.setErrorEnabled(false);
             }
             userChecked = true;
@@ -250,25 +250,25 @@ public class SignupActivity extends AppCompatActivity implements LoaderCallbacks
         boolean allValid = userChecked && firstNameChecked && lastNameChecked && userFilledChecked && usernameShortChecked && passwordFileedChecked &&
                 passwordShortChecked && passwordConfirmFilledChecked && passwordMatchChecked && addressFilledChecked && telFilledChecked && telValidChecked &&
                 creditFilledChecked && creditValidChecked;
-if(allValid){
-    user.setFirstName(mFirstNameView.getText().toString().trim());
-    user.setLastName(mLastNameView.getText().toString().trim());
-    user.setUsername(mUsernameView.getText().toString().trim());
-    user.setPassword(mPasswordView.getText().toString().trim());
-    user.setAddress(mAddressView.getText().toString().trim());
-    user.setTel(mTelView.getText().toString().trim());
-    user.setCreditCard(mCreditCardView.getText().toString().trim());
+        if (allValid) {
+            user.setFirstName(mFirstNameView.getText().toString().trim());
+            user.setLastName(mLastNameView.getText().toString().trim());
+            user.setUsername(mUsernameView.getText().toString().trim());
+            user.setPassword(mPasswordView.getText().toString().trim());
+            user.setAddress(mAddressView.getText().toString().trim());
+            user.setTel(mTelView.getText().toString().trim());
+            user.setCreditCard(mCreditCardView.getText().toString().trim());
 
-    if (mode.equals("new")) {
-        mDatabaseHelper.addUser(user);
-    } else if (mode.equals("edit")) {
-        mDatabaseHelper.updateUser(user);
-    }
-    mDatabaseHelper.clearCurrentUserTable(mDatabaseHelper.getWritableDatabase());
-    mDatabaseHelper.addCurrentUser(user);
-    // Snack Bar to show success message that record saved successfully
-    Snackbar.make(mSignupFormView, getString(R.string.success_message), Snackbar.LENGTH_LONG).show();
-}
+            if (mode.equals("new")) {
+                mDatabaseHelper.addUser(user);
+            } else if (mode.equals("edit")) {
+                mDatabaseHelper.updateUser(user);
+            }
+            mDatabaseHelper.clearCurrentUserTable(mDatabaseHelper.getWritableDatabase());
+            mDatabaseHelper.addCurrentUser(user);
+            // Snack Bar to show success message that record saved successfully
+            Snackbar.make(mSignupFormView, getString(R.string.success_message), Snackbar.LENGTH_LONG).show();
+        }
 
         return allValid;
 

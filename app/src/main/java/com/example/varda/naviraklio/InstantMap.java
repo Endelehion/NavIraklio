@@ -454,7 +454,6 @@ public class InstantMap extends FragmentActivity implements OnMapReadyCallback, 
         cinemas.add(new Place(35.338573, 25.129685, "Dedalos Club", "Cinema", 16, 2));
         //zografou
         cinemas.add(new Place(37.977369, 23.770716, "Aleka", "Cinema", 16, 2));
-        Collections.sort(cinemas, new ComparatorCoord());
 
 
     }

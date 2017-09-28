@@ -307,7 +307,7 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
                     }
                     testAppointment(i, appointTime);
                     if (appSame || appInside || appInclusive || appAfterWithoutTravelTime && appBeforeWithoutTravelTime) {  //Check if main appointment overlaps with another at the selected time
-                        //TODO appoint invalid
+
                         appointValid = false;
                         Log.i("AppointmentControl", "Main Appointment overlaps with secondary, Main start time:" + appointTimeFrame[0] + " end time:" + appointTimeFrame[1]);
                         Log.i("AppointmentControl", "Main Appointment overlaps with secondary, Main Coordinates:" + origin);
@@ -317,7 +317,6 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
                     } else {
                         if (appAfterWithTravelTime || appBeforeWithTravelTime) {                //check if they overlap with travel time
                             if (appAfterWithoutTravelTime || appBeforeWithoutTravelTime) {      //check if they overlap without travel time
-                                //TODO appointment invalid
 
                                 appointValid = false;
                                 Toast.makeText(PlanMap.this, "Main Appointment overlaps with secondary", Toast.LENGTH_SHORT).show();
@@ -327,7 +326,7 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
                                 exitMap("invalid");
                                 break;
                             } else {
-                                //TODO findPlace nearest to tested and within SameDirection return new appointPlace and times change variables accordingly
+
                                 ArrayList<Place> samePointsList;
                                 samePointsList = findSameDirectionPoints(placeList, origin, destinationLatLng);
                                 if (samePointsList.isEmpty()) {
@@ -342,7 +341,7 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
                                     Intent intent = new Intent();
                                     setResult(Activity.RESULT_CANCELED, intent);
                                     exitMap("closed");
-                                    //TODO invalid appointment all closed
+
                                 }
 
                                 if (appSame || appInside || appInclusive || appAfterWithTravelTime || appBeforeWithTravelTime) {
@@ -355,24 +354,24 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
                                     exitMap("invalid");
                                     break;
 
-                                    //TODO appointment invalid
+
                                 } else {
                                     if (samePointsList.isEmpty()) {
                                         askUser = true;
-                                        //TODO Dialog asking user if its ok to go out of his way if yes navigate according to after/before flag if no cancel appointment
+
                                     }
                                     validCounter++;
                                 }
                             }
                         } else {
                             validCounter++;
-                            //TODO appointment valid
+
                         }
                     }
                 }
             } else {
                 appointValid = false;
-                //TODO cancel appointment cant make it in time
+
                 Log.i("AppointmentControl", "Cant make it in time, Main start time:" + appointTimeFrame[0] + " end time:" + appointTimeFrame[1]);
                 Log.i("AppointmentControl", "Cant make it in time, Main Coordinates:" + origin);
                 exitMap("noTime");
@@ -815,7 +814,7 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
         cinemas.add(new Place(35.338573, 25.129685, "Dedalos Club", "Cinema", 16, 2));
         //zografou
         cinemas.add(new Place(37.977369, 23.770716, "Aleka", "Cinema", 16, 2));
-        Collections.sort(cinemas, new ComparatorCoord());
+
 
 
     }
@@ -1019,7 +1018,7 @@ protected void checkPermissions(){
         }
     }
 
-
+//TODO orientation Map change
     /**
      * A class to parse the Google Places in JSON format
      */

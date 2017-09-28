@@ -72,7 +72,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     private AutoCompleteTextView mUsernameView;
     private TextInputEditText mPasswordView;
-    private Button mSignInButton,mSignUpBtn;
+    private Button mSignInButton, mSignUpBtn;
 
     // Class references.
     private InputValidation mInputValidation;
@@ -83,7 +83,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
     //private GoogleApiClient client;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,7 +105,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mTextInputLayoutUsername = (TextInputLayout) findViewById(R.id.textInputLayoutUsername);
         mTextInputLayoutPassword = (TextInputLayout) findViewById(R.id.textInputLayoutPassword);
         mUsernameView = (AutoCompleteTextView) findViewById(R.id.textInputEditTextUsername);
-        populateAutoComplete();
+       // populateAutoComplete();
         mPasswordView = (TextInputEditText) findViewById(R.id.textInputEditTextPassword);
 
         mSignInButton = (Button) findViewById(R.id.sign_in_button);
@@ -124,7 +123,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             public void onClick(View v) {
 
 
-                        verifyFromSQLite();
+                verifyFromSQLite();
 
             }
         });
@@ -156,26 +155,36 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * This method is to validate the input text fields and verify login credentials from SQLite
      */
     private void verifyFromSQLite() {
-        if (!mInputValidation.isAutoCompleteTextViewFilled(mUsernameView, mTextInputLayoutUsername, getString(R.string.error_empty_username)))
-            return;
-        if (!mInputValidation.isInputEditTextValidUsername(mUsernameView, mTextInputLayoutUsername, getString(R.string.error_invalid_username)))
-            return;
-        if (!mInputValidation.isInputEditTextFilled(mPasswordView, mTextInputLayoutPassword, getString(R.string.error_empty_password)))
-            return;
-        if (!mInputValidation.isInputEditTextValidPassword(mPasswordView, mTextInputLayoutPassword, getString(R.string.error_invalid_password)))
-            return;
-        if (mDatabaseHelper.checkUser(mUsernameView.getText().toString().trim()
-                , mPasswordView.getText().toString().trim())) {
-            showProgress(true);
-            Intent goHome = new Intent(LoginActivity.this, Home.class);
-            emptyInputEditText();
-
-
-            startActivity(goHome);
-        } else {
-            // Snack Bar to show success message that record is wrong
-            Snackbar.make(mLoginFormView, getString(R.string.error_incorrect_password), Snackbar.LENGTH_LONG).show();
+        boolean usernameFilledCheck, usernameShortCheck = false, passwordFilledCheck, passwordShortCheck = false, loginValidCheck;
+        usernameFilledCheck = mInputValidation.isAutoCompleteTextViewFilled(mUsernameView, mTextInputLayoutUsername, getString(R.string.error_empty_username));
+        if (usernameFilledCheck) {
+            usernameShortCheck = mInputValidation.isInputEditTextValidUsername(mUsernameView, mTextInputLayoutUsername, getString(R.string.error_invalid_username));
         }
+        passwordFilledCheck = mInputValidation.isInputEditTextFilled(mPasswordView, mTextInputLayoutPassword, getString(R.string.error_empty_password));
+        if (passwordFilledCheck) {
+            passwordShortCheck = mInputValidation.isInputEditTextValidPassword(mPasswordView, mTextInputLayoutPassword, getString(R.string.error_invalid_password));
+        }
+
+        if (usernameFilledCheck && usernameShortCheck && passwordFilledCheck && passwordShortCheck) {
+            if (mDatabaseHelper.checkUser(mUsernameView.getText().toString().trim()
+                    , mPasswordView.getText().toString().trim())) {
+                emptyInputEditText();
+                loginValidCheck = true;
+            } else {
+                loginValidCheck = false;
+                mTextInputLayoutUsername.setErrorEnabled(true);
+                mTextInputLayoutPassword.setErrorEnabled(true);
+                mTextInputLayoutUsername.setError(getString(R.string.error_incorrect_password));
+                mTextInputLayoutPassword.setError(getString(R.string.error_incorrect_password));
+            }
+            if (loginValidCheck) {
+                showProgress(true);
+                Intent goHome = new Intent(LoginActivity.this, Home.class);
+                startActivity(goHome);
+            }
+        }
+
+
     }
 
     /**
@@ -186,45 +195,45 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mPasswordView.setText(null);
     }
 
-        /**   mUsernameView = (AutoCompleteTextView) findViewById(R.id.textInputEditTextUsername);
-        populateAutoComplete();
+    /**
+     * mUsernameView = (AutoCompleteTextView) findViewById(R.id.textInputEditTextUsername);
+     * populateAutoComplete();
+     * <p>
+     * mPasswordView = (TextInputEditText) findViewById(R.id.textInputEditTextPassword);
+     * mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+     *
+     * @Override public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
+     * if (id == R.id.login || id == EditorInfo.IME_NULL) {
+     * attemptLogin();
+     * return true;
+     * }
+     * return false;
+     * }
+     * });
+     * <p>
+     * Button mSignInButton = (Button) findViewById(R.id.sign_in_button);
+     * mSignInButton.setOnClickListener(new OnClickListener() {
+     * @Override public void onClick(View view) {
+     * attemptLogin();
+     * }
+     * });
+     * <p>
+     * TextView mSignUpBtn = (TextView) findViewById(R.id.sign_up_link);
+     * mSignUpBtn.setOnClickListener(new OnClickListener() {
+     * @Override public void onClick(View view) {
+     * signup();
+     * }
+     * });
+     * <p>
+     * mLoginFormView = (ScrollView) findViewById(R.id.login_form);
+     * mProgressView = (ProgressBar) findViewById(R.id.login_progress);
+     * // ATTENTION: This was auto-generated to implement the App Indexing API.
+     * // See https://g.co/AppIndexing/AndroidStudio for more information.
+     * client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+     * }
+     */
 
-        mPasswordView = (TextInputEditText) findViewById(R.id.textInputEditTextPassword);
-        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
-                    return true;
-                }
-                return false;
-            }
-        });
-
-        Button mSignInButton = (Button) findViewById(R.id.sign_in_button);
-        mSignInButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                attemptLogin();
-            }
-        });
-
-        TextView mSignUpBtn = (TextView) findViewById(R.id.sign_up_link);
-        mSignUpBtn.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                signup();
-            }
-        });
-
-        mLoginFormView = (ScrollView) findViewById(R.id.login_form);
-        mProgressView = (ProgressBar) findViewById(R.id.login_progress);
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
-    }*/
-
-    private void populateAutoComplete() {
+ /*   private void populateAutoComplete() {
         if (!mayRequestContacts()) {
             return;
         }
@@ -253,11 +262,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
         return false;
     }
-
+*/
     /**
      * Callback received when a permissions request has been completed.
      */
-    @Override
+  /*  @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         if (requestCode == REQUEST_READ_CONTACTS) {
@@ -265,7 +274,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 populateAutoComplete();
             }
         }
-    }
+    }*/
 
 
     /**
@@ -450,12 +459,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         AppIndex.AppIndexApi.end(client, getIndexApiAction());
         client.disconnect();
     }*/
+    @Override
+    protected void onResume() {
+        super.onResume();
+        showProgress(false);
+    }
 
-@Override
-protected void onResume(){
-    super.onResume();
-    showProgress(false);
-}
     private interface ProfileQuery {
         String[] PROJECTION = {
                 ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME,

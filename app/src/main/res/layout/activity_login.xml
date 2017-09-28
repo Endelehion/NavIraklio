@@ -10,6 +10,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:focusableInTouchMode="true"
     tools:context="com.example.varda.naviraklio.LoginActivity">
 
     <!-- Login progress -->
@@ -43,12 +44,12 @@
         android:id="@+id/sign_in_button"
         android:layout_width="320dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="120dp"
+        android:layout_marginTop="12dp"
         android:text="@string/action_sign_in"
         android:textSize="20sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/login_form" />
 
     <Button
         android:id="@+id/sign_up_btn"
@@ -63,9 +64,10 @@
 
     <ScrollView
         android:id="@+id/login_form"
-        android:layout_width="320dp"
-        android:layout_height="114dp"
-        android:layout_marginTop="8dp"
+        android:layout_width="321dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-17dp"
+        app:layout_constraintHorizontal_bias="0.512"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent">

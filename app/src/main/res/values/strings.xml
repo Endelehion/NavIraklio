@@ -17,7 +17,7 @@
     <string name="action_sign_in">Sign in</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="action_sign_up_link">No account yet? Create one</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_incorrect_password">Invalid Username or Password</string>
 
     <!-- Strings related to signup -->
     <string name="title_activity_signup">Signup Page</string>

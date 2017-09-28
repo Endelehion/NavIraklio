@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical"
+    android:focusableInTouchMode="true"
     tools:context="com.example.varda.naviraklio.SignupActivity">
 
     <!-- Signup progress -->
@@ -36,8 +37,8 @@
 
     <ScrollView
         android:id="@+id/signup_form"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:paddingLeft="7dp"
         android:paddingRight="7dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -201,7 +202,7 @@
 
                 <Button
                     android:id="@+id/sign_in_link"
-                    android:layout_width="143dp"
+                    android:layout_width="145dp"
                     android:layout_height="60dp"
                     android:layout_marginLeft="8dp"
                     android:layout_marginStart="8dp"
@@ -216,7 +217,7 @@
 
                 <Button
                     android:id="@+id/sign_up_button"
-                    android:layout_width="158dp"
+                    android:layout_width="145dp"
                     android:layout_height="60dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginRight="8dp"

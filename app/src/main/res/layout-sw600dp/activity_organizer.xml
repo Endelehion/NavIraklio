@@ -25,17 +25,6 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_end="430dp" />
 
-    <ListView
-        android:id="@+id/listAp"
-        android:layout_width="345dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="2dp"
-        android:layout_marginTop="8dp"
-        android:scrollbars="horizontal"
-        android:theme="@style/white_transparent_backround"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <Button
         android:id="@+id/newAp"
         android:layout_width="180dp"
@@ -57,5 +46,18 @@
         android:textSize="25sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline9"
         app:layout_constraintLeft_toRightOf="@+id/listAp" />
+
+    <ListView
+        android:id="@+id/listAp"
+        android:layout_width="345dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="fill"
+        android:layout_marginLeft="2dp"
+        android:layout_marginTop="7dp"
+        android:layout_weight="1"
+        android:scrollbars="vertical"
+        android:theme="@style/white_transparent_backround"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

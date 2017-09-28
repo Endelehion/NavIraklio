@@ -47,6 +47,9 @@ public class MoviePicker extends AppCompatActivity {
             whichMovie = savedInstanceState.getString("whichMovieKey", "");
             hoursList = savedInstanceState.getStringArrayList("hoursListKey");
             mode = savedInstanceState.getString("modeKey", mode);
+            movieDates = savedInstanceState.getStringArrayList("movieDatesKey");
+            movieDuration=savedInstanceState.getString("movieDurationKey");
+            cinemaString=savedInstanceState.getString("cinemaStringKey");
 
         } else {
             layoutId = R.layout.activity_movie_picker;
@@ -54,6 +57,8 @@ public class MoviePicker extends AppCompatActivity {
             hoursList = new ArrayList<>();
             mode = "TimePick";
             movieDates = new ArrayList<>();
+            movieDuration="0";
+            cinemaString="";
         }
         setContentView(layoutId);
         if (layoutId == R.layout.activity_movie_picker) {
@@ -188,15 +193,15 @@ public class MoviePicker extends AppCompatActivity {
                         cinemaString = hoursList.get(hoursRadioList.getCheckedItemPosition());
                         cinemaString = hoursList.get(hoursRadioList.getCheckedItemPosition()).substring(0, cinemaString.indexOf(":") - 2);
                         tempStr = hoursList.get(hoursRadioList.getCheckedItemPosition());
-                        movieHour=Integer.parseInt(hoursList.get(hoursRadioList.getCheckedItemPosition()).substring(tempStr.indexOf(":")-2,tempStr.indexOf(":")));
-                        movieMin=Integer.parseInt(hoursList.get(hoursRadioList.getCheckedItemPosition()).substring(tempStr.indexOf(":")+1,tempStr.indexOf(":")+3));
+                        movieHour = Integer.parseInt(hoursList.get(hoursRadioList.getCheckedItemPosition()).substring(tempStr.indexOf(":") - 2, tempStr.indexOf(":")));
+                        movieMin = Integer.parseInt(hoursList.get(hoursRadioList.getCheckedItemPosition()).substring(tempStr.indexOf(":") + 1, tempStr.indexOf(":") + 3));
 
                         mins = Integer.parseInt(moviePickedInfo.getText().toString().
                                 substring(moviePickedInfo.getText().toString().indexOf("Duration: ") + 10, moviePickedInfo.getText().toString().indexOf("min")));
                         hour = mins / 60;
                         min = mins % 60;
                         movieDuration = (mins / 60) + ":" + (mins % 60);
-                        SimpleDateFormat dayOfWeek = new SimpleDateFormat("EEEE",Locale.getDefault());
+                        SimpleDateFormat dayOfWeek = new SimpleDateFormat("EEEE", Locale.getDefault());
                         Calendar cal = Calendar.getInstance();
                         Date currDate = cal.getTime();
                         while (!dayOfWeek.format(currDate).equals(dayString)) {
@@ -207,7 +212,7 @@ public class MoviePicker extends AppCompatActivity {
                         cal.set(Calendar.HOUR_OF_DAY, movieHour);
                         cal.set(Calendar.MINUTE, movieMin);
                         movieDates = new ArrayList<>();
-                        SimpleDateFormat fullDate = new SimpleDateFormat("EEE dd MMM yyyy HH:mm",Locale.getDefault());
+                        SimpleDateFormat fullDate = new SimpleDateFormat("EEE dd MMM yyyy HH:mm", Locale.getDefault());
                         TimeZone timeZone;
                         timeZone = TimeZone.getTimeZone("Europe/Athens");
                         fullDate.setTimeZone(timeZone);
@@ -597,9 +602,21 @@ public class MoviePicker extends AppCompatActivity {
         savedInstanceState.putStringArrayList("hoursListKey", hoursList);
         savedInstanceState.putString("modeKey", mode);
         savedInstanceState.putStringArrayList("movieDatesKey", movieDates);
-
+       savedInstanceState.putString("movieDurationKey",movieDuration);
+        savedInstanceState.putString("cinemaStringKey",cinemaString);
     }
 
+    @Override
 
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        layoutId = savedInstanceState.getInt("layoutIdKey", R.layout.activity_movie_picker);
+        whichMovie = savedInstanceState.getString("whichMovieKey", "");
+        hoursList = savedInstanceState.getStringArrayList("hoursListKey");
+        mode = savedInstanceState.getString("modeKey", mode);
+        movieDates = savedInstanceState.getStringArrayList("movieDatesKey");
+        movieDuration=savedInstanceState.getString("movieDurationKey");
+        cinemaString=savedInstanceState.getString("cinemaStringKey");
+    }
 }
 

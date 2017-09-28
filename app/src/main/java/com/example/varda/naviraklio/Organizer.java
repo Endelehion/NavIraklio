@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -40,15 +41,15 @@ public class Organizer extends AppCompatActivity {
     private ArrayList<Appointment> appointArrayList;
     private ArrayAdapter adapterAp;
     private ListView listViewAp;
-    private String dateString, receivedDate, receivedType;
+    private String dateString, receivedDate, receivedType, receivedMovie;
     private Place receivedDestination;
     private Button navigateBtn;
     ArrayList<String> stringList;
-    private ArrayList<Movie> movieList;
     private List<Place> superMarkets, cinemas, gasStations;
     private int receivedDuration;
     private DatabaseAppointmentHelper appDB;
     private DatabaseHelper usDB;
+    private String receivedCinema;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,14 +83,28 @@ public class Organizer extends AppCompatActivity {
 */
         stringList = new ArrayList<>();
         for (int i = 0; i < appointArrayList.size(); i++) {
-            int id = appointArrayList.get(i).getId();
             String address = appointArrayList.get(i).getPlace().getAddress();
             String type = appointArrayList.get(i).getPlace().getCoordType();
             String date = appointArrayList.get(i).getDateString();
-            stringList.add(id + " " + address + " " + type + " " + date);
+            String movie = appointArrayList.get(i).getMovie();
+            stringList.add(type + " " + address + " " + movie + "\n" + date);
         }
 
-        adapterAp = new ArrayAdapter<>(Organizer.this, android.R.layout.simple_list_item_single_choice, stringList);
+        adapterAp = new ArrayAdapter<String>(Organizer.this, android.R.layout.simple_list_item_single_choice, stringList){
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent){
+                // Get the current item from ListView
+                View view = super.getView(position,convertView,parent);
+
+                // Get the Layout Parameters for ListView Current Item View
+                ViewGroup.LayoutParams params = view.getLayoutParams();
+
+                // Set the height of the Item View
+             params.height=ViewGroup.LayoutParams.WRAP_CONTENT;
+
+                return view;
+            }
+        };
         listViewAp = (ListView) findViewById(R.id.listAp);
         listViewAp.setAdapter(adapterAp);
         listViewAp.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
@@ -133,12 +148,15 @@ public class Organizer extends AppCompatActivity {
                 adapterIndex = listViewAp.getCheckedItemPosition();
                 if (adapterIndex != -1) {
                     Intent locationIntent = new Intent(Organizer.this, PlanMap.class);
-                    String passedString = appointArrayList.get(adapterIndex).getPlace().getCoordType();
-                    locationIntent.putExtra("typeKey", passedString);
+                    String type = appointArrayList.get(adapterIndex).getPlace().getCoordType();
+                    locationIntent.putExtra("typeKey", type);
                     locationIntent.putExtra("listIndexKey", adapterIndex);
                     locationIntent.putParcelableArrayListExtra("listKey", appointArrayList);
                     locationIntent.putExtra("dateKey", appointArrayList.get(adapterIndex).dateString);
                     locationIntent.putExtra("durationMinsKey", appointArrayList.get(adapterIndex).getDuration());
+                    if(type.equals("Cinema")){
+                        locationIntent.putExtra("cinemaKey",appointArrayList.get(adapterIndex).getCinema());
+                    }
                     startActivityForResult(locationIntent, REQUEST_LOCATION_MAP);
 
                 } else {
@@ -285,7 +303,6 @@ public class Organizer extends AppCompatActivity {
         cinemas.add(new Place(35.338573, 25.129685, "Dedalos Club", "Cinema", 16, 2));
         //zografou
         cinemas.add(new Place(37.977369, 23.770716, "Aleka", "Cinema", 16, 2));
-        Collections.sort(cinemas, new ComparatorCoord());
 
 
     }
@@ -314,13 +331,27 @@ public class Organizer extends AppCompatActivity {
             receivedDate = data.getStringExtra("dateKey");
             receivedType = data.getStringExtra("typeKey");
             receivedDestination = data.getParcelableExtra("destinationKey");
+            receivedMovie = data.getStringExtra("movieKey");
+            receivedCinema=data.getStringExtra("cinemaKey");
             data.getIntExtra("durationKey", receivedDuration);
             Appointment receivedAppointment = new Appointment(appointArrayList.size() - 1, receivedDate, receivedDuration, receivedDestination);
+            if (receivedMovie != null) {
+                receivedAppointment.setMovie(receivedMovie);
+            } else {
+                receivedAppointment.setMovie("");
+            }
+            if (receivedCinema != null) {
+                receivedAppointment.setCinema(receivedCinema);
+            } else {
+                receivedAppointment.setCinema("");
+            }
             appointArrayList.add(receivedAppointment);
-            int id = appointArrayList.get(appointArrayList.size() - 1).getId();
             String type = appointArrayList.get(appointArrayList.size() - 1).getPlace().getCoordType();
             String date = appointArrayList.get(appointArrayList.size() - 1).getDateString();
-            stringList.add(id + " " + type + " " + date);
+            String address = appointArrayList.get(appointArrayList.size() - 1).getPlace().getAddress();
+            String movie = appointArrayList.get(appointArrayList.size() - 1).getMovie();
+
+            stringList.add(type + " " + address + " " + movie + "\n" + date);
             adapterAp.notifyDataSetChanged();
         }
 
