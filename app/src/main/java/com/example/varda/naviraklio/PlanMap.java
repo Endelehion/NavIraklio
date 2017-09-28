@@ -160,7 +160,7 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        createLocation();
+
         clickedflag = false;
         mMap = googleMap;
         hera = new LatLng(35.339332, 25.133158);
@@ -218,7 +218,7 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
     public void startNavigation() {
         mMap.clear();
         clickedflag = true;
-        createLocation();
+        checkSettings();
         if (location != null) {
             Log.i("Location Info", "Location achieved!");
             addCurrentLocationMarker();
@@ -237,7 +237,6 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
         } else {
             Toast toast = Toast.makeText(PlanMap.this, "Location not Available", Toast.LENGTH_LONG);
             toast.show();
-            checkSettings();
             Log.i("Location Info", "Location not Available");
         }
     }
@@ -651,11 +650,11 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
         mLocationRequest.setInterval(10000);
         mLocationRequest.setFastestInterval(5000);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        createLocation();
     }
 
     protected void checkSettings() {
         /**check if required settings are enabled*/
-        createLocation();
         createLocationRequest();
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
                 .addLocationRequest(mLocationRequest);
@@ -670,7 +669,6 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
                     case LocationSettingsStatusCodes.SUCCESS:
                         // All location settings are satisfied. The client can
                         // initialize location requests here.
-                        createLocation();
                         createLocationRequest();
 
                         break;
