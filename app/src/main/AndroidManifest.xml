@@ -5,14 +5,14 @@
     <permission
         android:name="in.wptrafficanalyzer.locationroutedirectionmapv2.permission.MAPS_RECEIVE"
         android:protectionLevel="signature" />
-
+    <!--13433 lines of code!-->
     <uses-permission android:name="in.wptrafficanalyzer.locationroutedirectionmapv2.permission.MAPS_RECEIVE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <!-- To auto-complete the email text field in the login form with the user's emails --> //
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
@@ -33,8 +33,7 @@
         <activity
             android:name=".LoginActivity"
             android:label="@string/app_name"
-            android:windowSoftInputMode="adjustPan"
-            >
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -51,11 +50,18 @@
 
         <activity
             android:name=".SignupActivity"
-            android:label="@string/title_activity_signup" android:noHistory="true"
-            android:windowSoftInputMode="adjustPan"/>
-        <activity android:name=".Home" android:label="@string/title_activity_home"/>
-        <activity android:name=".Organizer" android:label="@string/title_activity_calendar"/>
-        <activity android:name=".Profile" android:label="@string/title_activity_profile"/>
+            android:label="@string/title_activity_signup"
+            android:noHistory="true"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".Home"
+            android:label="@string/title_activity_home" />
+        <activity
+            android:name=".Organizer"
+            android:label="@string/title_activity_calendar" />
+        <activity
+            android:name=".Profile"
+            android:label="@string/title_activity_profile" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -71,12 +77,22 @@
         <activity
             android:name=".InstantMap"
             android:label="@string/title_activity_map" />
-        <activity android:name=".NewAppointment" android:label="New Appointment"/>
-        <activity android:name=".DateTimePick" android:label="Set Date and Time"/>
-        <activity android:name=".PlanMap" android:label="Plan Map"
-            android:hardwareAccelerated="true"/>
-        <activity android:name=".MoviePicker" android:label="Movie Picker" />
-        <activity android:name=".UsersListActivity" android:label="@string/title_activity_usersList"/>
+        <activity
+            android:name=".NewAppointment"
+            android:label="New Appointment" />
+        <activity
+            android:name=".DateTimePick"
+            android:label="Set Date and Time" />
+        <activity
+            android:name=".PlanMap"
+            android:hardwareAccelerated="true"
+            android:label="Plan Map" />
+        <activity
+            android:name=".MoviePicker"
+            android:label="Movie Picker" />
+        <activity
+            android:name=".UsersListActivity"
+            android:label="@string/title_activity_usersList" />
     </application>
 
 </manifest>
