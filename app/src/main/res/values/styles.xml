@@ -20,7 +20,7 @@
         <item name="android:background">@drawable/button_shape</item>
         </style>
 
-    <style name="white_transparent_backround" parent="android:Widget.ListView">
+    <style name="white_transparent_background" parent="android:Widget.ListView">
         <item name="android:background">#B4FFFFFF</item>
     </style>
 

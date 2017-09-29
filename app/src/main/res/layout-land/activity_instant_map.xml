@@ -7,55 +7,47 @@
 >
 
 
+    <fragment xmlns:map="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/instantDestLabel"
+        tools:context="com.example.varda.naviraklio.InstantMap" />
+
     <Spinner
         android:id="@+id/spinner"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
+        android:layout_width="250dp"
+        android:layout_height="40dp"
+        android:layout_alignBottom="@+id/findButton"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/instantDestLabel"
         android:animateLayoutChanges="false"
         android:clipChildren="false"
         android:entries="@+strings/place_type"
         android:prompt="@+strings/prompt_spinner"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:layout_above="@+id/map" />
-
-    <EditText
-        android:id="@+id/searchText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Name"
-        android:layout_toEndOf="@+id/findButton" />
-
-    <fragment
-        xmlns:map="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context="com.example.varda.naviraklio.InstantMap"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/searchText" />
-
-    <Button
-        android:id="@+id/whereAmI"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:text="Where Am I" />
+        android:background="#B4FFFFFF" />
 
     <Button
         android:id="@+id/findButton"
         android:layout_width="100dp"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:text="FIND"
+        android:layout_below="@+id/instantDestLabel"
+        android:layout_toEndOf="@+id/spinner" />
+
+    <TextView
+        android:id="@+id/instantDestLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/spinner"
-        android:layout_above="@+id/map" />
+        android:gravity="left|center"
+        android:textSize="16sp"
+        android:theme="@style/white_transparent_background" />
 
 </RelativeLayout>

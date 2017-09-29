@@ -49,7 +49,7 @@
         android:scrollbars="horizontal"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:theme="@style/white_transparent_backround"
+        android:theme="@style/white_transparent_background"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline11"
         tools:layout_editor_absoluteY="57dp" />

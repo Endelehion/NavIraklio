@@ -41,7 +41,7 @@
         android:maxLines="1"
         android:text="@string/action_sign_up_link"
         android:textSize="18sp"
-        android:theme="@style/white_transparent_backround"
+        android:theme="@style/white_transparent_background"
         android:layout_marginBottom="7dp"
         android:layout_marginEnd="117dp"
         android:layout_marginRight="117dp"

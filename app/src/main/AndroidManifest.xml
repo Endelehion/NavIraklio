@@ -73,7 +73,8 @@
             android:label="@string/title_activity_map" />
         <activity android:name=".NewAppointment" android:label="New Appointment"/>
         <activity android:name=".DateTimePick" android:label="Set Date and Time"/>
-        <activity android:name=".PlanMap" android:label="Plan Map"/>
+        <activity android:name=".PlanMap" android:label="Plan Map"
+            android:hardwareAccelerated="true"/>
         <activity android:name=".MoviePicker" android:label="Movie Picker" />
         <activity android:name=".UsersListActivity" android:label="@string/title_activity_usersList"/>
     </application>

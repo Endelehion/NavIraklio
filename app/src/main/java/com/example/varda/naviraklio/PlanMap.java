@@ -80,7 +80,7 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
     private final String APPOINTMENT_STRINGID = "appointKey";
     private LatLng whereNow;
     private Marker currMark;
-    private Button findButton, mapConfirmBtn;
+    private Button mapConfirmBtn;
     private double sumDist;
     private TextView destinationText;
     private ToggleButton myLocationToggle, customMarkerToggle;
@@ -99,20 +99,39 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
     private boolean appBeforeWithoutTravelTime;
     private boolean appInside;
     private boolean appInclusive;
-    double avgDivergence = 1.8784960720510757;
+    private static final double avgDivergence = 1.8784960720510757;
     private boolean isRushHour;
     private final Date nowTime = Calendar.getInstance().getTime();
     private boolean isSecondAppointBeforeValid;
     private boolean isSecondAppointAfterValid;
-    int receivedDurationInSec;
-    private boolean appointmentValidated;
+    private int receivedDurationInSec;
+    private boolean appointmentValidated, firstRun;
     private String receivedCinema;
     private int validCounter;
-
+    private PolylineOptions lineOptions;
+    private int failCounter = 0;
+private String labelString;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plan_map);
+
+        if (savedInstanceState != null) {
+            destination = savedInstanceState.getParcelable("destinationKey");
+            lineOptions = savedInstanceState.getParcelable("lineOptionsKey");
+            appointmentValidated = savedInstanceState.getBoolean("appointmentValidatedKey");
+            firstRun = savedInstanceState.getBoolean("firstRunKey");
+            location = savedInstanceState.getParcelable("locationKey");
+            labelString = savedInstanceState.getString("labelStringKey");
+
+        } else {
+            destination = null;
+            appointmentValidated = false;
+            lineOptions = null;
+            firstRun = true;
+            location = null;
+            labelString="";
+        }
 
         // Create an instance of GoogleAPIClient.
         if (mGoogleApiClient == null) {
@@ -132,7 +151,6 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
         placeTypes = getResources().getStringArray(R.array.place_type);
         ArrayAdapter dataAdapter = new ArrayAdapter<String>(PlanMap.this, android.R.layout.simple_spinner_item, placeTypes);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        findButton = (Button) findViewById(R.id.findButton);
         mapConfirmBtn = (Button) findViewById(R.id.mapConfirmBtn);
         destinationText = (TextView) findViewById(R.id.destinationText);
         dateFormat = new SimpleDateFormat("EEE dd MMM yyyy HH:mm");
@@ -158,6 +176,7 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
         super.onBackPressed();
     }
 
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
@@ -180,14 +199,6 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
                     finish();
                 }
 
-            }
-        });
-
-
-        findButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startNavigation();
             }
         });
 
@@ -225,13 +236,13 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
             origin = new LatLng(location.getLatitude(), location.getLongitude());
 
             if (selectedTypeString != null) {
-
                 try {
                     appointmentValidated = findPlace(selectedTypeString);
+                    firstRun = false;
                 } catch (ParseException e) {
+                    firstRun = true;
                     e.printStackTrace();
                 }
-
             }
 
         } else {
@@ -290,7 +301,7 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
             int originToMainTravelTime;
             validCounter = 0;
 
-            originToMainTravelTime = calculateTravelTime(origin, destinationLatLng, avgDivergence, isRushHour);
+            originToMainTravelTime = calculateTravelTime(origin, destinationLatLng, isRushHour);
             appointTime = dateFormat.parse(receivedDateString);                         //appointTime: Tested Appointment Date
             appointTimeFrame = appointWindow(appointTime, receivedDurationInSec, -300, 300);               //appointTimeFrame[1]: Tested Appointment start, appointTimeFrame[0]: Tested Appointment end, all with added 5min window
 
@@ -380,9 +391,9 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
 
 
             if (appointValid) {
-                Toast.makeText(PlanMap.this, "appoint valid", Toast.LENGTH_SHORT).show();
+                Toast.makeText(PlanMap.this, "Appointment Valid", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(PlanMap.this, "appoint invalid confirm", Toast.LENGTH_SHORT).show();
+                Toast.makeText(PlanMap.this, "Appointment Invalid", Toast.LENGTH_SHORT).show();
                 Log.i("AppointmentControl", "invalid confirm");
             }
 
@@ -465,20 +476,21 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
     public void exitMap(final String reason) {
         if (reason.equals("user")) {
             Toast.makeText(PlanMap.this, "Appointment canceled by user", Toast.LENGTH_SHORT).show();
-            finish();
         } else if (reason.equals("invalid")) {
             Toast.makeText(PlanMap.this, "Appointment invalid: time overlaps with another", Toast.LENGTH_SHORT).show();
         } else if (reason.equals("noTime")) {
             Toast.makeText(PlanMap.this, "Appointment invalid: Can't make it in time", Toast.LENGTH_SHORT).show();
         } else if (reason.equals("closed")) {
             Toast.makeText(PlanMap.this, "They are all closed at the selected time", Toast.LENGTH_SHORT).show();
+        } else if (reason.equals("connection_failed")) {
+            Toast.makeText(this, "Connection with Location Provider Failed. Try Again Later", Toast.LENGTH_SHORT).show();
         }
-       /* new Timer().schedule(new TimerTask() {
+        new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
                 finish();
             }
-        }, 2000);*/
+        }, 2000);
     }
 
     public void checkRushHour() {
@@ -534,8 +546,8 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
         int listDuration, originToSecondTravelTime, mainToSecondTravelTime;
         listTime = dateFormat.parse(receivedAppointList.get(index).getDateString());            //listTime: appointment(s) Date on List
         listDuration = receivedAppointList.get(index).getDuration() * 60;                            //listDuration: appointment(s) int duration on list
-        mainToSecondTravelTime = calculateTravelTime(destinationLatLng, receivedAppointListLatLng, avgDivergence, isRushHour);
-        originToSecondTravelTime = calculateTravelTime(origin, receivedAppointListLatLng, avgDivergence, isRushHour);
+        mainToSecondTravelTime = calculateTravelTime(destinationLatLng, receivedAppointListLatLng, isRushHour);
+        originToSecondTravelTime = calculateTravelTime(origin, receivedAppointListLatLng, isRushHour);
         cal.setTime(nowTime);
         cal.add(Calendar.SECOND, originToSecondTravelTime);
         arrivalSecondBefore = cal.getTime();               //listDateTimeFrameBefore[0]: Tested appointment Start time, listDateTimeFrameAfter[1]: Tested appointment EndTime plus the travelTime from main to tested locations, all with added 5min window
@@ -597,7 +609,7 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
 
     }
 
-    public int calculateTravelTime(LatLng origin, LatLng destination, double divergence, boolean rushHour) {
+    public int calculateTravelTime(LatLng origin, LatLng destination, boolean rushHour) {
         int travelTime;
         double avgSpeed, distance;
         if (rushHour) {
@@ -606,11 +618,50 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
         else {
             avgSpeed = 6.94444;          //normal avg speed 25km/h == 416.6666m/min ==6.94444m/sec
         }
-        distance = divergence * distFrom(origin, destination);
+        distance = distFrom(origin, destination);
         travelTime = (int) Math.ceil(distance / avgSpeed);
 
         return travelTime;
     }
+
+    public int pureCalculateTravelTime(double distance) {
+        int travelTime;
+        double avgSpeed;
+        if (isRushHour) {
+            avgSpeed = 3.88888;
+        }         // rush hour avg speed 14km/h == 233.3333m/min  == 3.8888m/sec
+        else {
+            avgSpeed = 6.94444;          //normal avg speed 25km/h == 416.6666m/min ==6.94444m/sec
+        }
+        travelTime = (int) Math.ceil(distance / avgSpeed);
+        return travelTime;
+    }
+
+    public String convertTime(int timeSeconds) {
+        int days = 0, hours = 0, minutes = 0, seconds = 0, time = 0;    //1day = 86400s   1hour=3600s
+        String timeString = "";
+        days = timeSeconds / 86400;
+        time = timeSeconds % 86400;
+        hours = time / 3600;
+        time = time % 3600;
+        minutes = time / 60;
+        time = time % 60;
+        seconds = time;
+        if (days != 0) {
+            timeString=timeString.concat(days + "d ");
+        }
+        if (hours != 0) {
+            timeString=timeString.concat(hours + "h ");
+        }
+        if (minutes != 0) {
+            timeString=timeString.concat(minutes + "min ");
+        }
+        if (seconds != 0) {
+            timeString=timeString.concat(seconds + "sec ");
+        }
+        return timeString;
+    }
+
 
     @Nullable
     protected Place findNearestOpenPlace(ArrayList<Place> placeList, LatLng startPoint) throws ParseException {
@@ -621,7 +672,7 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
         appointTime = dateFormat.parse(receivedDateString);
         for (int i = 0; i < placeList.size(); i++) {
             if (checkIfopen(placeList.get(i), appointTime)) {
-                dist = distFrom(startPoint, new LatLng(placeList.get(i).getLat(),placeList.get(i).getLon()));
+                dist = distFrom(startPoint, new LatLng(placeList.get(i).getLat(), placeList.get(i).getLon()));
                 nearestPlace = placeList.get(i);
                 nullFlag = false;
                 break;
@@ -633,7 +684,7 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
         if (!nullFlag) {
             for (int i = 0; i < placeList.size(); i++) {
                 if (checkIfopen(placeList.get(i), appointTime)) {
-                    tempDist = distFrom(startPoint, new LatLng(placeList.get(i).getLat(),placeList.get(i).getLon()));
+                    tempDist = distFrom(startPoint, new LatLng(placeList.get(i).getLat(), placeList.get(i).getLon()));
                     if (tempDist < dist) {
                         dist = tempDist;
                         nearestPlace = placeList.get(i);
@@ -697,6 +748,15 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
         });
     }
 
+    public void reDrawMap() {
+
+        addCurrentLocationMarker();
+
+        mMap.addPolyline(lineOptions);
+        mMap.addMarker(new MarkerOptions().position(new LatLng(destination.getLat(), destination.getLon())).title(destination.getAddress()));
+        destinationText.setText(labelString);
+    }
+
     protected void onStart() {
         mGoogleApiClient.connect();
         super.onStart();
@@ -709,6 +769,11 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
+        if (firstRun) {
+            startNavigation();
+        } else {
+            reDrawMap();
+        }
 
     }
 
@@ -814,7 +879,6 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
         cinemas.add(new Place(37.977369, 23.770716, "Aleka", "Cinema", 16, 2));
 
 
-
     }
 
 
@@ -842,6 +906,7 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
         Location.distanceBetween(latlang1.latitude, latlang1.longitude, latlang2.latitude, latlang2.longitude, results);
         double dist;
         dist = (double) results[0];
+        dist = dist * avgDivergence;
         /* double lat1 = latlang1.latitude;
         double lng1 = latlang1.longitude;
         double lat2 = latlang2.latitude;
@@ -859,6 +924,44 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
         System.out.println(dist);*/
         return dist;
     }
+
+    public static double pureDistFrom(LatLng latlang1, LatLng latlang2) {
+        float[] results = new float[3];
+        Location.distanceBetween(latlang1.latitude, latlang1.longitude, latlang2.latitude, latlang2.longitude, results);
+        double dist;
+        dist = (double) results[0];
+        /* double lat1 = latlang1.latitude;
+        double lng1 = latlang1.longitude;
+        double lat2 = latlang2.latitude;
+        double lng2 = latlang2.longitude;
+
+        double earthRadius = 3958.75;
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLng = Math.toRadians(lng2 - lng1);
+        double sindLat = Math.sin(dLat / 2);
+        double sindLng = Math.sin(dLng / 2);
+        double a = Math.pow(sindLat, 2) + Math.pow(sindLng, 2)
+                * Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2));
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        double dist = earthRadius * c;
+        System.out.println(dist);*/
+        return dist;
+    }
+
+public String convertDistance(double distance){
+    int km=0,m=0;
+    String distanceString="";
+    km=(int) distance/1000;
+    distance=distance%1000;
+    m=(int) Math.ceil(distance);
+    if(km!=0){
+        distanceString=distanceString.concat(km+"km ");
+    }
+    if(m!=0){
+        distanceString=distanceString.concat(m+"m ");
+    }
+    return distanceString;
+}
 
 
 /*
@@ -1017,6 +1120,7 @@ protected void checkPermissions(){
     }
 
 //TODO orientation Map change
+
     /**
      * A class to parse the Google Places in JSON format
      */
@@ -1042,12 +1146,11 @@ protected void checkPermissions(){
 
         @Override
         protected void onPostExecute(List<List<HashMap<String, String>>> result) {
-            ArrayList points = null;
-            PolylineOptions lineOptions = null;
+
             MarkerOptions markerOptions = new MarkerOptions();
 
             for (int i = 0; i < result.size(); i++) {
-                points = new ArrayList();
+                ArrayList points = new ArrayList();
                 lineOptions = new PolylineOptions();
 
                 List<HashMap<String, String>> path = result.get(i);
@@ -1065,7 +1168,7 @@ protected void checkPermissions(){
                 lineOptions.width(12);
                 lineOptions.color(Color.RED);
                 lineOptions.geodesic(true);
-
+                mMap.addPolyline(lineOptions);
             }
             /*
             ArrayList<LatLng> latlngs=new ArrayList<>();
@@ -1090,23 +1193,24 @@ protected void checkPermissions(){
             try {
 
                 mMap.addPolyline(lineOptions);
-
+                mMap.addMarker(new MarkerOptions().position(new LatLng(destination.getLat(), destination.getLon())).title(destination.getAddress()));
                 List<LatLng> LPoints = lineOptions.getPoints();
 
 
                 sumDist = 0;
                 if (LPoints.get(1) != null) {
                     for (int k = 0; k < LPoints.size() - 1; k++) {
-                        sumDist = sumDist + distFrom(LPoints.get(k), LPoints.get(k + 1));
+                        sumDist = sumDist + pureDistFrom(LPoints.get(k), LPoints.get(k + 1));
                     }
                 } else {
                     LatLng myOrigin = new LatLng(location.getLatitude(), location.getLongitude());
-                    sumDist = distFrom(myOrigin, LPoints.get(0));
+                    sumDist = pureDistFrom(myOrigin, LPoints.get(0));
                 }
-                int timeEst;
-
-                timeEst = (int) sumDist / 333; // Average Driving speed in Heraklion 20km/h or 333m/min
-                destinationText.setText("Destination: " + destination.getAddress());
+                int timeSec=pureCalculateTravelTime(sumDist);
+                String travelTimeString=convertTime(timeSec);
+                String travelDistanceString=convertDistance(sumDist);
+                labelString="Destination: " + destination.getAddress()+" Distance: "+travelDistanceString+" Travel Time: "+travelTimeString;
+                destinationText.setText(labelString);
                 //  searchText.setText("Distance: " + sumDist+ "Time: "+timeEst);
             } catch (NullPointerException nullEx) {
                 nullEx.printStackTrace();
@@ -1115,16 +1219,27 @@ protected void checkPermissions(){
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                displayExceptionMessage("Too many requests, Retrying...");
+                failCounter++;
+                retryMapRequest();
                 Log.i("Map Requests", "amount exceeded");
-                startNavigation();
-
             }
         }
     }
 
     public void displayExceptionMessage(String msg) {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+
+    }
+
+    public void retryMapRequest() {
+        if (failCounter == 1) {
+            Toast.makeText(this, "Connection failed, Retrying...", Toast.LENGTH_SHORT).show();
+        }
+        if (failCounter < 20) {
+            startNavigation();
+        } else {
+            exitMap("connection_failed");
+        }
+
     }
 
     private String getDirectionsUrl(LatLng origin, LatLng dest) {
@@ -1189,5 +1304,25 @@ protected void checkPermissions(){
         return data;
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putParcelable("destinationKey", destination);
+        savedInstanceState.putBoolean("appointmentValidatedKey", appointmentValidated);
+        savedInstanceState.putParcelable("lineOptionsKey", lineOptions);
+        savedInstanceState.putBoolean("firstRunKey", firstRun);
+        savedInstanceState.putParcelable("locationKey", location);
+        savedInstanceState.putString("labelStringKey",labelString);
+    }
 
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        destination = savedInstanceState.getParcelable("destinationKey");
+        appointmentValidated = savedInstanceState.getBoolean("appointmentValidatedKey");
+        lineOptions = savedInstanceState.getParcelable("lineOptionsKey");
+        firstRun = savedInstanceState.getBoolean("firstRunKey");
+        location = savedInstanceState.getParcelable("locationKey");
+        labelString = savedInstanceState.getString("labelStringKey");
+    }
 }
