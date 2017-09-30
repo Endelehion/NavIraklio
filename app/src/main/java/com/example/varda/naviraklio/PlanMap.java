@@ -26,15 +26,21 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -44,6 +50,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 
 import org.json.JSONObject;
 
@@ -110,7 +119,8 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
     private int validCounter;
     private PolylineOptions lineOptions;
     private int failCounter = 0;
-private String labelString;
+    private String labelString;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -130,24 +140,10 @@ private String labelString;
             lineOptions = null;
             firstRun = true;
             location = null;
-            labelString="";
+            labelString = "";
         }
+        mapInit();
 
-        // Create an instance of GoogleAPIClient.
-        if (mGoogleApiClient == null) {
-            mGoogleApiClient = new GoogleApiClient.Builder(this)
-                    .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
-                    .addApi(API)
-                    .addApi(Places.GEO_DATA_API)
-                    .addApi(Places.PLACE_DETECTION_API)
-                    .enableAutoManage(this, this)
-                    .build();
-        }
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
         placeTypes = getResources().getStringArray(R.array.place_type);
         ArrayAdapter dataAdapter = new ArrayAdapter<String>(PlanMap.this, android.R.layout.simple_spinner_item, placeTypes);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -180,10 +176,8 @@ private String labelString;
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
-        clickedflag = false;
+
         mMap = googleMap;
-        hera = new LatLng(35.339332, 25.133158);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(hera, 17));
 
 
         mapConfirmBtn.setOnClickListener(new View.OnClickListener() {
@@ -225,6 +219,23 @@ private String labelString;
 
     }
 
+    public void mapInit() {
+        // Create an instance of GoogleAPIClient.
+        if (mGoogleApiClient == null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(this)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(API)
+                    .addApi(Places.GEO_DATA_API)
+                    .addApi(Places.PLACE_DETECTION_API)
+                    .enableAutoManage(this, this)
+                    .build();
+        }
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+    }
 
     public void startNavigation() {
         mMap.clear();
@@ -648,16 +659,16 @@ private String labelString;
         time = time % 60;
         seconds = time;
         if (days != 0) {
-            timeString=timeString.concat(days + "d ");
+            timeString = timeString.concat(days + "d ");
         }
         if (hours != 0) {
-            timeString=timeString.concat(hours + "h ");
+            timeString = timeString.concat(hours + "h ");
         }
         if (minutes != 0) {
-            timeString=timeString.concat(minutes + "min ");
+            timeString = timeString.concat(minutes + "min ");
         }
         if (seconds != 0) {
-            timeString=timeString.concat(seconds + "sec ");
+            timeString = timeString.concat(seconds + "sec ");
         }
         return timeString;
     }
@@ -704,49 +715,8 @@ private String labelString;
         createLocation();
     }
 
-    protected void checkSettings() {
-        /**check if required settings are enabled*/
-        createLocationRequest();
-        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
-                .addLocationRequest(mLocationRequest);
-        PendingResult<LocationSettingsResult> result = SettingsApi
-                .checkLocationSettings(mGoogleApiClient, builder.build());
-        result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
-            @Override
-            public void onResult(LocationSettingsResult result) {
-                final Status status = result.getStatus();
-                final LocationSettingsStates states = result.getLocationSettingsStates();
-                switch (status.getStatusCode()) {
-                    case LocationSettingsStatusCodes.SUCCESS:
-                        // All location settings are satisfied. The client can
-                        // initialize location requests here.
-                        createLocationRequest();
-
-                        break;
-                    case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-                        // Location settings are not satisfied, but this can be fixed
-                        // by showing the user a dialog.
-                        try {
-                            // Show the dialog by calling startResolutionForResult(),
-                            // and check the result in onActivityResult().
-                            status.startResolutionForResult(
-                                    PlanMap.this,
-                                    REQUEST_CHECK_SETTINGS);
 
 
-                        } catch (IntentSender.SendIntentException e) {
-                            // Ignore the error.
-                        }
-                        break;
-                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                        // Location settings are not satisfied. However, we have no way
-                        // to fix the settings so we won't show the dialog.
-
-                        break;
-                }
-            }
-        });
-    }
 
     public void reDrawMap() {
 
@@ -769,6 +739,8 @@ private String labelString;
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
+        hera = new LatLng(35.339332, 25.133158);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(hera, 17));
         if (firstRun) {
             startNavigation();
         } else {
@@ -882,7 +854,7 @@ private String labelString;
     }
 
 
-    public static double calcDist(LatLng latlang1, LatLng latlang2) {
+  /*  public static double calcDist(LatLng latlang1, LatLng latlang2) {
         double lat1 = latlang1.latitude;
         double lng1 = latlang1.longitude;
         double lat2 = latlang2.latitude;
@@ -899,7 +871,7 @@ private String labelString;
         double dist = earthRadius * c;
         System.out.println("harv dist: " + dist);
         return dist;
-    }
+    }*/
 
     public static double distFrom(LatLng latlang1, LatLng latlang2) {
         float[] results = new float[3];
@@ -948,20 +920,20 @@ private String labelString;
         return dist;
     }
 
-public String convertDistance(double distance){
-    int km=0,m=0;
-    String distanceString="";
-    km=(int) distance/1000;
-    distance=distance%1000;
-    m=(int) Math.ceil(distance);
-    if(km!=0){
-        distanceString=distanceString.concat(km+"km ");
+    public String convertDistance(double distance) {
+        int km = 0, m = 0;
+        String distanceString = "";
+        km = (int) distance / 1000;
+        distance = distance % 1000;
+        m = (int) Math.ceil(distance);
+        if (km != 0) {
+            distanceString = distanceString.concat(km + "km ");
+        }
+        if (m != 0) {
+            distanceString = distanceString.concat(m + "m ");
+        }
+        return distanceString;
     }
-    if(m!=0){
-        distanceString=distanceString.concat(m+"m ");
-    }
-    return distanceString;
-}
 
 
 /*
@@ -1076,100 +1048,193 @@ protected void checkPermissions(){
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
 
-                if (clickedflag) {
-                    Toast toasty = Toast.makeText(PlanMap.this, "gps enabled press again for Location", Toast.LENGTH_SHORT);
-                    toasty.show();
-                } else {
-                    Toast toasty = Toast.makeText(PlanMap.this, "gps enabled", Toast.LENGTH_SHORT);
-                    toasty.show();
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                        e.printStackTrace();
                 }
-            } else {
-                Toast toasty = Toast.makeText(PlanMap.this, "gps remains disabled", Toast.LENGTH_SHORT);
-                toasty.show();
+                mapInit();
+                startNavigation();
             }
+        } else {
+            Toast toasty = Toast.makeText(PlanMap.this, "gps remains disabled", Toast.LENGTH_SHORT);
+            toasty.show();
         }
-
-
     }
 
-    private class DownloadTask extends AsyncTask<String, Void, String> {
 
-        @Override
-        protected String doInBackground(String... url) {
 
-            String data = "";
+   /* protected void checkSettings() {
+        *//**check if required settings are enabled*//*
+        createLocationRequest();
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                .addLocationRequest(mLocationRequest);
+        PendingResult<LocationSettingsResult> result = SettingsApi
+                .checkLocationSettings(mGoogleApiClient, builder.build());
+        result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
+            @Override
+            public void onResult(LocationSettingsResult result) {
+                final Status status = result.getStatus();
+                final LocationSettingsStates states = result.getLocationSettingsStates();
+                switch (status.getStatusCode()) {
+                    case LocationSettingsStatusCodes.SUCCESS:
+                        // All location settings are satisfied. The client can
+                        // initialize location requests here.
+                        createLocationRequest();
 
-            try {
-                data = downloadUrl(url[0]);
-            } catch (Exception e) {
-                Log.d("Background Task", e.toString());
+                        break;
+                    case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                        // Location settings are not satisfied, but this can be fixed
+                        // by showing the user a dialog.
+                        try {
+                            // Show the dialog by calling startResolutionForResult(),
+                            // and check the result in onActivityResult().
+                            status.startResolutionForResult(
+                                    PlanMap.this,
+                                    REQUEST_CHECK_SETTINGS);
+
+
+                        } catch (IntentSender.SendIntentException e) {
+                            // Ignore the error.
+                        }
+                        break;
+                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                        // Location settings are not satisfied. However, we have no way
+                        // to fix the settings so we won't show the dialog.
+
+                        break;
+                }
             }
-            return data;
-        }
+        });
+    }*/
 
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
+    protected void checkSettings() {
+        /**check if required settings are enabled*/
+        createLocationRequest();
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                .addLocationRequest(mLocationRequest);
+        SettingsClient client = LocationServices.getSettingsClient(this);
+        Task<LocationSettingsResponse> task = client.checkLocationSettings(builder.build());
+        task.addOnSuccessListener(this, new OnSuccessListener<LocationSettingsResponse>() {
+            @Override
+            public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
+                // All location settings are satisfied. The client can initialize
+                // location requests here.
+                // ...
+                createLocationRequest();
+            }
+        });
 
-            ParserTask parserTask = new ParserTask();
-
-
-            parserTask.execute(result);
-
-        }
+        task.addOnFailureListener(this, new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                int statusCode = ((ApiException) e).getStatusCode();
+                switch (statusCode) {
+                    case CommonStatusCodes.RESOLUTION_REQUIRED:
+                        // Location settings are not satisfied, but this can be fixed
+                        // by showing the user a dialog.
+                        try {
+                            // Show the dialog by calling startResolutionForResult(),
+                            // and check the result in onActivityResult().
+                            ResolvableApiException resolvable = (ResolvableApiException) e;
+                            resolvable.startResolutionForResult(PlanMap.this,
+                                    REQUEST_CHECK_SETTINGS);
+                        } catch (IntentSender.SendIntentException sendEx) {
+                            // Ignore the error.
+                        }
+                        break;
+                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                        // Location settings are not satisfied. However, we have no way
+                        // to fix the settings so we won't show the dialog.
+                        break;
+                }
+            }
+        });
     }
+
+private class DownloadTask extends AsyncTask<String, Void, String> {
+
+    @Override
+    protected String doInBackground(String... url) {
+
+        String data = "";
+
+        try {
+            data = downloadUrl(url[0]);
+        } catch (Exception e) {
+            Log.d("Background Task", e.toString());
+        }
+        return data;
+    }
+
+    @Override
+    protected void onPostExecute(String result) {
+        super.onPostExecute(result);
+
+        ParserTask parserTask = new ParserTask();
+
+
+        parserTask.execute(result);
+
+    }
+}
+
+
+
+
+
 
 //TODO orientation Map change
 
-    /**
-     * A class to parse the Google Places in JSON format
-     */
-    private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String, String>>>> {
+/**
+ * A class to parse the Google Places in JSON format
+ */
+private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String, String>>>> {
 
-        // Parsing the data in non-ui thread
-        @Override
-        protected List<List<HashMap<String, String>>> doInBackground(String... jsonData) {
+    // Parsing the data in non-ui thread
+    @Override
+    protected List<List<HashMap<String, String>>> doInBackground(String... jsonData) {
 
-            JSONObject jObject;
-            List<List<HashMap<String, String>>> routes = null;
+        JSONObject jObject;
+        List<List<HashMap<String, String>>> routes = null;
 
-            try {
-                jObject = new JSONObject(jsonData[0]);
-                DirectionsJSONParser parser = new DirectionsJSONParser();
+        try {
+            jObject = new JSONObject(jsonData[0]);
+            DirectionsJSONParser parser = new DirectionsJSONParser();
 
-                routes = parser.parse(jObject);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return routes;
+            routes = parser.parse(jObject);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        return routes;
+    }
 
-        @Override
-        protected void onPostExecute(List<List<HashMap<String, String>>> result) {
+    @Override
+    protected void onPostExecute(List<List<HashMap<String, String>>> result) {
 
-            MarkerOptions markerOptions = new MarkerOptions();
+        MarkerOptions markerOptions = new MarkerOptions();
 
-            for (int i = 0; i < result.size(); i++) {
-                ArrayList points = new ArrayList();
-                lineOptions = new PolylineOptions();
+        for (int i = 0; i < result.size(); i++) {
+            ArrayList points = new ArrayList();
+            lineOptions = new PolylineOptions();
 
-                List<HashMap<String, String>> path = result.get(i);
+            List<HashMap<String, String>> path = result.get(i);
 
-                for (int j = 0; j < path.size(); j++) {
-                    HashMap<String, String> point = path.get(j);
+            for (int j = 0; j < path.size(); j++) {
+                HashMap<String, String> point = path.get(j);
 
-                    double lat = Double.parseDouble(point.get("lat"));
-                    double lng = Double.parseDouble(point.get("lng"));
-                    LatLng position = new LatLng(lat, lng);
+                double lat = Double.parseDouble(point.get("lat"));
+                double lng = Double.parseDouble(point.get("lng"));
+                LatLng position = new LatLng(lat, lng);
 
-                    points.add(position);
-                }
-                lineOptions.addAll(points);
-                lineOptions.width(12);
-                lineOptions.color(Color.RED);
-                lineOptions.geodesic(true);
-                mMap.addPolyline(lineOptions);
+                points.add(position);
             }
+            lineOptions.addAll(points);
+            lineOptions.width(12);
+            lineOptions.color(Color.RED);
+            lineOptions.geodesic(true);
+            mMap.addPolyline(lineOptions);
+        }
             /*
             ArrayList<LatLng> latlngs=new ArrayList<>();
             for (int k = 0; k < points.size(); k++){
@@ -1190,41 +1255,42 @@ protected void checkPermissions(){
             }*/
 
 // Drawing polyline in the Google PlanMap for the i-th route
-            try {
+        try {
 
-                mMap.addPolyline(lineOptions);
-                mMap.addMarker(new MarkerOptions().position(new LatLng(destination.getLat(), destination.getLon())).title(destination.getAddress()));
-                List<LatLng> LPoints = lineOptions.getPoints();
+            mMap.addPolyline(lineOptions);
+            mMap.addMarker(new MarkerOptions().position(new LatLng(destination.getLat(), destination.getLon())).title(destination.getAddress()));
+            List<LatLng> LPoints = lineOptions.getPoints();
 
 
-                sumDist = 0;
-                if (LPoints.get(1) != null) {
-                    for (int k = 0; k < LPoints.size() - 1; k++) {
-                        sumDist = sumDist + pureDistFrom(LPoints.get(k), LPoints.get(k + 1));
-                    }
-                } else {
-                    LatLng myOrigin = new LatLng(location.getLatitude(), location.getLongitude());
-                    sumDist = pureDistFrom(myOrigin, LPoints.get(0));
+            sumDist = 0;
+            if (LPoints.get(1) != null) {
+                for (int k = 0; k < LPoints.size() - 1; k++) {
+                    sumDist = sumDist + pureDistFrom(LPoints.get(k), LPoints.get(k + 1));
                 }
-                int timeSec=pureCalculateTravelTime(sumDist);
-                String travelTimeString=convertTime(timeSec);
-                String travelDistanceString=convertDistance(sumDist);
-                labelString="Destination: " + destination.getAddress()+" Distance: "+travelDistanceString+" Travel Time: "+travelTimeString;
-                destinationText.setText(labelString);
-                //  searchText.setText("Distance: " + sumDist+ "Time: "+timeEst);
-            } catch (NullPointerException nullEx) {
-                nullEx.printStackTrace();
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                failCounter++;
-                retryMapRequest();
-                Log.i("Map Requests", "amount exceeded");
+            } else {
+                LatLng myOrigin = new LatLng(location.getLatitude(), location.getLongitude());
+                sumDist = pureDistFrom(myOrigin, LPoints.get(0));
             }
+            int timeSec = pureCalculateTravelTime(sumDist);
+            String travelTimeString = convertTime(timeSec);
+            String travelDistanceString = convertDistance(sumDist);
+            labelString = "Destination: " + destination.getAddress() + " Distance: " + travelDistanceString + " Travel Time: " + travelTimeString;
+            destinationText.setText(labelString);
+            //  searchText.setText("Distance: " + sumDist+ "Time: "+timeEst);
+        } catch (NullPointerException nullEx) {
+            nullEx.printStackTrace();
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            failCounter++;
+            retryMapRequest();
+            Log.i("Map Requests", "amount exceeded");
         }
     }
+
+}
 
     public void displayExceptionMessage(String msg) {
 
@@ -1312,7 +1378,7 @@ protected void checkPermissions(){
         savedInstanceState.putParcelable("lineOptionsKey", lineOptions);
         savedInstanceState.putBoolean("firstRunKey", firstRun);
         savedInstanceState.putParcelable("locationKey", location);
-        savedInstanceState.putString("labelStringKey",labelString);
+        savedInstanceState.putString("labelStringKey", labelString);
     }
 
     @Override
@@ -1325,4 +1391,5 @@ protected void checkPermissions(){
         location = savedInstanceState.getParcelable("locationKey");
         labelString = savedInstanceState.getString("labelStringKey");
     }
+
 }

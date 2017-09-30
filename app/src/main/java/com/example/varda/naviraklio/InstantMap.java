@@ -24,15 +24,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -43,6 +49,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 
 import org.json.JSONObject;
 
@@ -113,20 +122,7 @@ public class InstantMap extends FragmentActivity implements OnMapReadyCallback, 
             labelString = "";
         }
         // Create an instance of GoogleAPIClient.
-        if (mGoogleApiClient == null) {
-            mGoogleApiClient = new GoogleApiClient.Builder(this)
-                    .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
-                    .addApi(API)
-                    .addApi(Places.GEO_DATA_API)
-                    .addApi(Places.PLACE_DETECTION_API)
-                    .enableAutoManage(this, this)
-                    .build();
-        }
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        initMap();
         instantDestLabel = (TextView) findViewById(R.id.instantDestLabel);
         spinner = (Spinner) findViewById(R.id.spinner);
         placeTypes = getResources().getStringArray(R.array.place_type);
@@ -145,8 +141,7 @@ public class InstantMap extends FragmentActivity implements OnMapReadyCallback, 
 
         clickedflag = false;
         mMap = googleMap;
-        hera = new LatLng(35.339332, 25.133158);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(hera, 17));
+
 
 
         findButton.setOnClickListener(new View.OnClickListener() {
@@ -156,12 +151,7 @@ public class InstantMap extends FragmentActivity implements OnMapReadyCallback, 
                 clickedflag = true;
                 checkSettings();
                 if (location != null) {
-                    origin = new LatLng(location.getLatitude(), location.getLongitude());
-                    Log.i("Location Info", "Location achieved!");
-                    addCurrentLocationMarker();
-                    String spinnerSelection;
-                    spinnerSelection = spinner.getSelectedItem().toString();
-                    findPlace(spinnerSelection);
+                    startNavigation();
                     firstRun = false;
                 } else {
                     Toast toast = Toast.makeText(InstantMap.this, "Location not Available", Toast.LENGTH_LONG);
@@ -193,6 +183,23 @@ public class InstantMap extends FragmentActivity implements OnMapReadyCallback, 
 
     }
 
+    public void initMap() {
+        if (mGoogleApiClient == null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(this)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(API)
+                    .addApi(Places.GEO_DATA_API)
+                    .addApi(Places.PLACE_DETECTION_API)
+                    .enableAutoManage(this, this)
+                    .build();
+        }
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+
+    }
 
     protected void findPlace(String place) {
 
@@ -253,7 +260,13 @@ public class InstantMap extends FragmentActivity implements OnMapReadyCallback, 
                 break;
         }
         if (destination != null) {
-            navigateFromTo(origin, new LatLng(destination.getLat(), destination.getLon()));
+            String url = getDirectionsUrl(origin, new LatLng(destination.getLat(), destination.getLon()));
+
+            DownloadTask downloadTask = new DownloadTask();
+
+            // Start downloading json data from Google Directions API
+
+            downloadTask.execute(url);
         }
     }
 
@@ -265,20 +278,23 @@ public class InstantMap extends FragmentActivity implements OnMapReadyCallback, 
         createLocation();
     }
 
-    public void navigateFromTo(LatLng origin, LatLng destination) {
-        // Getting URL to the Google Directions API
-        String url = getDirectionsUrl(origin, destination);
-
-        DownloadTask downloadTask = new DownloadTask();
-
-        // Start downloading json data from Google Directions API
-
-        downloadTask.execute(url);
-
+    public void startNavigation() {
+        checkSettings();
+        origin = new LatLng(location.getLatitude(), location.getLongitude());
+        Log.i("Location Info", "Location achieved!");
+        addCurrentLocationMarker();
+        String spinnerSelection;
+        spinnerSelection = spinner.getSelectedItem().toString();
+        findPlace(spinnerSelection);
     }
 
-    protected void checkSettings() {
-        /**check if required settings are enabled*/
+
+    /*protected void checkSettings() {
+        */
+
+    /**
+     * check if required settings are enabled
+     *//*
         createLocationRequest();
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
                 .addLocationRequest(mLocationRequest);
@@ -319,6 +335,49 @@ public class InstantMap extends FragmentActivity implements OnMapReadyCallback, 
                 }
             }
         });
+    }*/
+    protected void checkSettings() {
+        /**check if required settings are enabled*/
+        createLocationRequest();
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                .addLocationRequest(mLocationRequest);
+        SettingsClient client = LocationServices.getSettingsClient(this);
+        Task<LocationSettingsResponse> task = client.checkLocationSettings(builder.build());
+        task.addOnSuccessListener(this, new OnSuccessListener<LocationSettingsResponse>() {
+            @Override
+            public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
+                // All location settings are satisfied. The client can initialize
+                // location requests here.
+                // ...
+                createLocationRequest();
+            }
+        });
+
+        task.addOnFailureListener(this, new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                int statusCode = ((ApiException) e).getStatusCode();
+                switch (statusCode) {
+                    case CommonStatusCodes.RESOLUTION_REQUIRED:
+                        // Location settings are not satisfied, but this can be fixed
+                        // by showing the user a dialog.
+                        try {
+                            // Show the dialog by calling startResolutionForResult(),
+                            // and check the result in onActivityResult().
+                            ResolvableApiException resolvable = (ResolvableApiException) e;
+                            resolvable.startResolutionForResult(InstantMap.this,
+                                    REQUEST_CHECK_SETTINGS);
+                        } catch (IntentSender.SendIntentException sendEx) {
+                            // Ignore the error.
+                        }
+                        break;
+                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                        // Location settings are not satisfied. However, we have no way
+                        // to fix the settings so we won't show the dialog.
+                        break;
+                }
+            }
+        });
     }
 
     protected void onStart() {
@@ -333,6 +392,8 @@ public class InstantMap extends FragmentActivity implements OnMapReadyCallback, 
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
+        hera = new LatLng(35.339332, 25.133158);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(hera, 17));
         if (!firstRun) {
             reDrawMap();
         }
@@ -691,13 +752,13 @@ protected void checkPermissions(){
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
 
-                if (clickedflag) {
-                    Toast toasty = Toast.makeText(InstantMap.this, "gps enabled press again for Location", Toast.LENGTH_SHORT);
-                    toasty.show();
-                } else {
-                    Toast toasty = Toast.makeText(InstantMap.this, "gps enabled", Toast.LENGTH_SHORT);
-                    toasty.show();
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
+                initMap();
+                startNavigation();
             } else {
                 Toast toasty = Toast.makeText(InstantMap.this, "gps remains disabled", Toast.LENGTH_SHORT);
                 toasty.show();
@@ -862,7 +923,7 @@ protected void checkPermissions(){
             Toast.makeText(this, "Connection failed, Retrying...", Toast.LENGTH_SHORT).show();
         }
         if (failCounter < 20) {
-            navigateFromTo(origin, new LatLng(destination.getLat(), destination.getLon()));
+            startNavigation();
         } else {
             Toast.makeText(InstantMap.this, "Connection with Location Provider Failed. Try Again Later", Toast.LENGTH_SHORT).show();
             new Timer().schedule(new TimerTask() {
