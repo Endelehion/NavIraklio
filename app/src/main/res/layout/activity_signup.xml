@@ -13,11 +13,8 @@
     <ProgressBar
         android:id="@+id/signup_progress"
         style="?android:attr/progressBarStyle"
-        android:layout_width="189dp"
-        android:layout_height="144dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="128dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:visibility="gone"
         app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -37,7 +34,7 @@
 
     <ScrollView
         android:id="@+id/signup_form"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:paddingLeft="7dp"
         android:paddingRight="7dp"

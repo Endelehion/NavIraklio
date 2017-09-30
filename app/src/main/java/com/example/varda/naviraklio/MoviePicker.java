@@ -23,8 +23,10 @@ import java.util.TimeZone;
 
 public class MoviePicker extends AppCompatActivity {
 
-    private ImageButton americanMadeImage, dunkirkImage, valerianImage, smurfsImage, despicableMe3Image, detroitImage, loganLuckyImage, hitmanImage;
-    private TextView moviePickedTitle, moviePickedInfo, moviePickedDescription;
+    private ImageView americanMadeImage, dunkirkImage, valerianImage, smurfsImage, despicableMe3Image, detroitImage, loganLuckyImage, hitmanImage;
+    private TextView moviePickedTitle, moviePickedInfo, moviePickedDescription, americanMadeTitle, dunkirkTitle, valerianTitle, smurfsTitle;
+    private TextView despicableMe3Title, detroitTitle, loganLuckyTitle, hitmanTitle, americanMadeDescription, dunkirkDescription, valerianDescription, smurfsDescription;
+    private TextView despicableMe3Description, detroitDescription, loganLuckyDescription, hitmanDescription;
     private ArrayList<String> daysList, hoursList;
     private ImageView moviePickedImage;
     private ArrayAdapter daysAdapter, hoursAdapter;
@@ -48,8 +50,8 @@ public class MoviePicker extends AppCompatActivity {
             hoursList = savedInstanceState.getStringArrayList("hoursListKey");
             mode = savedInstanceState.getString("modeKey", mode);
             movieDates = savedInstanceState.getStringArrayList("movieDatesKey");
-            movieDuration=savedInstanceState.getString("movieDurationKey");
-            cinemaString=savedInstanceState.getString("cinemaStringKey");
+            movieDuration = savedInstanceState.getString("movieDurationKey");
+            cinemaString = savedInstanceState.getString("cinemaStringKey");
 
         } else {
             layoutId = R.layout.activity_movie_picker;
@@ -57,8 +59,8 @@ public class MoviePicker extends AppCompatActivity {
             hoursList = new ArrayList<>();
             mode = "TimePick";
             movieDates = new ArrayList<>();
-            movieDuration="0";
-            cinemaString="";
+            movieDuration = "0";
+            cinemaString = "";
         }
         setContentView(layoutId);
         if (layoutId == R.layout.activity_movie_picker) {
@@ -72,14 +74,30 @@ public class MoviePicker extends AppCompatActivity {
 
 
     public void createMovieList() {
-        americanMadeImage = (ImageButton) findViewById(R.id.americanMadeImage);
-        dunkirkImage = (ImageButton) findViewById(R.id.dunkirkImage);
-        valerianImage = (ImageButton) findViewById(R.id.valerianImage);
-        smurfsImage = (ImageButton) findViewById(R.id.smurfsImage);
-        despicableMe3Image = (ImageButton) findViewById(R.id.despicableMe3Image);
-        detroitImage = (ImageButton) findViewById(R.id.detroitImage);
-        loganLuckyImage = (ImageButton) findViewById(R.id.loganLuckyImage);
-        hitmanImage = (ImageButton) findViewById(R.id.hitmanImage);
+        americanMadeImage = (ImageView) findViewById(R.id.americanMadeImage);
+        dunkirkImage = (ImageView) findViewById(R.id.dunkirkImage);
+        valerianImage = (ImageView) findViewById(R.id.valerianImage);
+        smurfsImage = (ImageView) findViewById(R.id.smurfsImage);
+        despicableMe3Image = (ImageView) findViewById(R.id.despicableMe3Image);
+        detroitImage = (ImageView) findViewById(R.id.detroitImage);
+        loganLuckyImage = (ImageView) findViewById(R.id.loganLuckyImage);
+        hitmanImage = (ImageView) findViewById(R.id.hitmanImage);
+        americanMadeTitle = (TextView) findViewById(R.id.americanMadeTitle);
+        dunkirkTitle = (TextView) findViewById(R.id.dunkirkTitle);
+        valerianTitle = (TextView) findViewById(R.id.valerianTitle);
+        smurfsTitle = (TextView) findViewById(R.id.smurfsTitle);
+        despicableMe3Title = (TextView) findViewById(R.id.despicableMe3Title);
+        detroitTitle = (TextView) findViewById(R.id.detroitTitle);
+        loganLuckyTitle = (TextView) findViewById(R.id.loganLuckyTitle);
+        hitmanTitle = (TextView) findViewById(R.id.hitmanTitle);
+        americanMadeDescription = (TextView) findViewById(R.id.americanMadeDescription);
+        dunkirkDescription = (TextView) findViewById(R.id.dunkirkDescription);
+        valerianDescription = (TextView) findViewById(R.id.valerianDescription);
+        smurfsDescription = (TextView) findViewById(R.id.smurfsDescription);
+        despicableMe3Description = (TextView) findViewById(R.id.despicableMe3Description);
+        detroitDescription = (TextView) findViewById(R.id.detroitDescription);
+        loganLuckyDescription = (TextView) findViewById(R.id.loganLuckyDescription);
+        hitmanDescription = (TextView) findViewById(R.id.hitmanDescription);
         createTableListeners();
     }
 
@@ -134,6 +152,118 @@ public class MoviePicker extends AppCompatActivity {
             }
         });
         smurfsImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                whichMovie = "Smurfs";
+                createMoviePanel(whichMovie);
+            }
+        });
+        americanMadeTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                whichMovie = "American Made";
+                createMoviePanel(whichMovie);
+            }
+        });
+        dunkirkTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                whichMovie = "Dunkirk";
+                createMoviePanel(whichMovie);
+            }
+        });
+        valerianTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                whichMovie = "Valerian";
+                createMoviePanel(whichMovie);
+            }
+        });
+        despicableMe3Title.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                whichMovie = "Despicable Me 3";
+                createMoviePanel(whichMovie);
+            }
+        });
+        loganLuckyTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                whichMovie = "Logan Lucky";
+                createMoviePanel(whichMovie);
+            }
+        });
+        detroitTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                whichMovie = "Detroit";
+                createMoviePanel(whichMovie);
+            }
+        });
+        hitmanTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                whichMovie = "Hitman";
+                createMoviePanel(whichMovie);
+            }
+        });
+        smurfsTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                whichMovie = "Smurfs";
+                createMoviePanel(whichMovie);
+            }
+        });
+        americanMadeDescription.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                whichMovie = "American Made";
+                createMoviePanel(whichMovie);
+            }
+        });
+        dunkirkDescription.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                whichMovie = "Dunkirk";
+                createMoviePanel(whichMovie);
+            }
+        });
+        valerianDescription.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                whichMovie = "Valerian";
+                createMoviePanel(whichMovie);
+            }
+        });
+        despicableMe3Description.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                whichMovie = "Despicable Me 3";
+                createMoviePanel(whichMovie);
+            }
+        });
+        loganLuckyDescription.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                whichMovie = "Logan Lucky";
+                createMoviePanel(whichMovie);
+            }
+        });
+        detroitDescription.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                whichMovie = "Detroit";
+                createMoviePanel(whichMovie);
+            }
+        });
+        hitmanDescription.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                whichMovie = "Hitman";
+                createMoviePanel(whichMovie);
+            }
+        });
+        smurfsDescription.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 whichMovie = "Smurfs";
@@ -602,8 +732,8 @@ public class MoviePicker extends AppCompatActivity {
         savedInstanceState.putStringArrayList("hoursListKey", hoursList);
         savedInstanceState.putString("modeKey", mode);
         savedInstanceState.putStringArrayList("movieDatesKey", movieDates);
-       savedInstanceState.putString("movieDurationKey",movieDuration);
-        savedInstanceState.putString("cinemaStringKey",cinemaString);
+        savedInstanceState.putString("movieDurationKey", movieDuration);
+        savedInstanceState.putString("cinemaStringKey", cinemaString);
     }
 
     @Override
@@ -615,8 +745,8 @@ public class MoviePicker extends AppCompatActivity {
         hoursList = savedInstanceState.getStringArrayList("hoursListKey");
         mode = savedInstanceState.getString("modeKey", mode);
         movieDates = savedInstanceState.getStringArrayList("movieDatesKey");
-        movieDuration=savedInstanceState.getString("movieDurationKey");
-        cinemaString=savedInstanceState.getString("cinemaStringKey");
+        movieDuration = savedInstanceState.getString("movieDurationKey");
+        cinemaString = savedInstanceState.getString("cinemaStringKey");
     }
 }
 

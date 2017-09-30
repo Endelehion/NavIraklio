@@ -52,7 +52,7 @@
             android:name=".SignupActivity"
             android:label="@string/title_activity_signup"
             android:noHistory="true"
-            android:windowSoftInputMode="adjustPan" />
+            />
         <activity
             android:name=".Home"
             android:label="@string/title_activity_home" />
