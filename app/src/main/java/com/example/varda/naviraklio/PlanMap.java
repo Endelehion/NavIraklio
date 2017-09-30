@@ -3,14 +3,18 @@ package com.example.varda.naviraklio;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
+import android.net.ConnectivityManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Parcelable;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -142,6 +146,9 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
             location = null;
             labelString = "";
         }
+        if (!isNetworkConnected()) {
+            exitMap("noInternet");
+        }
         mapInit();
 
         placeTypes = getResources().getStringArray(R.array.place_type);
@@ -237,7 +244,16 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
         mapFragment.getMapAsync(this);
     }
 
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        return cm.getActiveNetworkInfo() != null;
+    }
+
     public void startNavigation() {
+        if (!isNetworkConnected()) {
+            return;
+        }
         mMap.clear();
         clickedflag = true;
         checkSettings();
@@ -484,24 +500,72 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
         warnDialog.show();
     }
 
+    public void showSettingsDialog(String reason) {
+        AlertDialog.Builder settingsDialog = new AlertDialog.Builder(PlanMap.this);
+        String titleMsg = "error", dialogMsg = "error";
+        if (reason.equals("noInternet")) {
+            titleMsg = "No Internet Connection";
+            dialogMsg = "Internet connection could not be established, check your settings and try again";
+        } else if (reason.equals("connection_failed")) {
+            titleMsg = "Location Request Failed";
+            dialogMsg = "Connection with Location Provider Failed. Disable and re-enable your GPS setting and try again";
+        }
+        settingsDialog.setTitle(titleMsg);
+        settingsDialog
+                .setMessage(dialogMsg)
+                .setCancelable(false)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        finish();
+                        dialog.cancel();
+                    }
+                });
+
+        settingsDialog.show();
+
+    }
+
     public void exitMap(final String reason) {
         if (reason.equals("user")) {
             Toast.makeText(PlanMap.this, "Appointment canceled by user", Toast.LENGTH_SHORT).show();
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    finish();
+                }
+            }, 2000);
         } else if (reason.equals("invalid")) {
             Toast.makeText(PlanMap.this, "Appointment invalid: time overlaps with another", Toast.LENGTH_SHORT).show();
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    finish();
+                }
+            }, 2000);
         } else if (reason.equals("noTime")) {
             Toast.makeText(PlanMap.this, "Appointment invalid: Can't make it in time", Toast.LENGTH_SHORT).show();
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    finish();
+                }
+            }, 2000);
         } else if (reason.equals("closed")) {
             Toast.makeText(PlanMap.this, "They are all closed at the selected time", Toast.LENGTH_SHORT).show();
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    finish();
+                }
+            }, 2000);
         } else if (reason.equals("connection_failed")) {
-            Toast.makeText(this, "Connection with Location Provider Failed. Try Again Later", Toast.LENGTH_SHORT).show();
+            showSettingsDialog(reason);
+        } else if (reason.equals("noInternet")) {
+            showSettingsDialog(reason);
         }
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                finish();
-            }
-        }, 2000);
+
     }
 
     public void checkRushHour() {
@@ -716,8 +780,6 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
     }
 
 
-
-
     public void reDrawMap() {
 
         addCurrentLocationMarker();
@@ -739,6 +801,7 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
+
         hera = new LatLng(35.339332, 25.133158);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(hera, 17));
         if (firstRun) {
@@ -1051,7 +1114,7 @@ protected void checkPermissions(){
                 try {
                     Thread.sleep(2000);
                 } catch (InterruptedException e) {
-                        e.printStackTrace();
+                    e.printStackTrace();
                 }
                 mapInit();
                 startNavigation();
@@ -1065,7 +1128,11 @@ protected void checkPermissions(){
 
 
    /* protected void checkSettings() {
-        *//**check if required settings are enabled*//*
+        */
+
+    /**
+     * check if required settings are enabled
+     *//*
         createLocationRequest();
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
                 .addLocationRequest(mLocationRequest);
@@ -1107,8 +1174,10 @@ protected void checkPermissions(){
             }
         });
     }*/
-
     protected void checkSettings() {
+        if (!isNetworkConnected()) {
+            return;
+        }
         /**check if required settings are enabled*/
         createLocationRequest();
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
@@ -1122,6 +1191,24 @@ protected void checkPermissions(){
                 // location requests here.
                 // ...
                 createLocationRequest();
+                if (location == null) {
+                    Toast.makeText(PlanMap.this, "Location Request Failed, Retrying...", Toast.LENGTH_SHORT);
+                    for (int i = 0; i < 4; i++) {
+                        if (location != null) {
+                            break;
+                        } else if (location == null && i == 3) {
+                            exitMap("connection_failed");
+                        } else {
+                            try {
+                                Thread.sleep(2000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            createLocationRequest();
+                        }
+
+                    }
+                }
             }
         });
 
@@ -1152,89 +1239,85 @@ protected void checkPermissions(){
         });
     }
 
-private class DownloadTask extends AsyncTask<String, Void, String> {
+    private class DownloadTask extends AsyncTask<String, Void, String> {
 
-    @Override
-    protected String doInBackground(String... url) {
+        @Override
+        protected String doInBackground(String... url) {
 
-        String data = "";
+            String data = "";
 
-        try {
-            data = downloadUrl(url[0]);
-        } catch (Exception e) {
-            Log.d("Background Task", e.toString());
+            try {
+                data = downloadUrl(url[0]);
+            } catch (Exception e) {
+                Log.d("Background Task", e.toString());
+            }
+            return data;
         }
-        return data;
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            ParserTask parserTask = new ParserTask();
+
+
+            parserTask.execute(result);
+
+        }
     }
-
-    @Override
-    protected void onPostExecute(String result) {
-        super.onPostExecute(result);
-
-        ParserTask parserTask = new ParserTask();
-
-
-        parserTask.execute(result);
-
-    }
-}
-
-
-
-
 
 
 //TODO orientation Map change
 
-/**
- * A class to parse the Google Places in JSON format
- */
-private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String, String>>>> {
+    /**
+     * A class to parse the Google Places in JSON format
+     */
+    private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String, String>>>> {
 
-    // Parsing the data in non-ui thread
-    @Override
-    protected List<List<HashMap<String, String>>> doInBackground(String... jsonData) {
+        // Parsing the data in non-ui thread
+        @Override
+        protected List<List<HashMap<String, String>>> doInBackground(String... jsonData) {
 
-        JSONObject jObject;
-        List<List<HashMap<String, String>>> routes = null;
+            JSONObject jObject;
+            List<List<HashMap<String, String>>> routes = null;
 
-        try {
-            jObject = new JSONObject(jsonData[0]);
-            DirectionsJSONParser parser = new DirectionsJSONParser();
+            try {
+                jObject = new JSONObject(jsonData[0]);
+                DirectionsJSONParser parser = new DirectionsJSONParser();
 
-            routes = parser.parse(jObject);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return routes;
-    }
-
-    @Override
-    protected void onPostExecute(List<List<HashMap<String, String>>> result) {
-
-        MarkerOptions markerOptions = new MarkerOptions();
-
-        for (int i = 0; i < result.size(); i++) {
-            ArrayList points = new ArrayList();
-            lineOptions = new PolylineOptions();
-
-            List<HashMap<String, String>> path = result.get(i);
-
-            for (int j = 0; j < path.size(); j++) {
-                HashMap<String, String> point = path.get(j);
-
-                double lat = Double.parseDouble(point.get("lat"));
-                double lng = Double.parseDouble(point.get("lng"));
-                LatLng position = new LatLng(lat, lng);
-
-                points.add(position);
+                routes = parser.parse(jObject);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            lineOptions.addAll(points);
-            lineOptions.width(12);
-            lineOptions.color(Color.RED);
-            lineOptions.geodesic(true);
-            mMap.addPolyline(lineOptions);
+            return routes;
         }
+
+        @Override
+        protected void onPostExecute(List<List<HashMap<String, String>>> result) {
+
+            MarkerOptions markerOptions = new MarkerOptions();
+
+            for (int i = 0; i < result.size(); i++) {
+                ArrayList points = new ArrayList();
+                lineOptions = new PolylineOptions();
+
+                List<HashMap<String, String>> path = result.get(i);
+
+                for (int j = 0; j < path.size(); j++) {
+                    HashMap<String, String> point = path.get(j);
+
+                    double lat = Double.parseDouble(point.get("lat"));
+                    double lng = Double.parseDouble(point.get("lng"));
+                    LatLng position = new LatLng(lat, lng);
+
+                    points.add(position);
+                }
+                lineOptions.addAll(points);
+                lineOptions.width(12);
+                lineOptions.color(Color.RED);
+                lineOptions.geodesic(true);
+                mMap.addPolyline(lineOptions);
+            }
             /*
             ArrayList<LatLng> latlngs=new ArrayList<>();
             for (int k = 0; k < points.size(); k++){
@@ -1255,42 +1338,42 @@ private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<St
             }*/
 
 // Drawing polyline in the Google PlanMap for the i-th route
-        try {
-
-            mMap.addPolyline(lineOptions);
-            mMap.addMarker(new MarkerOptions().position(new LatLng(destination.getLat(), destination.getLon())).title(destination.getAddress()));
-            List<LatLng> LPoints = lineOptions.getPoints();
-
-
-            sumDist = 0;
-            if (LPoints.get(1) != null) {
-                for (int k = 0; k < LPoints.size() - 1; k++) {
-                    sumDist = sumDist + pureDistFrom(LPoints.get(k), LPoints.get(k + 1));
-                }
-            } else {
-                LatLng myOrigin = new LatLng(location.getLatitude(), location.getLongitude());
-                sumDist = pureDistFrom(myOrigin, LPoints.get(0));
-            }
-            int timeSec = pureCalculateTravelTime(sumDist);
-            String travelTimeString = convertTime(timeSec);
-            String travelDistanceString = convertDistance(sumDist);
-            labelString = "Destination: " + destination.getAddress() + " Distance: " + travelDistanceString + " Travel Time: " + travelTimeString;
-            destinationText.setText(labelString);
-            //  searchText.setText("Distance: " + sumDist+ "Time: "+timeEst);
-        } catch (NullPointerException nullEx) {
-            nullEx.printStackTrace();
             try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            failCounter++;
-            retryMapRequest();
-            Log.i("Map Requests", "amount exceeded");
-        }
-    }
 
-}
+                mMap.addPolyline(lineOptions);
+                mMap.addMarker(new MarkerOptions().position(new LatLng(destination.getLat(), destination.getLon())).title(destination.getAddress()));
+                List<LatLng> LPoints = lineOptions.getPoints();
+
+
+                sumDist = 0;
+                if (LPoints.get(1) != null) {
+                    for (int k = 0; k < LPoints.size() - 1; k++) {
+                        sumDist = sumDist + pureDistFrom(LPoints.get(k), LPoints.get(k + 1));
+                    }
+                } else {
+                    LatLng myOrigin = new LatLng(location.getLatitude(), location.getLongitude());
+                    sumDist = pureDistFrom(myOrigin, LPoints.get(0));
+                }
+                int timeSec = pureCalculateTravelTime(sumDist);
+                String travelTimeString = convertTime(timeSec);
+                String travelDistanceString = convertDistance(sumDist);
+                labelString = "Destination: " + destination.getAddress() + " Distance: " + travelDistanceString + " Travel Time: " + travelTimeString;
+                destinationText.setText(labelString);
+                //  searchText.setText("Distance: " + sumDist+ "Time: "+timeEst);
+            } catch (NullPointerException nullEx) {
+                nullEx.printStackTrace();
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                failCounter++;
+                retryMapRequest();
+                Log.i("Map Requests", "amount exceeded");
+            }
+        }
+
+    }
 
     public void displayExceptionMessage(String msg) {
 

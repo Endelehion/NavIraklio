@@ -1,11 +1,15 @@
 package com.example.varda.naviraklio;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
+import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -60,6 +64,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.InetAddress;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -143,23 +148,15 @@ public class InstantMap extends FragmentActivity implements OnMapReadyCallback, 
         mMap = googleMap;
 
 
-
         findButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mMap.clear();
-                clickedflag = true;
-                checkSettings();
-                if (location != null) {
-                    startNavigation();
-                    firstRun = false;
-                } else {
-                    Toast toast = Toast.makeText(InstantMap.this, "Location not Available", Toast.LENGTH_LONG);
-                    toast.show();
-                    Log.i("Location Info", "Location not Available");
+                if (!isNetworkConnected()) {
+                   showSettingsDialog("noInternet");
+                    return;
                 }
-
-
+                mMap.clear();
+                startNavigation();
             }
         });
 
@@ -280,12 +277,20 @@ public class InstantMap extends FragmentActivity implements OnMapReadyCallback, 
 
     public void startNavigation() {
         checkSettings();
-        origin = new LatLng(location.getLatitude(), location.getLongitude());
-        Log.i("Location Info", "Location achieved!");
-        addCurrentLocationMarker();
-        String spinnerSelection;
-        spinnerSelection = spinner.getSelectedItem().toString();
-        findPlace(spinnerSelection);
+        if (location != null) {
+            origin = new LatLng(location.getLatitude(), location.getLongitude());
+            Log.i("Location Info", "Location achieved!");
+            addCurrentLocationMarker();
+            String spinnerSelection;
+            spinnerSelection = spinner.getSelectedItem().toString();
+            findPlace(spinnerSelection);
+            firstRun = false;
+        } else {
+            Toast toast = Toast.makeText(InstantMap.this, "Location not Available", Toast.LENGTH_LONG);
+            toast.show();
+            Log.i("Location Info", "Location not Available");
+        }
+
     }
 
 
@@ -336,8 +341,15 @@ public class InstantMap extends FragmentActivity implements OnMapReadyCallback, 
             }
         });
     }*/
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        return cm.getActiveNetworkInfo() != null;
+    }
+
     protected void checkSettings() {
         /**check if required settings are enabled*/
+
         createLocationRequest();
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
                 .addLocationRequest(mLocationRequest);
@@ -350,6 +362,24 @@ public class InstantMap extends FragmentActivity implements OnMapReadyCallback, 
                 // location requests here.
                 // ...
                 createLocationRequest();
+                if (location == null) {
+                    Toast.makeText(InstantMap.this, "Location Request Failed, Retrying...", Toast.LENGTH_SHORT);
+                    for (int i = 0; i < 3; i++) {
+                        if (location != null) {
+                            break;
+                        } else if (location == null && i == 2) {
+                           showSettingsDialog("connection_failed");
+                        } else {
+                            try {
+                                Thread.sleep(2000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            createLocationRequest();
+                        }
+
+                    }
+                }
             }
         });
 
@@ -420,7 +450,32 @@ public class InstantMap extends FragmentActivity implements OnMapReadyCallback, 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(whereNow, 17));
     }
 
+    public void showSettingsDialog(final String reason) {
+        AlertDialog.Builder settingsDialog = new AlertDialog.Builder(InstantMap.this);
+        String titleMsg = "error", dialogMsg = "error";
+        if (reason.equals("noInternet")) {
+            titleMsg = "No Internet Connection";
+            dialogMsg = "Internet connection could not be established, check your settings and try again";
+        } else if (reason.equals("connection_failed")) {
+            titleMsg = "Location Request Failed";
+            dialogMsg = "Connection with Location Provider Failed. Disable and re-enable your GPS setting and try again";
+        }
+        settingsDialog.setTitle(titleMsg);
+        settingsDialog
+                .setMessage(dialogMsg)
+                .setCancelable(false)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (reason.equals("connection_failed")) {
+                            finish();
+                        }
+                        dialog.cancel();
+                    }
+                });
 
+        settingsDialog.show();
+    }
     void createCoordinates() {
         superMarkets = new ArrayList<>();
         superMarkets.add(new Place(35.340685, 25.133643, "Chalkiadakis", "Supermarket", 9, 21));
