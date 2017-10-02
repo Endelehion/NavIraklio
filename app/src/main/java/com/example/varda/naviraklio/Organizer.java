@@ -285,10 +285,10 @@ public class Organizer extends AppCompatActivity {
         gasStations.add(new Place(35.338016, 25.160950, "EKO", "Gas Station", 7, 22));
 
         //zografou
-        // gasStations.add(new Place(new LatLng(37.974122, 23.774079), "Revoil", "Gas Station", 7, 22));
-        gasStations.add(new Place(37.967245, 23.774535, "kontino alla de prolavainei", "Gas Station", 9, 21));
+         gasStations.add(new Place(37.974122, 23.774079, "Revoil", "Gas Station", 7, 22));
+    /*    gasStations.add(new Place(37.967245, 23.774535, "kontino alla de prolavainei", "Gas Station", 9, 21));
         gasStations.add(new Place(37.989516, 23.744785, "eksw apo to dromo", "Gas Station", 9, 21));
-        gasStations.add(new Place(37.986878, 23.752681, "sto dromo", "Gas Station", 9, 21));
+        gasStations.add(new Place(37.986878, 23.752681, "sto dromo", "Gas Station", 9, 21));*/
 
 
         Collections.sort(gasStations, new ComparatorCoord());

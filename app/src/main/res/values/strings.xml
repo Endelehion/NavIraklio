@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">NavIraklion</string>
+    <string name="app_name">NavIraklio</string>
     <string name="error_invalid_username">Username is too short</string>
     <string name="error_invalid_password">Password is too short</string>
     <string name="error_empty_username">Please fill in your username</string>
