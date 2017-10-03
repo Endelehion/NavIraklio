@@ -34,19 +34,19 @@
 
     <TextView
         android:id="@+id/sign_up_label"
-        android:layout_width="358dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="-41dp"
         android:clickable="true"
         android:gravity="center"
         android:maxLines="1"
         android:text="@string/action_sign_up_link"
-        android:textSize="18sp"
+        android:textSize="15sp"
         android:theme="@style/white_transparent_background"
-        android:layout_marginBottom="7dp"
-        android:layout_marginEnd="117dp"
-        android:layout_marginRight="117dp"
         app:layout_constraintBottom_toTopOf="@+id/sign_up_btn"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintHorizontal_bias="0.512" />
 
     <Button
         android:id="@+id/sign_up_btn"
@@ -67,7 +67,8 @@
         android:layout_marginLeft="119dp"
         android:layout_marginTop="7dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="119dp">
 
         <LinearLayout
             android:id="@+id/login_form_layout"

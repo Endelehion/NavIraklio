@@ -6,17 +6,6 @@
     android:layout_height="match_parent"
     tools:context="com.example.varda.naviraklio.NewAppointment">
 
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:alpha="0.4"
-        android:background="@drawable/heraklion_small"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"></LinearLayout>
-
     <Spinner
         android:id="@+id/spinner"
         android:layout_width="237dp"
@@ -64,32 +53,33 @@
         android:text="Starts"
         android:textSize="30dp"
         app:layout_constraintLeft_toLeftOf="@+id/guideline12"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginLeft="0dp" />
 
     <TextView
         android:id="@+id/dateText"
-        android:layout_width="236dp"
-        android:layout_height="40dp"
-        android:layout_marginLeft="91dp"
-        android:layout_marginStart="91dp"
+        android:layout_width="262dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="0dp"
         android:layout_marginTop="121dp"
         android:layout_weight="1"
         android:ems="10"
-        android:inputType="date"
-        android:textSize="30dp"
-        app:layout_constraintLeft_toLeftOf="@+id/guideline12"
+        android:gravity="center"
+        android:textSize="25sp"
+        app:layout_constraintLeft_toRightOf="@+id/textView9"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="__/__/____" />
+        tools:text="Mon 12 Jan 2017 09:00" />
 
     <TextView
         android:id="@+id/durationText"
         android:layout_width="wrap_content"
         android:layout_height="38dp"
-        android:layout_marginTop="204dp"
         android:text="Duration: "
         android:textSize="30dp"
         app:layout_constraintLeft_toLeftOf="@+id/guideline12"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="22dp"
+        app:layout_constraintTop_toBottomOf="@+id/dateText" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline12"
@@ -154,23 +144,26 @@
 
     <TextView
         android:id="@+id/cinemaLabel"
-        android:layout_width="wrap_content"
+        android:layout_width="340dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="207dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="8dp"
         android:text="Cinema: "
         android:textSize="25sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="@+id/guideline12" />
+        app:layout_constraintLeft_toLeftOf="@+id/guideline12"
+        app:layout_constraintTop_toBottomOf="@+id/durationText" />
 
     <TextView
         android:id="@+id/movieTitleLabel"
-        android:layout_width="wrap_content"
+        android:layout_width="340dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="128dp"
-        android:text="Movie: "
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="9dp"
+        android:text="Movie:"
         android:textSize="25sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="@+id/guideline12" />
+        app:layout_constraintLeft_toLeftOf="@+id/guideline12"
+        app:layout_constraintTop_toBottomOf="@+id/cinemaLabel"
+        tools:layout_editor_absoluteX="36dp" />
 
     <Button
         android:id="@+id/setLocationBtn"
@@ -180,5 +173,18 @@
         android:text="Set Location"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:alpha="0.4"
+        android:background="@drawable/heraklion_small"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"></LinearLayout>
 
 </android.support.constraint.ConstraintLayout>
