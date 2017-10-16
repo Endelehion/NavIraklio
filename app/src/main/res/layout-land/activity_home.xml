@@ -36,7 +36,7 @@
 
         android:minHeight="69dp"
         android:padding="20dp"
-        android:text="Calendar"
+        android:text="Organizer"
         android:textColor="@color/common_google_signin_btn_text_dark_default"
         android:textSize="12sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline5"
@@ -52,7 +52,7 @@
         android:layout_row="0"
         android:layout_weight="1"
         android:minHeight="69dp"
-        android:text="Map"
+        android:text="Instant Map"
         android:textColor="@color/common_google_signin_btn_text_dark_default"
         app:layout_constraintBottom_toTopOf="@+id/guideline5"
         app:layout_constraintRight_toLeftOf="@+id/guideline4" />

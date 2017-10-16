@@ -37,7 +37,7 @@
         android:layout_row="0"
         android:layout_weight="1"
         android:minHeight="69dp"
-        android:text="Map"
+        android:text="Instant Map"
         app:layout_constraintBottom_toTopOf="@+id/guideline"
         app:layout_constraintRight_toLeftOf="@+id/guideline3" />
 
@@ -72,7 +72,7 @@
         android:elevation="1dp"
         android:minHeight="69dp"
         android:padding="20dp"
-        android:text="Calendar"
+        android:text="Organizer"
         android:textSize="12sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline"
         app:layout_constraintLeft_toLeftOf="@+id/guideline4" />

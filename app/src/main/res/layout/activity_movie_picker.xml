@@ -22,8 +22,8 @@
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/moviePickerLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -34,7 +34,6 @@
             android:id="@+id/moviePickLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="0dp"
             android:layout_weight="1"
             android:text="Pick a Movie"
             android:textAlignment="center"
@@ -46,9 +45,9 @@
 
         <ScrollView
             android:id="@+id/scrollView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="35dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="5dp"
             android:layout_weight="1"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -63,16 +62,16 @@
 
                 <TableRow
                     android:id="@+id/dunkirkRow"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
 
                     <ImageView
                         android:id="@+id/dunkirkImage"
-                        android:layout_width="80dp"
-                        android:layout_height="170dp"
+                        android:layout_width="100dp"
+                        android:layout_height="150dp"
                         android:padding="0dp"
-                        android:scaleType="centerInside"
+                        android:scaleType="fitCenter"
                         app:srcCompat="@drawable/dunkirk_poster" />
 
                     <RelativeLayout
@@ -89,7 +88,8 @@
                             android:layout_alignParentStart="true"
                             android:layout_below="@+id/dunkirkTitle"
                             android:paddingLeft="5dp"
-                            android:text="Rating: PG-13 \n Duration: 107min \n Genre: Drama | History \n Directed by: Christopher Nolan \n Plot: Allied soldiers are surrounded by the German army and evacuated during a fierce battle in World War II." />
+                            android:text="Rating: PG-13 \n Duration: 107min \n Genre: Drama | History \n Directed by: Christopher Nolan \n Plot: Allied soldiers are surrounded by the German army and evacuated during a fierce battle in World War II."
+                            android:textSize="12sp" />
 
                         <TextView
                             android:id="@+id/dunkirkTitle"
@@ -99,7 +99,7 @@
                             android:layout_alignParentTop="true"
                             android:paddingLeft="5dp"
                             android:text="Dunkirk"
-                            android:textSize="30sp"
+                            android:textSize="25sp"
                             android:textStyle="bold" />
 
                     </RelativeLayout>
@@ -114,10 +114,10 @@
 
                     <ImageView
                         android:id="@+id/valerianImage"
-                        android:layout_width="80dp"
-                        android:layout_height="170dp"
+                        android:layout_width="100dp"
+                        android:layout_height="150dp"
                         android:padding="0dp"
-                        android:scaleType="centerInside"
+                        android:scaleType="fitCenter"
                         app:srcCompat="@drawable/valerian_poster" />
 
                     <RelativeLayout
@@ -162,10 +162,10 @@
 
                     <ImageView
                         android:id="@+id/loganLuckyImage"
-                        android:layout_width="80dp"
-                        android:layout_height="170dp"
+                        android:layout_width="100dp"
+                        android:layout_height="150dp"
                         android:padding="0dp"
-                        android:scaleType="centerInside"
+                        android:scaleType="fitCenter"
                         app:srcCompat="@drawable/logan_lucky_poster" />
 
                     <RelativeLayout
@@ -182,7 +182,8 @@
                             android:layout_alignParentStart="true"
                             android:layout_below="@+id/loganLuckyTitle"
                             android:paddingLeft="5dp"
-                            android:text="Rating: PG-13 \n Duration: 115min \n Genre: Comedy | Crime | Drama \n Directed by: Steven Soderbergh \n Plot: Two brothers attempt to pull off a heist during a NASCAR race in North Carolina." />
+                            android:text="Rating: PG-13 \n Duration: 115min \n Genre: Comedy | Crime | Drama \n Directed by: Steven Soderbergh \n Plot: Two brothers attempt to pull off a heist during a NASCAR race in North Carolina."
+                            android:textSize="12sp" />
 
                         <TextView
                             android:id="@+id/loganLuckyTitle"
@@ -192,7 +193,7 @@
                             android:layout_alignParentTop="true"
                             android:paddingLeft="5dp"
                             android:text="Logan Lucky"
-                            android:textSize="30sp"
+                            android:textSize="25sp"
                             android:textStyle="bold" />
 
                     </RelativeLayout>
@@ -206,10 +207,10 @@
 
                     <ImageView
                         android:id="@+id/americanMadeImage"
-                        android:layout_width="80dp"
-                        android:layout_height="170dp"
+                        android:layout_width="100dp"
+                        android:layout_height="150dp"
                         android:padding="0dp"
-                        android:scaleType="centerInside"
+                        android:scaleType="fitCenter"
                         app:srcCompat="@drawable/american_made_poster" />
 
                     <RelativeLayout
@@ -225,7 +226,8 @@
                             android:layout_alignParentStart="true"
                             android:layout_below="@+id/americanMadeTitle"
                             android:paddingLeft="5dp"
-                            android:text="Rating: R \n Duration: 115min \n Genre: Action | Biography | Crime \n Directed by: Doug Liman \n Plot: A pilot lands work for the CIA and as a drug runner in the south during the 1980s " />
+                            android:text="Rating: R \n Duration: 115min \n Genre: Action | Biography | Crime \n Directed by: Doug Liman \n Plot: A pilot lands work for the CIA and as a drug runner in the south during the 1980s "
+                            android:textSize="12sp" />
 
                         <TextView
                             android:id="@+id/americanMadeTitle"
@@ -235,7 +237,7 @@
                             android:layout_alignParentTop="true"
                             android:paddingLeft="5dp"
                             android:text="American Made"
-                            android:textSize="30sp"
+                            android:textSize="25sp"
                             android:textStyle="bold" />
 
 
@@ -252,10 +254,10 @@
 
                     <ImageView
                         android:id="@+id/smurfsImage"
-                        android:layout_width="80dp"
-                        android:layout_height="170dp"
+                        android:layout_width="100dp"
+                        android:layout_height="150dp"
                         android:padding="0dp"
-                        android:scaleType="centerInside"
+                        android:scaleType="fitCenter"
                         app:srcCompat="@drawable/smurfs_poster" />
 
                     <RelativeLayout
@@ -298,11 +300,11 @@
 
                     <ImageView
                         android:id="@+id/hitmanImage"
-                        android:layout_width="80dp"
-                        android:layout_height="170dp"
+                        android:layout_width="100dp"
+                        android:layout_height="150dp"
 
                         android:padding="0dp"
-                        android:scaleType="centerInside"
+                        android:scaleType="fitCenter"
                         app:srcCompat="@drawable/hitman_poster" />
 
                     <RelativeLayout
@@ -317,7 +319,8 @@
                             android:layout_alignParentEnd="true"
                             android:layout_alignParentStart="true"
                             android:layout_below="@+id/hitmanTitle"
-                            android:text="Rating: R \n Duration: 111min \n Genre: Action | Comedy \n Directed by: Patrick Hughes \n Plot: The world's top bodyguard gets a new client, a hit man who must testify at the International Court of Justice." />
+                            android:text="Rating: R \n Duration: 111min \n Genre: Action | Comedy \n Directed by: Patrick Hughes \n Plot: The world's top bodyguard gets a new client, a hit man who must testify at the International Court of Justice."
+                            android:textSize="12sp" />
 
                         <TextView
                             android:id="@+id/hitmanTitle"
@@ -326,7 +329,7 @@
                             android:layout_alignParentStart="true"
                             android:layout_alignParentTop="true"
                             android:text="The Hitman's Bodyguard"
-                            android:textSize="21sp"
+                            android:textSize="19sp"
                             android:textStyle="bold" />
 
                     </RelativeLayout>
@@ -341,11 +344,11 @@
 
                     <ImageView
                         android:id="@+id/despicableMe3Image"
-                        android:layout_width="80dp"
-                        android:layout_height="170dp"
+                        android:layout_width="100dp"
+                        android:layout_height="150dp"
 
                         android:padding="0dp"
-                        android:scaleType="centerInside"
+                        android:scaleType="fitCenter"
                         app:srcCompat="@drawable/despicable_me3_poster" />
 
                     <RelativeLayout
@@ -362,7 +365,8 @@
                             android:layout_alignParentStart="true"
                             android:layout_below="@+id/despicableMe3Title"
                             android:paddingLeft="5dp"
-                            android:text="Rating: PG \n Duration: 115min \n Genre: Animation | Action | Family \n Directed by: Balda, Coffin, Guillon \n Plot: Gru meets his long-lost charming, cheerful, and more successful twin brother Dru. " />
+                            android:text="Rating: PG \n Duration: 115min \n Genre: Animation | Action | Family \n Directed by: Balda, Coffin, Guillon \n Plot: Gru meets his long-lost charming, cheerful, and more successful twin brother Dru. "
+                            android:textSize="12sp" />
 
                         <TextView
                             android:id="@+id/despicableMe3Title"
@@ -371,7 +375,7 @@
                             android:layout_alignParentStart="true"
                             android:layout_alignParentTop="true"
                             android:text="Despicable Me 3"
-                            android:textSize="30sp"
+                            android:textSize="25sp"
                             android:textStyle="bold" />
 
                     </RelativeLayout>
@@ -385,11 +389,11 @@
 
                     <ImageView
                         android:id="@+id/detroitImage"
-                        android:layout_width="80dp"
-                        android:layout_height="170dp"
+                        android:layout_width="100dp"
+                        android:layout_height="150dp"
 
                         android:padding="0dp"
-                        android:scaleType="centerInside"
+                        android:scaleType="fitCenter"
                         app:srcCompat="@drawable/detroit_poster" />
 
                     <RelativeLayout
@@ -404,7 +408,8 @@
                             android:layout_alignParentEnd="true"
                             android:layout_alignParentStart="true"
                             android:layout_below="@+id/detroitTitle"
-                            android:text="Rating: R \n Duration: 142min \n Genre: Crime | Drama | History \n Directed by: Kathryn Bigelow \n Plot: The darkest moments during the civil unrest that rocked Detroit in the summer of '67." />
+                            android:text="Rating: R \n Duration: 142min \n Genre: Crime | Drama | History \n Directed by: Kathryn Bigelow \n Plot: The darkest moments during the civil unrest that rocked Detroit in the summer of '67."
+                            android:textSize="12sp" />
 
                         <TextView
                             android:id="@+id/detroitTitle"
@@ -413,7 +418,7 @@
                             android:layout_alignParentStart="true"
                             android:layout_alignParentTop="true"
                             android:text="Detroit"
-                            android:textSize="30sp"
+                            android:textSize="25sp"
                             android:textStyle="bold" />
 
                     </RelativeLayout>

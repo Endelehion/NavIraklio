@@ -71,7 +71,7 @@
                         android:layout_width="100dp"
                         android:layout_height="160dp"
                         android:padding="0dp"
-                        android:scaleType="centerInside"
+                        android:scaleType="fitCenter"
                         app:srcCompat="@drawable/dunkirk_poster" />
 
                     <RelativeLayout
@@ -113,10 +113,10 @@
 
                     <ImageView
                         android:id="@+id/valerianImage"
-                        android:layout_width="90dp"
+                        android:layout_width="100dp"
                         android:layout_height="160dp"
                         android:padding="0dp"
-                        android:scaleType="centerInside"
+                        android:scaleType="fitCenter"
                         app:srcCompat="@drawable/valerian_poster" />
 
                     <RelativeLayout
