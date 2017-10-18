@@ -201,7 +201,6 @@
         android:alpha="0.4"
         android:background="@drawable/heraklion_large_land"
         android:orientation="horizontal"
-        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintLeft_toLeftOf="parent"

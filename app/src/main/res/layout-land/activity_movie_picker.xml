@@ -13,7 +13,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:alpha="0.3"
-        android:background="@drawable/cinema_frame_small"
+        android:background="@drawable/cinema_frame_small_land"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
