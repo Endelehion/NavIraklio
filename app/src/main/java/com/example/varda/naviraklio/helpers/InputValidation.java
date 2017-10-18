@@ -138,7 +138,7 @@ public class InputValidation {
      */
     public boolean isInputEditTextValidPassword(TextInputEditText textInputEditText, TextInputLayout textInputLayout, String message) {
         String value = textInputEditText.getText().toString().trim();
-        if (value.isEmpty() || textInputEditText.length() < 5) {
+        if (value.isEmpty() || textInputEditText.length() < 6) {
             textInputLayout.setError(message);
             hideKeyboardFrom(textInputEditText);
             return false;
