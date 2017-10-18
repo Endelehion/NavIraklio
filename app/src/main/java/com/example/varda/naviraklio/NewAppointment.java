@@ -34,6 +34,8 @@ public class NewAppointment extends AppCompatActivity {
     private String moviePickedDate;
     private ArrayList<Appointment> receivedAppointArrayList;
     private Place receivedDestination;
+    private String movieDuration;
+    private String preMode;
 
 
     @Override
@@ -45,7 +47,9 @@ public class NewAppointment extends AppCompatActivity {
             cinemaStringLabel = savedInstanceState.getString("cinemaStringLabelKey", "");
             movieStringLabel = savedInstanceState.getString("movieStringLabelKey", "");
             duration = savedInstanceState.getString("durationStringKey", "");
+            movieDuration = savedInstanceState.getString("movieDurationStringKey", "");
             mode = savedInstanceState.getString("modeKey");
+            preMode = savedInstanceState.getString("preModeKey");
             moviePickedDate = savedInstanceState.getString("moviePickedDateKey");
             receivedDestination = savedInstanceState.getParcelable("destinationKey");
         } else {
@@ -53,8 +57,10 @@ public class NewAppointment extends AppCompatActivity {
             duration = "";
             cinemaStringLabel = "";
             movieStringLabel = "";
+            movieDuration="";
             mode = "Supermarket";
             moviePickedDate = "";
+            preMode="";
             receivedDestination = null;
         }
         Intent receivedIntent = getIntent();
@@ -75,7 +81,7 @@ public class NewAppointment extends AppCompatActivity {
         movieTitleLabel = (TextView) findViewById(R.id.movieTitleLabel);
         cinemaLabel = (TextView) findViewById(R.id.cinemaLabel);
         typeLabel = (TextView) findViewById(R.id.typeLabel);
-        updateStartText();
+
         if (mode.equals("Cinema")) {
             setUpCinema();
         } else if (mode.equals("Gas Station")) {
@@ -111,6 +117,7 @@ public class NewAppointment extends AppCompatActivity {
                     if (mode.equals("Cinema")) {
                         locationIntent.putExtra("cinemaKey", cinemaStringLabel);
                     }
+                    preMode=mode;
                     startActivityForResult(locationIntent, REQUEST_LOCATION_STRING);
 
                 } else {
@@ -133,15 +140,17 @@ public class NewAppointment extends AppCompatActivity {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (spinner.getSelectedItem().toString().equals("Cinema")) {
-                    mode = "Cinema";
-                    setUpCinema();
-                } else if (spinner.getSelectedItem().toString().equals("Gas Station")) {
-                    mode = "Gas Station";
-                    setUpGasStation();
-                } else if (spinner.getSelectedItem().toString().equals("Supermarket")) {
-                    mode = "Supermarket";
-                    setUpSupermarket();
+                if(!mode.equals("Ragnarok")) {
+                    if (spinner.getSelectedItem().toString().equals("Cinema")) {
+                        mode = "Cinema";
+                        setUpCinema();
+                    } else if (spinner.getSelectedItem().toString().equals("Gas Station")) {
+                        mode = "Gas Station";
+                        setUpGasStation();
+                    } else if (spinner.getSelectedItem().toString().equals("Supermarket")) {
+                        mode = "Supermarket";
+                        setUpSupermarket();
+                    }
                 }
             }
 
@@ -229,7 +238,7 @@ public class NewAppointment extends AppCompatActivity {
         }
         if (requestCode == REQUEST_MOVIE) {
             if (resultCode == Activity.RESULT_OK) {
-                duration = data.getStringExtra("moviePickedDurationKey");
+                movieDuration = data.getStringExtra("moviePickedDurationKey");
                 movieStringLabel = data.getStringExtra("moviePickedTitleKey");
                 cinemaStringLabel = data.getStringExtra("moviePickedCinemaKey");
                 moviePickedDate = data.getStringExtra("moviePickedDateKey");
@@ -256,6 +265,8 @@ public class NewAppointment extends AppCompatActivity {
         savedInstanceState.putString("modeKey", mode);
         savedInstanceState.putString("moviePickedDateKey", moviePickedDate);
         savedInstanceState.putParcelable("destinationKey", receivedDestination);
+        savedInstanceState.putString("movieDurationKey", movieDuration);
+        savedInstanceState.putString("preModeKey", preMode);
     }
 
     @Override
@@ -266,13 +277,19 @@ public class NewAppointment extends AppCompatActivity {
         movieStringLabel = savedInstanceState.getString("movieStringLabelKey");
         duration = savedInstanceState.getString("durationStringKey");
         mode = savedInstanceState.getString("modeKey");
+        preMode = savedInstanceState.getString("preModeKey");
         moviePickedDate = savedInstanceState.getString("moviePickedDateKey");
         receivedDestination = savedInstanceState.getParcelable("destinationKey");
+        movieDuration=savedInstanceState.getString("movieDurationKey");
     }
 
 
     protected void updateStartText() {
         dateText.setText(dateString);
+        durationText.setText("Duration: "+duration);
+        cinemaLabel.setText("Cinema: "+cinemaStringLabel);
+        movieTitleLabel.setText("Movie: "+movieStringLabel);
+
     }
 
     public void setUpCinema() {
@@ -281,11 +298,9 @@ public class NewAppointment extends AppCompatActivity {
         movieBtn.setVisibility(View.VISIBLE);
         movieTitleLabel.setVisibility(View.VISIBLE);
         cinemaLabel.setVisibility(View.VISIBLE);
-        durationText.setText("Duration: " + duration);
-        cinemaLabel.setText("Cinema: " + cinemaStringLabel);
-        movieTitleLabel.setText("Movie: " + movieStringLabel);
-        dateText.setText(dateString);
+        duration=movieDuration;
         confirmAppointmentBtn.setVisibility(View.INVISIBLE);
+        updateStartText();
     }
 
     public void setUpGasStation() {
@@ -293,8 +308,9 @@ public class NewAppointment extends AppCompatActivity {
         movieBtn.setVisibility(View.GONE);
         movieTitleLabel.setVisibility(View.INVISIBLE);
         cinemaLabel.setVisibility(View.INVISIBLE);
-        durationText.setText("Duration: 0:05");
+        duration="0:05";
         confirmAppointmentBtn.setVisibility(View.INVISIBLE);
+        updateStartText();
     }
 
     public void setUpSupermarket() {
@@ -302,8 +318,9 @@ public class NewAppointment extends AppCompatActivity {
         movieBtn.setVisibility(View.GONE);
         movieTitleLabel.setVisibility(View.INVISIBLE);
         cinemaLabel.setVisibility(View.INVISIBLE);
-        durationText.setText("Duration: 0:40");
+        duration="0:40";
         confirmAppointmentBtn.setVisibility(View.INVISIBLE);
+        updateStartText();
     }
 
     public void invokeRagnarok() {
@@ -313,6 +330,13 @@ public class NewAppointment extends AppCompatActivity {
         spinner.setVisibility(View.INVISIBLE);
         typeLabel.setVisibility(View.INVISIBLE);
         confirmAppointmentBtn.setVisibility(View.VISIBLE);
+        cancelNewAppointBtn.setVisibility(View.VISIBLE);
+        updateStartText();
+        if(!preMode.equals("Cinema")){
+            cinemaLabel.setVisibility(View.INVISIBLE);
+            movieTitleLabel.setVisibility(View.INVISIBLE);
+        }
+
     }
 
 }

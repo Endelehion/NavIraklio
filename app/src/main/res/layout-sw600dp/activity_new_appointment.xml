@@ -84,7 +84,7 @@
         android:id="@+id/textView9"
         android:layout_width="134dp"
         android:layout_height="77dp"
-        android:text="Starts"
+        android:text="Starts:"
         android:textSize="45dp"
         app:layout_constraintLeft_toLeftOf="@+id/guideline12"
         android:layout_marginLeft="0dp"
