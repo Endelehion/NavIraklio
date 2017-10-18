@@ -118,7 +118,7 @@ public class InputValidation {
     }*/
     public boolean isInputEditTextValidUsername(AutoCompleteTextView textInputEditText, TextInputLayout textInputLayout, String message) {
         String value = textInputEditText.getText().toString().trim();
-        if (value.isEmpty() || textInputEditText.length() < 6) {
+        if (value.isEmpty() || textInputEditText.length() < 5) {
             textInputLayout.setError(message);
             hideKeyboardFrom(textInputEditText);
             return false;
@@ -138,7 +138,7 @@ public class InputValidation {
      */
     public boolean isInputEditTextValidPassword(TextInputEditText textInputEditText, TextInputLayout textInputLayout, String message) {
         String value = textInputEditText.getText().toString().trim();
-        if (value.isEmpty() || textInputEditText.length() < 4) {
+        if (value.isEmpty() || textInputEditText.length() < 5) {
             textInputLayout.setError(message);
             hideKeyboardFrom(textInputEditText);
             return false;
