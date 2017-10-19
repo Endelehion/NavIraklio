@@ -21,8 +21,8 @@ public class Place implements Parcelable,Serializable {
     public Place(double lat,double lon, String address, String coordType, int openHour,  int closeHour) {
         this.lat=lat;
         this.lon=lon;
-        this.setAddress(address);
-        this.setCoordType(coordType);
+        this.address=address;
+        this.coordType=coordType;
         this.openHour=openHour;
         this.closeHour=closeHour;
     }
