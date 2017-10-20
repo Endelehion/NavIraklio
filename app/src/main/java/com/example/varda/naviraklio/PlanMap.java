@@ -454,7 +454,7 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
         return appointValid;
     }
 
-    public boolean checkIfopen(Place testedPlace, Date appointTime) {
+    public boolean checkIfopen(Place testedPlace, Date appointTime, Date appointEnd) {
         Calendar calendar = Calendar.getInstance();
         Date openTime, closeTime;
         calendar.setTime(appointTime);
@@ -467,7 +467,7 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
             calendar.add(Calendar.DATE, 1);
             closeTime = calendar.getTime();
         }
-        boolean isOpen = appointTime.after(openTime) && appointTime.before(closeTime) || closeTime.equals(openTime);
+        boolean isOpen = appointTime.after(openTime) && appointTime.before(closeTime) && appointEnd.after(openTime) && appointEnd.before(closeTime) || closeTime.equals(openTime);
         return isOpen;
     }
 
@@ -743,10 +743,14 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
         double dist = 0, tempDist;
         Place nearestPlace = null;
         boolean nullFlag = false;
-        Date appointTime;
+        Date appointTime,appointEnd;
         appointTime = dateFormat.parse(receivedDateString);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(appointTime);
+        cal.add(Calendar.SECOND,receivedDurationInSec);
+        appointEnd = cal.getTime();
         for (int i = 0; i < placeList.size(); i++) {
-            if (checkIfopen(placeList.get(i), appointTime)) {
+            if (checkIfopen(placeList.get(i), appointTime,appointEnd)) {
                 dist = distFrom(startPoint, new LatLng(placeList.get(i).getLat(), placeList.get(i).getLon()));
                 nearestPlace = placeList.get(i);
                 nullFlag = false;
@@ -758,7 +762,7 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
         }
         if (!nullFlag) {
             for (int i = 0; i < placeList.size(); i++) {
-                if (checkIfopen(placeList.get(i), appointTime)) {
+                if (checkIfopen(placeList.get(i), appointTime,appointEnd)) {
                     tempDist = distFrom(startPoint, new LatLng(placeList.get(i).getLat(), placeList.get(i).getLon()));
                     if (tempDist < dist) {
                         dist = tempDist;

@@ -25,7 +25,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d9f1127b-78f8-4fff-b05d-ec4e5afa92e5" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/intermediates/dex-cache/cache.xml" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/3.3/taskArtifacts/fileHashes.bin" afterPath="$PROJECT_DIR$/.gradle/3.3/taskArtifacts/fileHashes.bin" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/3.3/taskArtifacts/fileSnapshots.bin" afterPath="$PROJECT_DIR$/.gradle/3.3/taskArtifacts/fileSnapshots.bin" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/3.3/taskArtifacts/taskArtifacts.bin" afterPath="$PROJECT_DIR$/.gradle/3.3/taskArtifacts/taskArtifacts.bin" />
@@ -34,7 +33,6 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/3.3/tasks/_app_compileDebugJavaWithJavac/localJarClasspathSnapshot/localJarClasspathSnapshot.lock" afterPath="$PROJECT_DIR$/.gradle/3.3/tasks/_app_compileDebugJavaWithJavac/localJarClasspathSnapshot/localJarClasspathSnapshot.lock" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/app.iml" afterPath="$PROJECT_DIR$/app/app.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/varda/naviraklio/Organizer.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/varda/naviraklio/Organizer.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/varda/naviraklio/PlanMap.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/varda/naviraklio/PlanMap.java" />
     </list>
     <ignored path="NavIraklio.iws" />
@@ -118,11 +116,11 @@
       <file leaf-file-name="PlanMap.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/varda/naviraklio/PlanMap.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="493">
-              <caret line="612" column="5" selection-start-line="612" selection-start-column="5" selection-end-line="612" selection-end-column="5" />
+            <state relative-caret-position="561">
+              <caret line="473" column="34" selection-start-line="473" selection-start-column="34" selection-end-line="473" selection-end-column="34" />
               <folding>
-                <marker date="1508527599565" expanded="false" signature="54570:54704" ph="(ResultCallback) (result) → {" />
-                <marker date="1508527599565" expanded="false" signature="56250:56265" ph="}" />
+                <marker date="1508536364802" expanded="false" signature="54855:54989" ph="(ResultCallback) (result) → {" />
+                <marker date="1508536364802" expanded="false" signature="56535:56550" ph="}" />
               </folding>
             </state>
           </provider>
@@ -2793,7 +2791,7 @@
     <property name="settings.editor.splitter.proportion" value="0.2" />
     <property name="android.project.structure.last.selected" value="app" />
     <property name="android.project.structure.proportion" value="0.15" />
-    <property name="device.picker.selection" value="Nexus_7_API_25" />
+    <property name="device.picker.selection" value="049916c2" />
     <property name="last_opened_file_path" value="$USER_HOME$/Documents/ptyxiakh yliko" />
     <property name="DEBUGGABLE_DEVICE" value="asus-nexus_7-049916c2" />
     <property name="DEBUGGABLE_PROCESS" value="com.example.varda.naviraklio" />
@@ -3273,13 +3271,6 @@
       <option name="presentableId" value="Default" />
       <updated>1492522266328</updated>
     </task>
-    <task id="LOCAL-00018" summary="New Appointments - DatePick   return datetime through startActivityForResult">
-      <created>1504379229208</created>
-      <option name="number" value="00018" />
-      <option name="presentableId" value="LOCAL-00018" />
-      <option name="project" value="LOCAL" />
-      <updated>1504379229208</updated>
-    </task>
     <task id="LOCAL-00019" summary="New Appointments - DatePick   return datetime through startActivityForResult">
       <created>1504381822758</created>
       <option name="number" value="00019" />
@@ -3616,7 +3607,14 @@
       <option name="project" value="LOCAL" />
       <updated>1508424640959</updated>
     </task>
-    <option name="localTasksCounter" value="67" />
+    <task id="LOCAL-00067" summary="release Alpha 1.0">
+      <created>1508527626980</created>
+      <option name="number" value="00067" />
+      <option name="presentableId" value="LOCAL-00067" />
+      <option name="project" value="LOCAL" />
+      <updated>1508527626990</updated>
+    </task>
+    <option name="localTasksCounter" value="68" />
     <servers />
   </component>
   <component name="TodoView">
@@ -4001,11 +3999,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/varda/naviraklio/PlanMap.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="493">
-          <caret line="612" column="5" selection-start-line="612" selection-start-column="5" selection-end-line="612" selection-end-column="5" />
+        <state relative-caret-position="561">
+          <caret line="473" column="34" selection-start-line="473" selection-start-column="34" selection-end-line="473" selection-end-column="34" />
           <folding>
-            <marker date="1508527599565" expanded="false" signature="54570:54704" ph="(ResultCallback) (result) → {" />
-            <marker date="1508527599565" expanded="false" signature="56250:56265" ph="}" />
+            <marker date="1508536364802" expanded="false" signature="54855:54989" ph="(ResultCallback) (result) → {" />
+            <marker date="1508536364802" expanded="false" signature="56535:56550" ph="}" />
           </folding>
         </state>
       </provider>
