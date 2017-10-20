@@ -458,9 +458,11 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
         Calendar calendar = Calendar.getInstance();
         Date openTime, closeTime;
         calendar.setTime(appointTime);
+        calendar.set(Calendar.MINUTE,0);
         calendar.set(Calendar.HOUR_OF_DAY, testedPlace.getOpenHour());
         openTime = calendar.getTime();
         calendar.setTime(appointTime);
+        calendar.set(Calendar.MINUTE,0);
         calendar.set(Calendar.HOUR_OF_DAY, testedPlace.getCloseHour());
         closeTime = calendar.getTime();
         if (closeTime.before(openTime)) {
