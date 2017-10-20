@@ -355,6 +355,5 @@ public class Organizer extends AppCompatActivity {
             adapterAp.notifyDataSetChanged();
         }
 
-
     }
 }
