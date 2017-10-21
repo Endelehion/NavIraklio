@@ -842,30 +842,29 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
 
     void createCoordinates() {
         superMarkets = new ArrayList<>();
-        superMarkets.add(new Place(35.340685, 25.133643, "Chalkiadakis", "Supermarket", 9, 21));
-        superMarkets.add(new Place(35.337384, 25.121930, "LIDL", "Supermarket", 9, 21));
-        superMarkets.add(new Place(35.338468, 25.139354, "AB", "Supermarket", 9, 21));
-        superMarkets.add(new Place(35.337481, 25.132863, "BAZAAR", "Supermarket", 9, 21));
-        superMarkets.add(new Place(35.339136, 25.155434, "Sklavenitis", "Supermarket", 9, 21));
-        superMarkets.add(new Place(35.341716, 25.136238, "papadaki", "Supermarket", 9, 21));
-        superMarkets.add(new Place(35.326724, 25.131095, "Sklavenitis", "Supermarket", 9, 21));
-        superMarkets.add(new Place(35.326251, 25.138878, "Sklavenitis", "Supermarket", 9, 21));
-        superMarkets.add(new Place(35.337651, 25.126895, "Chalkiadakis", "Supermarket", 9, 21));
-        superMarkets.add(new Place(35.338751, 25.119835, "Chalkiadakis", "Supermarket", 9, 21));
-        superMarkets.add(new Place(35.324666, 25.133577, "Ariadni", "Supermarket", 9, 21));
-        superMarkets.add(new Place(35.334394, 25.115245, "INKA", "Supermarket", 9, 21));
-        superMarkets.add(new Place(35.324695, 25.124600, "AB", "Supermarket", 9, 21));
-        superMarkets.add(new Place(35.323925, 25.112541, "LIDL", "Supermarket", 9, 21));
-        superMarkets.add(new Place(35.319163, 25.144127, "INKA", "Supermarket", 9, 21));
-        superMarkets.add(new Place(35.324660, 25.124514, "AB", "Supermarket", 9, 21));
-        superMarkets.add(new Place(35.318393, 25.148246, "Chalkiadakis", "Supermarket", 9, 21));
-        superMarkets.add(new Place(35.331733, 25.137689, "Chalkiadakis", "Supermarket", 9, 21));
-        superMarkets.add(new Place(35.330157, 25.132282, "Chalkiadakis", "Supermarket", 9, 21));
-        superMarkets.add(new Place(35.334359, 25.158718, "Chalkiadakis Max", "Supermarket", 9, 21));
-        superMarkets.add(new Place(35.329072, 25.119279, "Chalkiadakis", "Supermarket", 9, 21));
-        superMarkets.add(new Place(35.343307, 25.155190, "My Cretan Goods", "Supermarket", 9, 21));
-        superMarkets.add(new Place(35.336788, 25.133692, "Alati tis Gis", "Supermarket", 9, 21));
-        superMarkets.add(new Place(35.330241, 25.124522, "Kouts", "Supermarket", 9, 21));
+        superMarkets.add(new Place(35.340685, 25.133643, "Chalkiadakis, Koroneou 9", "Supermarket", 9, 21));
+        superMarkets.add(new Place(35.337384, 25.121930, "LIDL, Alkeou 1", "Supermarket", 9, 21));
+        superMarkets.add(new Place(35.338468, 25.139354, "AB, Leof. Ikarou 26", "Supermarket", 9, 21));
+        superMarkets.add(new Place(35.337481, 25.132863, "BAZAAR, Kosmon 15-31", "Supermarket", 9, 21));
+        superMarkets.add(new Place(35.339136, 25.155434, "Sklavenitis, Michail Eleftheriadi", "Supermarket", 9, 21));
+        superMarkets.add(new Place(35.341716, 25.136238, "Papadaki, Epimenidou 11", "Supermarket", 9, 21));
+        superMarkets.add(new Place(35.326724, 25.131095, "Sklavenitis, Raftopoulou 37", "Supermarket", 9, 21));
+        superMarkets.add(new Place(35.326251, 25.138878, "Sklavenitis, Leof. Knosou 86", "Supermarket", 9, 21));
+        superMarkets.add(new Place(35.337651, 25.126895, "Chalkiadakis, Leof. Kalokerinou 210", "Supermarket", 9, 21));
+        superMarkets.add(new Place(35.338751, 25.119835, "Chalkiadakis, Machis Kritis 40", "Supermarket", 9, 21));
+        superMarkets.add(new Place(35.324666, 25.133577, "Ariadni, Paraskevopoulou 75", "Supermarket", 9, 21));
+        superMarkets.add(new Place(35.334394, 25.115245, "INKA, Emmanouil Ntismpiraki 16", "Supermarket", 9, 21));
+        superMarkets.add(new Place(35.324695, 25.124600, "AB, Polichronaki 13", "Supermarket", 9, 21));
+        superMarkets.add(new Place(35.323925, 25.112541, "LIDL, Lisistratis 24", "Supermarket", 9, 21));
+        superMarkets.add(new Place(35.319163, 25.144127, "INKA, Leof. Knosou 164", "Supermarket", 9, 21));
+        superMarkets.add(new Place(35.318393, 25.148246, "Chalkiadakis, Delaporta 2-4", "Supermarket", 9, 21));
+        superMarkets.add(new Place(35.331733, 25.137689, "Chalkiadakis, Drakontopoulou 49", "Supermarket", 9, 21));
+        superMarkets.add(new Place(35.330157, 25.132282, "Chalkiadakis, Leof. Andrea Papandreou 34", "Supermarket", 9, 21));
+        superMarkets.add(new Place(35.334359, 25.158718, "Chalkiadakis Max, Mafsolou", "Supermarket", 9, 21));
+        superMarkets.add(new Place(35.329072, 25.119279, "Chalkiadakis, Therisou 157", "Supermarket", 9, 21));
+        superMarkets.add(new Place(35.343307, 25.155190, "My Cretan Goods, Dodekanisou 15", "Supermarket", 9, 21));
+        superMarkets.add(new Place(35.336788, 25.133692, "Alati tis Gis, Giannitson 2-6", "Supermarket", 9, 21));
+        superMarkets.add(new Place(35.330241, 25.124522, "Kouts, EOK 12", "Supermarket", 9, 21));
 
 
         //zografou
@@ -874,30 +873,30 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
 
 
         gasStations = new ArrayList<>();
-        gasStations.add(new Place(35.338674, 25.141106, "SHELL", "Gas Station", 24, 24));
-        gasStations.add(new Place(35.335309, 25.141536, "EKO", "Gas Station", 24, 24));
-        gasStations.add(new Place(35.333256, 25.121656, "Tsiknakis Ioannis", "Gas Station", 7, 22));
-        gasStations.add(new Place(35.330283, 25.108827, "ELIN", "Gas Station", 7, 22));
-        gasStations.add(new Place(35.329145, 25.117691, "Christodoulakis", "Gas Station", 7, 22));
-        gasStations.add(new Place(35.338607, 25.143821, "Giannakakis", "Gas Station", 7, 22));
-        gasStations.add(new Place(35.336275, 25.121359, "Hanagia", "Gas Station", 7, 22));
-        gasStations.add(new Place(35.333818, 25.117024, "Stamatakis", "Gas Station", 7, 22));
-        gasStations.add(new Place(35.326903, 25.131728, "Koumoulas", "Gas Station", 7, 22));
-        gasStations.add(new Place(35.338667, 25.141116, "SHELL", "Gas Station", 24, 24));
-        gasStations.add(new Place(35.338795, 25.141556, "SHELL", "Gas Station", 24, 24));
-        gasStations.add(new Place(35.338714, 25.143423, "BP", "Gas Station", 24, 24));
-        gasStations.add(new Place(35.337829, 25.141788, "BP", "Gas Station", 24, 24));
-        gasStations.add(new Place(35.336477, 25.146265, "BP", "Gas Station", 24, 24));
-        gasStations.add(new Place(35.334352, 25.133687, "BP", "Gas Station", 24, 24));
-        gasStations.add(new Place(35.324131, 25.139945, "Mavraki", "Gas Station", 24, 24));
-        gasStations.add(new Place(35.332375, 25.122159, "Samolis BP", "Gas Station", 24, 24));
-        gasStations.add(new Place(35.332414, 25.112785, "Aegean", "Gas Station", 7, 22));
-        gasStations.add(new Place(35.319242, 25.133003, "EKO", "Gas Station", 7, 22));
-        gasStations.add(new Place(35.320312, 25.125391, "Koumoulas", "Gas Station", 7, 22));
-        gasStations.add(new Place(35.321124, 25.143192, "Androulakis", "Gas Station", 7, 22));
-        gasStations.add(new Place(35.331358, 25.104039, "Xenakis", "Gas Station", 24, 24));
-        gasStations.add(new Place(35.341186, 25.141900, "Avis", "Gas Station", 7, 22));
-        gasStations.add(new Place(35.338016, 25.160950, "EKO", "Gas Station", 7, 22));
+        gasStations.add(new Place(35.338674, 25.141106, "SHELL, Michail Pedioti 5-11", "Gas Station", 24, 24));
+        gasStations.add(new Place(35.335309, 25.141536, "EKO, Leof. Eth. Antistaseos 93", "Gas Station", 24, 24));
+        gasStations.add(new Place(35.333256, 25.121656, "Tsiknakis Ioannis, Rafkou 1", "Gas Station", 7, 22));
+        gasStations.add(new Place(35.330283, 25.108827, "ELIN, Leof. 62 Martiron 208", "Gas Station", 7, 22));
+        gasStations.add(new Place(35.329145, 25.117691, "Christodoulakis, Strimonos 3-11", "Gas Station", 7, 22));
+        gasStations.add(new Place(35.338607, 25.143821, "Giannakakis, Par. Ikarou", "Gas Station", 7, 22));
+        gasStations.add(new Place(35.336275, 25.121359, "Hanagia, Rafkou 46", "Gas Station", 7, 22));
+        gasStations.add(new Place(35.333818, 25.117024, "Stamatakis, Levinou 8", "Gas Station", 7, 22));
+        gasStations.add(new Place(35.326903, 25.131728, "Koumoulas, Vasiliou Smpokou 58", "Gas Station", 7, 22));
+        gasStations.add(new Place(35.338667, 25.141116, "SHELL, Michail Pedioti 5-11", "Gas Station", 24, 24));
+        gasStations.add(new Place(35.338795, 25.141556, "SHELL, Leof. Ikarou 46", "Gas Station", 24, 24));
+        gasStations.add(new Place(35.338714, 25.143423, "BP, Leof. Ikarou 23", "Gas Station", 24, 24));
+        gasStations.add(new Place(35.337829, 25.141788, "BP, Leof. Eth. Antistaseos 133", "Gas Station", 24, 24));
+        gasStations.add(new Place(35.336477, 25.146265, "BP, Konitsis 39", "Gas Station", 24, 24));
+        gasStations.add(new Place(35.334352, 25.133687, "BP, Leof. Plastira 16", "Gas Station", 24, 24));
+        gasStations.add(new Place(35.324131, 25.139945, "Mavraki, Leof. Knosou 104", "Gas Station", 24, 24));
+        gasStations.add(new Place(35.332375, 25.122159, "Samolis BP, Leof. Minoos 118", "Gas Station", 24, 24));
+        gasStations.add(new Place(35.332414, 25.112785, "Aegean, Leof. 62 Martyron 160-162", "Gas Station", 7, 22));
+        gasStations.add(new Place(35.319242, 25.133003, "EKO, Leof. Ionias 251", "Gas Station", 7, 22));
+        gasStations.add(new Place(35.320312, 25.125391, "Koumoulas, Theod. Mattheaki 58", "Gas Station", 7, 22));
+        gasStations.add(new Place(35.321124, 25.143192, "Androulakis, Leof. Knosou 136", "Gas Station", 7, 22));
+        gasStations.add(new Place(35.331358, 25.104039, "Xenakis, Leof. 62 Martiron 210", "Gas Station", 24, 24));
+        gasStations.add(new Place(35.341186, 25.141900, "Avis, Leof. Nearchou 10", "Gas Station", 7, 22));
+        gasStations.add(new Place(35.338016, 25.160950, "EKO, Leof. Ikarou 78-80", "Gas Station", 7, 22));
 
         //zografou
          gasStations.add(new Place(37.974122, 23.774079, "Revoil", "Gas Station", 7, 22));
@@ -910,12 +909,12 @@ public class PlanMap extends FragmentActivity implements OnMapReadyCallback, Goo
 
 
         cinemas = new ArrayList<>();
-        cinemas.add(new Place(35.339880, 25.119728, "Odeon Talos", "Cinema", 16, 2));
-        cinemas.add(new Place(35.340889, 25.136980, "Vintsenzos Kornaros", "Cinema", 16, 2));
-        cinemas.add(new Place(35.338375, 25.136216, "Astoria", "Cinema", 16, 2));
-        cinemas.add(new Place(35.335669, 25.070682, "Texnopolis", "Cinema", 16, 2));
-        cinemas.add(new Place(35.337980, 25.158230, "Cine Studio", "Cinema", 16, 2));
-        cinemas.add(new Place(35.338573, 25.129685, "Dedalos Club", "Cinema", 16, 2));
+        cinemas.add(new Place(35.339880, 25.119728, "Odeon Talos, Minoos & Pelasgon", "Cinema", 16, 2));
+        cinemas.add(new Place(35.340889, 25.136980, "Vintsenzos Kornaros, Pasifais 2-6", "Cinema", 16, 2));
+        cinemas.add(new Place(35.338375, 25.136216, "Astoria, Pl. Eleftherias 11", "Cinema", 16, 2));
+        cinemas.add(new Place(35.335669, 25.070682, "Texnopolis, Makedonias 86", "Cinema", 16, 2));
+        cinemas.add(new Place(35.337980, 25.158230, "Cine Studio, Artemisias 152", "Cinema", 16, 2));
+        cinemas.add(new Place(35.338573, 25.129685, "Dedalos Club, Giamalaki 4", "Cinema", 16, 2));
         //zografou
         cinemas.add(new Place(37.977369, 23.770716, "Aleka", "Cinema", 16, 2));
 
