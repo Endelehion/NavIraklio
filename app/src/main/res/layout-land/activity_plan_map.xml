@@ -15,6 +15,7 @@
         android:layout_alignParentTop="true"
         android:layout_weight="1"
         android:gravity="center"
+        android:padding="3dp"
         android:text="Destination:"
         android:textAlignment="center"
         android:textSize="15sp"
@@ -32,12 +33,13 @@
         map:layout_constraintBottom_toBottomOf="parent"
         map:layout_constraintRight_toRightOf="parent"
         android:layout_marginRight="7dp"
-        android:layout_marginBottom="7dp" />
+        android:layout_marginBottom="7dp"
+        android:layout_marginEnd="7dp" />
 
     <fragment
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"

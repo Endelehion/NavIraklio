@@ -44,10 +44,11 @@
         android:id="@+id/instantDestLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="left|center"
-        android:textSize="20sp"
-        android:theme="@style/white_transparent_background"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
+        android:gravity="left|center"
+        android:padding="3dp"
+        android:textSize="20sp"
+        android:theme="@style/white_transparent_background" />
 
 </RelativeLayout>
